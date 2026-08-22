@@ -14,18 +14,6 @@
     {
       "src": "frontend/**",
       "use": "@vercel/static"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "styles.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "app.js",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -50,10 +38,6 @@
       "dest": "backend/main.py"
     },
     {
-      "src": "/",
-      "dest": "frontend/index.html"
-    },
-    {
       "src": "/styles.css",
       "dest": "frontend/styles.css"
     },
@@ -63,7 +47,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "frontend/index.html"
     }
   ]
 }
