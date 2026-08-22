@@ -19,7 +19,7 @@ Organizations, startups, and research institutions operate in highly competitive
 
 Unlike traditional single-turn chatbots or hardcoded pipelines, NOVAagent makes real-time decisions:
 1. **Evaluates Objective & State**: Determines whether real-time industry news, competitor activity, or scientific publications are required.
-2. **Executes Autonomous Tools**: Gathers real live web data via Tavily API and academic research publications via arXiv API.
+2. **Executes Autonomous Tools**: Gathers real live web data via Tavily API, academic research publications via arXiv API, and DOIs/journal articles via CrossRef API.
 3. **Synthesizes Strategic Evidence**: Leverages Google Gemini 3.6 Flash to analyze collected findings without inventing unsupported facts.
 4. **Generates Executive Reports**: Renders actionable competitive intelligence reports categorized into Executive Summaries, Key Developments, Emerging Trends, Strategic Opportunities, Threats & Risks, Implications, Recommended Actions, and Grounded Source References.
 
@@ -41,16 +41,16 @@ USER OBJECTIVE
 │ Conditional │                                              │
 │ Router      │                                              │
 └──────┬──────┘                                              │
-       ├───────────────┬──────────────────┬──────────────────┤
-       ▼               ▼                  ▼                  ▼
-┌─────────────┐ ┌─────────────┐ ┌───────────────────┐ ┌──────────────┐
-│ web_search  │ │research_s...│ │analyze_information│ │    finish    │
-└──────┬──────┘ └──────┬──────┘ └─────────┬─────────┘ └──────┬───────┘
-       │               │                  │                  │
-       └───────────────┴─────────┬────────┴──────────────────┘
-                                 ▼
-                         Observe Results
-                          & Update State
+       ├───────────────┬───────────────┬──────────────────┬──┴───────────┐
+       ▼               ▼               ▼                  ▼              ▼
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌───────────────────┐ ┌──────────────┐
+│ web_search  │ │research_s...│ │crossref_s...│ │analyze_information│ │    finish    │
+└──────┬──────┘ └──────┬──────┘ └──────┬──────┘ └─────────┬─────────┘ └──────┬───────┘
+       │               │               │                  │                  │
+       └───────────────┴───────────────┴─────────┬────────┴──────────────────┘
+                                                 ▼
+                                         Observe Results
+                                          & Update State
 ```
 
 ### Step-by-Step System Flow:
@@ -59,6 +59,7 @@ USER OBJECTIVE
 3. **Dynamic Action Routing**:
    - `web_search`: Uses Tavily API to gather live market news, competitor launches, and industry trends.
    - `research_search`: Queries arXiv REST API to parse scientific papers and emerging technical publications.
+   - `crossref_search`: Queries CrossRef REST API for peer-reviewed academic journals, DOIs, and book chapters.
    - `analyze_information`: Calls Google Gemini 3.6 Flash to synthesize collected evidence into strategic insights.
    - `finish`: Concludes information gathering when evidence is sufficient or 8-iteration limit is reached.
 4. **State Persistence & Loop**: LangGraph updates `AgentState` using list reducers and loops back to the Reasoning Node.
@@ -73,24 +74,39 @@ USER OBJECTIVE
 - **Search & Tool APIs**:
   - **Tavily Web Search API**: Real-time competitor news, product launches, and industry trends
   - **arXiv REST XML API**: Academic papers, technical trends, and scientific publications
+  - **CrossRef REST API**: Peer-reviewed journal publications, DOIs, and conference proceedings
 - **Backend Framework**: FastAPI, Uvicorn, Pydantic v2, Python-Dotenv
 - **Web Frontend**: HTML5, Vanilla CSS3 (Minimal Off-White / Warm Beige Design), Vanilla JavaScript
+- **Deployment**: Vercel Serverless (`@vercel/python` & `@vercel/static`)
 
 ---
 
 ## Features
 
-- 🧠 **Genuine ReAct State Loop**: Dynamic graph loop (`START` → `REASON` → `CONDITIONAL ROUTER` → `TOOLS` → `REASON` → `FINISH`) enforcing real reasoning over hardcoded chains.
-- 🛠️ **Dynamic Autonomous Tool Selection**: Dynamically routes between `web_search`, `research_search`, `analyze_information`, and `finish`.
+- 🧠 **Genuine ReAct State Loop**: Dynamic graph loop enforcing real reasoning over hardcoded chains.
+- 🛠️ **Dynamic Autonomous Tool Selection**: Dynamically routes between `web_search`, `research_search`, `crossref_search`, `analyze_information`, and `finish`.
 - 📊 **Structured Intelligence Dashboard**: Categorizes insights into Executive Summary, Key Developments, Emerging Trends, Strategic Opportunities, Threats & Risks, Strategic Implications, and Recommended Actions.
-- 🔗 **Grounded Sources & Citations**: Direct clickable links to live web articles and arXiv paper PDFs.
+- 🔗 **Grounded Sources & Citations**: Direct clickable links to live web articles, arXiv paper PDFs, and CrossRef DOIs.
 - 🛡️ **Safe Trace Event Logging**: Exposes safe, high-level trace events (`[REASONING_STATUS]`, `[ACTION]`, `[TOOL_RESULT]`, `[DECISION]`) without exposing private chain-of-thought, internal prompts, or API keys.
 - ⚡ **Iteration Guardrails & Error Safety**: Enforces a safety maximum limit of 8 iterations and handles API failures gracefully.
 - 🎨 **Minimalist Non-Scrollable UI**: Clean off-white and warm beige dashboard (`100vh`) with fixed viewport layout and internal pane scrolling.
 
 ---
 
-## Installation / Setup Steps
+## 🚀 Vercel Deployment Guide
+
+NOVAagent is configured for **instant Vercel deployment** via `vercel.json`:
+
+1. Import your GitHub repository (`https://github.com/UtkarshaBhadakwade/NOVA_AGENTX24`) on [Vercel Dashboard](https://vercel.com/new).
+2. Set **Framework Preset** to **Other** (Vercel automatically detects `vercel.json`).
+3. Add Environment Variables under **Project Settings ➔ Environment Variables**:
+   - `GEMINI_API_KEY` = your Gemini API key
+   - `TAVILY_API_KEY` = your Tavily API key
+4. Click **Deploy**!
+
+---
+
+## Local Installation / Setup Steps
 
 ### 1. Clone or Open Project Directory
 ```powershell
@@ -117,7 +133,7 @@ TAVILY_API_KEY=your_tavily_api_key_here
 
 ---
 
-## How to Run the Project
+## How to Run the Project Locally
 
 ### Option A: Run the End-to-End Terminal Verification
 To execute the ReAct agent graph test directly in your terminal:
