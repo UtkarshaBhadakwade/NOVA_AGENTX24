@@ -19,6 +19,20 @@ Organizations, startups, and research institutions operate in highly competitive
 
 ---
 
+## Application Architecture & Workflow Flow
+
+```
+USER OBJECTIVE ──► REASONING NODE ──► ROUTER ──► DYNAMIC TOOLS ──► STATE UPDATE ──► REPORT
+```
+
+1. **User Objective**: Submitted via Web UI or REST API (`POST /analyze`).
+2. **Reasoning Node**: Analyzes objective and missing information.
+3. **Dynamic Tools**: Chooses `web_search` (Tavily), `research_search` (arXiv), `analyze_information` (Gemini 3.6 Flash), or `finish`.
+4. **State Persistence**: LangGraph updates `AgentState` via list reducers.
+5. **Interactive Report**: Formats report with executive summary, developments, opportunities, threats, and grounded sources.
+
+---
+
 ## Technologies Used
 
 - **Core Reasoning & Agent Graph**: Python 3.11+, LangGraph, LangChain Core
@@ -26,22 +40,6 @@ Organizations, startups, and research institutions operate in highly competitive
 - **Search & Tool APIs**: Tavily Web Search API & arXiv REST XML API
 - **Backend Framework**: FastAPI, Uvicorn, Pydantic v2
 - **Web Frontend**: HTML5, Vanilla CSS3 (Beige/Off-White UI), Vanilla JavaScript
-
----
-
-## Installation / Setup Steps
-
-```powershell
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r backend/requirements.txt
-```
-
-Set environment variables in `backend/.env`:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-TAVILY_API_KEY=your_tavily_api_key_here
-```
 
 ---
 

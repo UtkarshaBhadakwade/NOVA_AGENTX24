@@ -25,20 +25,44 @@ Unlike traditional single-turn chatbots or hardcoded pipelines, NOVAagent makes 
 
 ---
 
-## Hackathon Evaluation & Judging Criteria Coverage
+## Application Architecture & Workflow Flow
 
-| Criteria | What Judges Check | How NOVAagent Fulfills It |
-| :--- | :--- | :--- |
-| **Problem Understanding** | Does the solution actually solve the given problem? | **YES.** Continuously tracks scientific papers (arXiv) and market news (Tavily), delivering structured intelligence reports to prevent missed updates. |
-| **Agentic Behavior** | Does the AI reason, plan and act? | **YES.** Built on a genuine LangGraph ReAct loop (`START` → `REASON` → `ROUTER` → `TOOL` → `REASON` → `FINISH`) that dynamically plans and acts. |
-| **Tool Usage** | Does the agent use tools effectively? | **YES.** Uses specialized autonomous tools (`web_search`, `research_search`, `analyze_information`) based on missing info. |
-| **Autonomy** | Can it perform multi-step tasks? | **YES.** Operates completely autonomously over multi-iteration loops (e.g. Iteration 1 to 4) without human intervention. |
-| **Adaptability** | Can it handle changing situations? | **YES.** Dynamic tool selection routes differently for competitor queries (`web_search`), research queries (`research_search`), or broad intelligence tasks. |
-| **Error Handling** | Can it recover from failures? | **YES.** Handles missing keys, empty results, API timeouts, invalid tool choices, and enforces an 8-iteration safety guardrail. |
-| **Innovation** | Is the solution creative/useful? | **YES.** Combines real-time web market evidence with peer-reviewed arXiv papers into a unified, actionable intelligence workspace. |
-| **Accuracy** | Are the results reliable? | **YES.** Synthesizes findings strictly grounded in retrieved evidence, with clickable web URLs and arXiv PDF citations. |
-| **User Experience** | Is the bot easy to use? | **YES.** Features a sleek, non-scrollable beige/off-white Web Dashboard (`http://localhost:8000`) with sample prompts and a live ReAct execution stream. |
-| **Deployment** | Is the solution actually deployed and working? | **YES.** Deployed as a live FastAPI service (`POST /analyze`, `GET /`) with real end-to-end execution verified. |
+```
+USER OBJECTIVE
+      │
+      ▼
+┌─────────────┐
+│ NOVAagent   │◄─────────────────────────────────────────────┐
+│ (Reasoning) │                                              │
+└──────┬──────┘                                              │
+       │ Evaluate missing info & pick 1 action               │
+       ▼                                                     │
+┌─────────────┐                                              │
+│ Conditional │                                              │
+│ Router      │                                              │
+└──────┬──────┘                                              │
+       ├───────────────┬──────────────────┬──────────────────┤
+       ▼               ▼                  ▼                  ▼
+┌─────────────┐ ┌─────────────┐ ┌───────────────────┐ ┌──────────────┐
+│ web_search  │ │research_s...│ │analyze_information│ │    finish    │
+└──────┬──────┘ └──────┬──────┘ └─────────┬─────────┘ └──────┬───────┘
+       │               │                  │                  │
+       └───────────────┴─────────┬────────┴──────────────────┘
+                                 ▼
+                         Observe Results
+                          & Update State
+```
+
+### Step-by-Step System Flow:
+1. **User Objective Submission**: The user enters an intelligence objective via the Web Dashboard or REST API (`POST /analyze`).
+2. **Agent Reasoning Node**: Evaluates the objective, current state, collected evidence, and missing information.
+3. **Dynamic Action Routing**:
+   - `web_search`: Uses Tavily API to gather live market news, competitor launches, and industry trends.
+   - `research_search`: Queries arXiv REST API to parse scientific papers and emerging technical publications.
+   - `analyze_information`: Calls Google Gemini 3.6 Flash to synthesize collected evidence into strategic insights.
+   - `finish`: Concludes information gathering when evidence is sufficient or 8-iteration limit is reached.
+4. **State Persistence & Loop**: LangGraph updates `AgentState` using list reducers and loops back to the Reasoning Node.
+5. **Interactive Dashboard Output**: Formats and renders the structured intelligence report (Executive Summary, Key Developments, Emerging Trends, Opportunities, Threats & Risks, Strategic Implications, Recommended Actions, Confidence Level, and Grounded Sources).
 
 ---
 
