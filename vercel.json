@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "backend/main.py": {
+    "api/index.py": {
       "maxDuration": 60,
       "memory": 1024
     }
@@ -9,23 +9,23 @@
   "routes": [
     {
       "src": "/investigations.*",
-      "dest": "backend/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/analyze",
-      "dest": "backend/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/health",
-      "dest": "backend/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/docs",
-      "dest": "backend/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/openapi.json",
-      "dest": "backend/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/styles.css",
@@ -37,7 +37,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "frontend/index.html"
     }
   ]
 }
