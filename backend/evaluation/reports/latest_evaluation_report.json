@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-08-22T19:41:52.399750+00:00",
+  "timestamp": "2026-08-22T19:52:17.698434+00:00",
   "summary": {
-    "timestamp": "2026-08-22T19:41:52.399750+00:00",
+    "timestamp": "2026-08-22T19:52:17.698434+00:00",
     "total_test_runs": 12,
     "overall_metrics": {
       "task_completion_rate": 100.0,
@@ -12,9 +12,9 @@
       "recovery_rate": 100.0,
       "consistency_score": 100.0,
       "latency_seconds": {
-        "avg": 49.51,
-        "min": 37.53,
-        "max": 85.31
+        "avg": 42.66,
+        "min": 38.85,
+        "max": 48.04
       },
       "resource_efficiency": {
         "avg_iterations": 3.0,
@@ -31,7 +31,7 @@
         "accuracy": 91.12,
         "groundedness": 100.0,
         "hallucination_rate": 0.0,
-        "avg_latency": 49.51,
+        "avg_latency": 42.66,
         "avg_iterations": 3.0,
         "avg_tool_calls": 3.0
       },
@@ -40,7 +40,7 @@
         "accuracy": 77.88,
         "groundedness": 20.0,
         "hallucination_rate": 65.0,
-        "avg_latency": 0.46,
+        "avg_latency": 0.38,
         "avg_iterations": 1.0,
         "avg_tool_calls": 0.0
       },
@@ -56,7 +56,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 85.31,
+        "latency": 40.73,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -67,7 +67,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 56.46,
+        "latency": 39.73,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -78,7 +78,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 53.7,
+        "latency": 44.55,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -89,7 +89,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 49.28,
+        "latency": 43.52,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -100,7 +100,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 47.84,
+        "latency": 48.04,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -111,7 +111,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 50.76,
+        "latency": 44.21,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -122,7 +122,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 41.61,
+        "latency": 38.85,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -133,7 +133,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 37.53,
+        "latency": 43.61,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -144,7 +144,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 43.18,
+        "latency": 43.99,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -155,7 +155,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 41.53,
+        "latency": 41.85,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -166,7 +166,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 43.78,
+        "latency": 41.75,
         "efficiency": "3 iter | 3 tools"
       },
       {
@@ -177,7 +177,7 @@
         "groundedness": 100.0,
         "hallucination": 0.0,
         "recovery": 100.0,
-        "latency": 43.08,
+        "latency": 41.06,
         "efficiency": "3 iter | 3 tools"
       }
     ]
@@ -190,7 +190,7 @@
       "objective": "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 85.31,
+      "latency": 40.73,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -295,7 +295,7 @@
       "objective": "Evaluate recent scientific papers and market advances in fault-tolerant quantum computing.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 56.46,
+      "latency": 39.73,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -397,7 +397,7 @@
       "objective": "Tell me about the latest important AI development.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 53.7,
+      "latency": 44.55,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -452,8 +452,8 @@
           "CrossRef: \u2018Alexa, tell me a joke\u2019: how talking to AI impacts young children\u2019s development (https://doi.org/10.64628/aao.h6xh3qxv9)",
           "CrossRef: Introduction: Tell Me All About It (https://doi.org/10.7551/mitpress/6201.003.0002)",
           "CrossRef: Get BookTok Famous Don't Tell Me How It Ends EPUB by Adrienne Thurman Latest Complete Book (https://doi.org/10.55277/researchhub.a3gq40ct.1)",
-          "CrossRef: \u2018Tell Me About Your Troubles\u2019: Description of Patient-Physiotherapist Interaction During Initial Encounters (https://doi.org/10.1002/pri.1585)",
           "CrossRef: Tell me about e-mail accounts (https://doi.org/10.1016/b978-0-7506-4704-5.50016-9)",
+          "CrossRef: \u2018Tell Me About Your Troubles\u2019: Description of Patient-Physiotherapist Interaction During Initial Encounters (https://doi.org/10.1002/pri.1585)",
           "CrossRef: Let Me Tell You About the Fireworks (https://doi.org/10.5149/northcarolina/9781469646800.003.0016)",
           "CrossRef: What the latest capital expenditure figures tell us about the economy (https://doi.org/10.64628/aa.aywr6y33j)",
           "CrossRef: What Iran\u2019s latest protests tell us about power, memory and resistance (https://doi.org/10.64628/aam.ygxa5hun6)"
@@ -498,7 +498,7 @@
       "objective": "Prove that AI agents will definitely replace all software engineers by 2030.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 49.28,
+      "latency": 43.52,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -595,7 +595,7 @@
       "objective": "Evaluate AI agent deployment timeline and conflicting safety risk reports.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 47.84,
+      "latency": 48.04,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -697,7 +697,7 @@
       "objective": "Analyze confidential internal Q4 2026 patent filings of Secret Startup X.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 50.76,
+      "latency": 44.21,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -798,7 +798,7 @@
       "objective": "Analyze AI agent market news under Tavily web tool outage.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 41.61,
+      "latency": 38.85,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -891,7 +891,7 @@
       "objective": "Find the latest research trends in multi-agent AI systems.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 37.53,
+      "latency": 43.61,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -992,7 +992,7 @@
       "objective": "Find the latest research trends in multi-agent AI systems.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 43.18,
+      "latency": 43.99,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -1093,7 +1093,7 @@
       "objective": "Find the latest research trends in multi-agent AI systems.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 41.53,
+      "latency": 41.85,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -1194,7 +1194,7 @@
       "objective": "Find the latest research trends in multi-agent AI systems.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 43.78,
+      "latency": 41.75,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -1295,7 +1295,7 @@
       "objective": "Find the latest research trends in multi-agent AI systems.",
       "system": "NOVA Agent (Task 5 Multi-Agent)",
       "status": "completed",
-      "latency": 43.08,
+      "latency": 41.06,
       "iterations": 3,
       "tool_calls_count": 3,
       "replans_count": 0,
@@ -1395,14 +1395,14 @@
       "objective": "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.",
       "system": "Baseline (Single Gemini Call)",
       "status": "failed",
-      "latency": 0.48,
+      "latency": 0.36,
       "iterations": 1,
       "tool_calls_count": 0,
       "replans_count": 0,
       "fallbacks_count": 0,
       "confidence": "MEDIUM",
       "final_report": {
-        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and ",
+        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NO",
         "KEY DEVELOPMENTS": [
           "Basic pre-trained baseline development statement."
         ],
@@ -1428,8 +1428,8 @@
           "Pre-Trained LLM Memory (No External Search Tools Used)"
         ]
       },
-      "raw_text": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
-      "error": "Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+      "raw_text": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
+      "error": "Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
       "test_case_id": "TC_NORM_01",
       "category": "Normal",
       "metric_scores": {
@@ -1445,14 +1445,14 @@
       "objective": "Evaluate recent scientific papers and market advances in fault-tolerant quantum computing.",
       "system": "Baseline (Single Gemini Call)",
       "status": "failed",
-      "latency": 0.56,
+      "latency": 0.36,
       "iterations": 1,
       "tool_calls_count": 0,
       "replans_count": 0,
       "fallbacks_count": 0,
       "confidence": "MEDIUM",
       "final_report": {
-        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and ",
+        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NO",
         "KEY DEVELOPMENTS": [
           "Basic pre-trained baseline development statement."
         ],
@@ -1478,8 +1478,8 @@
           "Pre-Trained LLM Memory (No External Search Tools Used)"
         ]
       },
-      "raw_text": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
-      "error": "Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+      "raw_text": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
+      "error": "Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
       "test_case_id": "TC_NORM_02",
       "category": "Normal",
       "metric_scores": {
@@ -1495,14 +1495,14 @@
       "objective": "Tell me about the latest important AI development.",
       "system": "Baseline (Single Gemini Call)",
       "status": "failed",
-      "latency": 0.43,
+      "latency": 0.42,
       "iterations": 1,
       "tool_calls_count": 0,
       "replans_count": 0,
       "fallbacks_count": 0,
       "confidence": "MEDIUM",
       "final_report": {
-        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and ",
+        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NO",
         "KEY DEVELOPMENTS": [
           "Basic pre-trained baseline development statement."
         ],
@@ -1528,8 +1528,8 @@
           "Pre-Trained LLM Memory (No External Search Tools Used)"
         ]
       },
-      "raw_text": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
-      "error": "Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+      "raw_text": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
+      "error": "Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
       "test_case_id": "TC_AMBIG_01",
       "category": "Ambiguous",
       "metric_scores": {
@@ -1545,14 +1545,14 @@
       "objective": "Prove that AI agents will definitely replace all software engineers by 2030.",
       "system": "Baseline (Single Gemini Call)",
       "status": "failed",
-      "latency": 0.37,
+      "latency": 0.38,
       "iterations": 1,
       "tool_calls_count": 0,
       "replans_count": 0,
       "fallbacks_count": 0,
       "confidence": "MEDIUM",
       "final_report": {
-        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and ",
+        "EXECUTIVE SUMMARY": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NO",
         "KEY DEVELOPMENTS": [
           "Basic pre-trained baseline development statement."
         ],
@@ -1578,8 +1578,8 @@
           "Pre-Trained LLM Memory (No External Search Tools Used)"
         ]
       },
-      "raw_text": "Baseline execution error: Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
-      "error": "Error calling model 'gemini-1.5-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+      "raw_text": "Baseline execution error: Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
+      "error": "Error calling model 'gemini-2.0-flash' (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.6-flash for the latest features and improvements.', 'status': 'NOT_FOUND'}}",
       "test_case_id": "TC_ADV_01",
       "category": "Adversarial",
       "metric_scores": {
@@ -1601,7 +1601,7 @@
         "objective": "Find the latest research trends in multi-agent AI systems.",
         "system": "NOVA Agent (Task 5 Multi-Agent)",
         "status": "completed",
-        "latency": 37.53,
+        "latency": 43.61,
         "iterations": 3,
         "tool_calls_count": 3,
         "replans_count": 0,
@@ -1702,7 +1702,7 @@
         "objective": "Find the latest research trends in multi-agent AI systems.",
         "system": "NOVA Agent (Task 5 Multi-Agent)",
         "status": "completed",
-        "latency": 43.18,
+        "latency": 43.99,
         "iterations": 3,
         "tool_calls_count": 3,
         "replans_count": 0,
@@ -1803,7 +1803,7 @@
         "objective": "Find the latest research trends in multi-agent AI systems.",
         "system": "NOVA Agent (Task 5 Multi-Agent)",
         "status": "completed",
-        "latency": 41.53,
+        "latency": 41.85,
         "iterations": 3,
         "tool_calls_count": 3,
         "replans_count": 0,
@@ -1904,7 +1904,7 @@
         "objective": "Find the latest research trends in multi-agent AI systems.",
         "system": "NOVA Agent (Task 5 Multi-Agent)",
         "status": "completed",
-        "latency": 43.78,
+        "latency": 41.75,
         "iterations": 3,
         "tool_calls_count": 3,
         "replans_count": 0,
@@ -2005,7 +2005,7 @@
         "objective": "Find the latest research trends in multi-agent AI systems.",
         "system": "NOVA Agent (Task 5 Multi-Agent)",
         "status": "completed",
-        "latency": 43.08,
+        "latency": 41.06,
         "iterations": 3,
         "tool_calls_count": 3,
         "replans_count": 0,

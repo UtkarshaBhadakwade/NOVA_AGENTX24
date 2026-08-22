@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-22T19:41:52.399750+00:00",
+  "timestamp": "2026-08-22T19:52:17.698434+00:00",
   "total_test_runs": 12,
   "overall_metrics": {
     "task_completion_rate": 100.0,
@@ -10,9 +10,9 @@
     "recovery_rate": 100.0,
     "consistency_score": 100.0,
     "latency_seconds": {
-      "avg": 49.51,
-      "min": 37.53,
-      "max": 85.31
+      "avg": 42.66,
+      "min": 38.85,
+      "max": 48.04
     },
     "resource_efficiency": {
       "avg_iterations": 3.0,
@@ -29,7 +29,7 @@
       "accuracy": 91.12,
       "groundedness": 100.0,
       "hallucination_rate": 0.0,
-      "avg_latency": 49.51,
+      "avg_latency": 42.66,
       "avg_iterations": 3.0,
       "avg_tool_calls": 3.0
     },
@@ -38,7 +38,7 @@
       "accuracy": 77.88,
       "groundedness": 20.0,
       "hallucination_rate": 65.0,
-      "avg_latency": 0.46,
+      "avg_latency": 0.38,
       "avg_iterations": 1.0,
       "avg_tool_calls": 0.0
     },
@@ -54,7 +54,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 85.31,
+      "latency": 40.73,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -65,7 +65,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 56.46,
+      "latency": 39.73,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -76,7 +76,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 53.7,
+      "latency": 44.55,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -87,7 +87,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 49.28,
+      "latency": 43.52,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -98,7 +98,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 47.84,
+      "latency": 48.04,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -109,7 +109,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 50.76,
+      "latency": 44.21,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -120,7 +120,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 41.61,
+      "latency": 38.85,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -131,7 +131,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 37.53,
+      "latency": 43.61,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -142,7 +142,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 43.18,
+      "latency": 43.99,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -153,7 +153,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 41.53,
+      "latency": 41.85,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -164,7 +164,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 43.78,
+      "latency": 41.75,
       "efficiency": "3 iter | 3 tools"
     },
     {
@@ -175,7 +175,7 @@
       "groundedness": 100.0,
       "hallucination": 0.0,
       "recovery": 100.0,
-      "latency": 43.08,
+      "latency": 41.06,
       "efficiency": "3 iter | 3 tools"
     }
   ]
