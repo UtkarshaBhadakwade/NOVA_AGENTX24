@@ -6,16 +6,6 @@
       "memory": 1024
     }
   },
-  "builds": [
-    {
-      "src": "backend/main.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/investigations.*",
@@ -47,7 +37,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/index.html"
+      "dest": "frontend/$1"
     }
   ]
 }
