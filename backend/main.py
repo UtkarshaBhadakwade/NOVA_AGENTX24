@@ -197,7 +197,6 @@ def run_intelligence_analysis(request: AnalyzeRequest):
     logger.info(f"Starting Task 5 Adaptive Agent Graph for objective: '{request.objective}' (TestMode: {request.test_mode})")
     
     try:
-        # Invoke LangGraph state graph with thread checkpointing configuration
         final_state = agent_graph.invoke(
             initial_state,
             config={"configurable": {"thread_id": thread_id}}
@@ -210,7 +209,6 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
         web_res = final_state.get("market_results", []) or final_state.get("web_results", [])
 
-        # Add Checkpoint Trace Event
         final_trace = final_state.get("trace_events", [])
         final_trace.append({
             "event": "[CHECKPOINT]",
@@ -232,7 +230,6 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "errors": final_state.get("errors", [])
         }
 
-        # Save investigation to SQLite database
         try:
             saved = save_investigation(response_data)
             if saved and isinstance(saved, dict):
@@ -255,6 +252,8 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
 # Mount static frontend directory
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 if os.path.exists(frontend_dir):
     app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
@@ -267,4 +266,7 @@ if os.path.exists(frontend_dir):
         file_path = os.path.join(frontend_dir, file_name)
         if os.path.exists(file_path):
             return FileResponse(file_path)
+        root_path = os.path.join(root_dir, file_name)
+        if os.path.exists(root_path):
+            return FileResponse(root_path)
         raise HTTPException(status_code=404, detail="File not found")
