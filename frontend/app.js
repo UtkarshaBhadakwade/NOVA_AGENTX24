@@ -198,7 +198,30 @@ async function runAnalysis() {
         });
 
         if (!response.ok) {
-            throw new Error(`Server returned status: ${response.status}`);
+            let errorMsg = `Server returned status: ${response.status}`;
+            let stageMsg = "api_request";
+            try {
+                const errJson = await response.json();
+                if (errJson && errJson.message) {
+                    errorMsg = errJson.message;
+                    stageMsg = errJson.stage || "backend_processing";
+                }
+            } catch (e) {}
+
+            timeline.innerHTML += `
+                <div class="process-card" style="border-color: var(--status-low);">
+                    <div class="process-header">
+                        <span class="process-agent-name">Execution Alert</span>
+                        <span class="process-status" style="color: var(--status-low);">Error</span>
+                    </div>
+                    <div class="process-detail">
+                        <strong>Stage:</strong> ${escapeHtml(stageMsg)}<br>
+                        <strong>Message:</strong> ${escapeHtml(errorMsg)}
+                    </div>
+                </div>
+            `;
+            reportWelcome.style.display = "flex";
+            return;
         }
 
         const data = await response.json();

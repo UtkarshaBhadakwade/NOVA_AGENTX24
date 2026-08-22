@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -25,8 +25,11 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("nova_agent.main")
 
-# Initialize SQLite database on startup
-init_db()
+# Initialize SQLite database safely
+try:
+    init_db()
+except Exception as e:
+    logger.warning(f"[MEMORY_WARNING] Persistent memory storage unavailable. Continuing investigation without long-term memory. Details: {str(e)}")
 
 app = FastAPI(
     title="NOVA Agent - Autonomous Competitive Intelligence Agent",
@@ -55,49 +58,72 @@ class AnalyzeRequest(BaseModel):
     quartile: Optional[str] = Field("All Quartiles", description="Journal Quartile filter (Q1, Q2, Q3, Q4)")
 
 class AnalyzeResponse(BaseModel):
-    id: Optional[str]
+    id: Optional[str] = None
     objective: str
-    timeframe: str
-    year: str
-    source_filter: str
-    quartile: str
-    status: str
-    iterations: int
-    tools_called: List[str]
-    trace_events: List[Dict[str, Any]]
-    final_report: Optional[Dict[str, Any]]
-    web_results_count: int
-    research_results_count: int
-    crossref_results_count: int
-    errors: List[str]
+    timeframe: str = "Latest"
+    year: str = "Any Year"
+    source_filter: str = "All Sources"
+    quartile: str = "All Quartiles"
+    status: str = "completed"
+    iterations: int = 0
+    tools_called: List[str] = []
+    trace_events: List[Dict[str, Any]] = []
+    final_report: Optional[Dict[str, Any]] = None
+    web_results_count: int = 0
+    research_results_count: int = 0
+    crossref_results_count: int = 0
+    errors: List[str] = []
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "NOVA Agent Autonomous Multi-Agent System"}
+    return {
+        "status": "ok",
+        "service": "NOVA Agent Autonomous Multi-Agent System",
+        "gemini_api_key_configured": bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")),
+        "tavily_api_key_configured": bool(os.environ.get("TAVILY_API_KEY"))
+    }
 
 @app.get("/investigations")
 def list_investigations(limit: int = Query(50, ge=1, le=200)):
     """Returns past saved investigations grouped into pinned and recent lists."""
-    return get_investigations(limit=limit)
+    try:
+        return get_investigations(limit=limit)
+    except Exception as e:
+        logger.warning(f"[MEMORY_WARNING] List investigations warning: {str(e)}")
+        return {"pinned": [], "recent": []}
 
 @app.get("/investigations/search")
 def search_history(q: str = Query(..., min_length=1)):
     """Searches past investigations by objective title or report content."""
-    return search_investigations(q)
+    try:
+        return search_investigations(q)
+    except Exception as e:
+        logger.warning(f"[MEMORY_WARNING] Search history warning: {str(e)}")
+        return []
 
 @app.get("/investigations/{investigation_id}")
 def get_investigation(investigation_id: str):
     """Retrieves full details and report for a specific saved investigation."""
-    inv = get_investigation_by_id(investigation_id)
-    if not inv:
-        raise HTTPException(status_code=404, detail="Investigation not found.")
-    return inv
+    try:
+        inv = get_investigation_by_id(investigation_id)
+        if not inv:
+            raise HTTPException(status_code=404, detail="Investigation not found.")
+        return inv
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.warning(f"[MEMORY_WARNING] Get investigation warning: {str(e)}")
+        raise HTTPException(status_code=404, detail="Investigation memory unavailable.")
 
 @app.post("/investigations/{investigation_id}/pin")
 def pin_investigation(investigation_id: str):
     """Toggles pinned status for a saved investigation item."""
-    pinned = toggle_pinned(investigation_id)
-    return {"id": investigation_id, "pinned": pinned}
+    try:
+        pinned = toggle_pinned(investigation_id)
+        return {"id": investigation_id, "pinned": pinned}
+    except Exception as e:
+        logger.warning(f"[MEMORY_WARNING] Pin investigation warning: {str(e)}")
+        return {"id": investigation_id, "pinned": False}
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def run_intelligence_analysis(request: AnalyzeRequest):
@@ -132,6 +158,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
     }
 
     logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}' (Year: {request.year}, Quartile: {request.quartile})")
+    
     try:
         final_state = agent_graph.invoke(initial_state)
 
@@ -143,6 +170,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         web_res = final_state.get("market_results", []) or final_state.get("web_results", [])
 
         response_data = {
+            "id": None,
             "objective": final_state["objective"],
             "timeframe": request.timeframe or "Latest",
             "year": request.year or "Any Year",
@@ -159,13 +187,26 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "errors": final_state.get("errors", [])
         }
 
-        saved = save_investigation(response_data)
-        response_data["id"] = saved.get("id")
+        # Save completed investigation to SQLite database with error isolation
+        try:
+            saved = save_investigation(response_data)
+            if saved and isinstance(saved, dict):
+                response_data["id"] = saved.get("id")
+        except Exception as db_err:
+            logger.warning(f"[MEMORY_WARNING] Persistent memory save warning: {str(db_err)}")
 
         return AnalyzeResponse(**response_data)
+
     except Exception as e:
         logger.error(f"Error executing agent graph: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "stage": "agent_execution",
+                "message": f"Agent execution encountered an error: {str(e)}"
+            }
+        )
 
 # Mount static frontend directory
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
