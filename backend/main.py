@@ -15,11 +15,11 @@ from backend.state import AgentState
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("agent_x.main")
+logger = logging.getLogger("nova_agent.main")
 
 app = FastAPI(
     title="NOVA Agent - Autonomous Competitive Intelligence Agent",
-    description="Powered by LangGraph, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
+    description="Powered by LangGraph Multi-Agent Architecture, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
     version="1.0.0"
 )
 
@@ -53,7 +53,7 @@ class AnalyzeResponse(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "NOVAagent Autonomous Agent"}
+    return {"status": "ok", "service": "NOVA Agent Autonomous Multi-Agent System"}
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def run_intelligence_analysis(request: AnalyzeRequest):
@@ -62,28 +62,38 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
     initial_state: AgentState = {
         "objective": request.objective,
-        "web_results": [],
+        "current_task": None,
+        "delegated_agent": None,
         "research_results": [],
+        "market_results": [],
+        "web_results": [],
         "crossref_results": [],
-        "analysis_results": None,
+        "agent_findings": [],
+        "agent_history": [],
         "actions_taken": [],
         "iteration_count": 0,
         "max_iterations": MAX_ITERATIONS,
+        "evidence_sufficient": False,
         "task_complete": False,
         "final_report": None,
+        "analysis_results": None,
         "trace_events": [],
-        "errors": []
+        "errors": [],
+        "next_action": "supervisor",
+        "search_query": request.objective
     }
 
-    logger.info(f"Starting NOVAagent intelligence run for objective: '{request.objective}'")
+    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}'")
     try:
         final_state = agent_graph.invoke(initial_state)
 
-        # Extract tools called from actions_taken
+        # Extract tools/agents called from actions_taken
         tools_called = [
             action for action in final_state.get("actions_taken", [])
-            if not action.startswith("reasoning ->")
+            if not action.startswith("supervisor ->")
         ]
+
+        web_res = final_state.get("market_results", []) or final_state.get("web_results", [])
 
         return AnalyzeResponse(
             objective=final_state["objective"],
@@ -92,7 +102,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             tools_called=tools_called,
             trace_events=final_state.get("trace_events", []),
             final_report=final_state.get("final_report"),
-            web_results_count=len(final_state.get("web_results", [])),
+            web_results_count=len(web_res),
             research_results_count=len(final_state.get("research_results", [])),
             crossref_results_count=len(final_state.get("crossref_results", [])),
             errors=final_state.get("errors", [])
