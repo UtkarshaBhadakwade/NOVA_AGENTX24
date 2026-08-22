@@ -191,11 +191,11 @@ Structured intelligence output containing:
 ### 3. Dynamic Tool Calling Execution & Grounded Sources
 ![Dynamic Tool Calling Execution](docs/screenshots/tool_calling_execution.png)
 
-### 4. Adaptive Multi-Agent Workspace
-![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
-
-### 5. Final Intelligence Dashboard & Grounded Sources
+### 4. Final Intelligence Dashboard & Grounded Sources
 ![Task 5 Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
+
+### 5. Adaptive Multi-Agent Workspace
+![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
 
 ---
 
