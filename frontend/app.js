@@ -30,7 +30,7 @@ async function runAnalysis() {
             <div class="event-header">
                 <span class="event-type">[INITIATING]</span>
             </div>
-            <div class="event-text">Starting Agent X ReAct loop for objective...</div>
+            <div class="event-text">Starting NOVAagent ReAct loop for objective...</div>
         </div>
     `;
 
@@ -120,7 +120,7 @@ function renderReport(report) {
             const div = document.createElement('div');
             div.className = "source-box";
             
-            const match = src.match(/(Web|arXiv):\s*(.*?)\s*\((https?:\/\/[^\s]+)\)/);
+            const match = src.match(/(Web|Web \(Tavily\)|arXiv|CrossRef):\s*(.*?)\s*\((https?:\/\/[^\s]+)\)/);
             if (match) {
                 const type = match[1];
                 const title = match[2];

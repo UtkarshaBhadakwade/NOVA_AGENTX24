@@ -86,28 +86,28 @@ USER OBJECTIVE:
 CURRENT AGENT STATE:
 - Iteration Count: {iteration_count}/{MAX_ITERATIONS}
 - Actions Taken So Far: {actions_taken}
-- Web Search Results Count: {len(web_results)}
+- Web Search Results Count (Tavily API): {len(web_results)}
 - arXiv Research Results Count: {len(research_results)}
-- CrossRef Academic Results Count: {len(crossref_results)}
+- CrossRef Research Results Count: {len(crossref_results)}
 - Strategic Analysis Completed: {bool(analysis_results)}
 
 EVIDENCE SUMMARY:
-Web Results Titles: {[r.get('title') for r in web_results]}
+Web Results Titles (Tavily): {[r.get('title') for r in web_results]}
 arXiv Results Titles: {[r.get('title') for r in research_results]}
 CrossRef Results Titles: {[r.get('title') for r in crossref_results]}
 
 INSTRUCTIONS:
 Evaluate missing information needed for the objective. Select ONE next action:
-1. "web_search": Need real-time web data, industry news, competitor launches, market developments.
+1. "web_search": Need real-time web data, industry news, competitor launches, market developments via Tavily Search API.
 2. "research_search": Need academic papers, scientific publications, patent/technical trends on arXiv.
-3. "crossref_search": Need peer-reviewed academic journal publications, DOIs, or publisher data from CrossRef.
+3. "crossref_search": Need peer-reviewed research papers, DOIs, or publisher publications on CrossRef.
 4. "analyze_information": Have collected raw web/research evidence; now need to synthesize into strategic insights.
 5. "finish": Analysis is complete, and sufficient evidence has been gathered to produce the final intelligence report.
 
 RULES FOR SELECTION:
 - If web_search has NOT been run yet, pick "web_search".
 - If research_search has NOT been run yet, pick "research_search".
-- If crossref_search has NOT been run yet and deep academic/journal evidence is needed, pick "crossref_search".
+- If crossref_search has NOT been run yet, pick "crossref_search".
 - If evidence exists (or search tools were run) but analyze_information has NOT been run yet, pick "analyze_information".
 - If analyze_information has been completed, pick "finish".
 
@@ -153,19 +153,19 @@ Output strictly valid JSON matching this schema:
         if not web_called:
             decision_json = {
                 "action": "web_search",
-                "reasoning_status": "Current industry and competitor developments are needed.",
+                "reasoning_status": "Current industry and competitor developments are needed via Tavily Web Search.",
                 "search_query": objective
             }
         elif not research_called:
             decision_json = {
                 "action": "research_search",
-                "reasoning_status": "Need research evidence to validate emerging technical trends.",
+                "reasoning_status": "Need research paper evidence from arXiv to validate emerging technical trends.",
                 "search_query": objective
             }
         elif not crossref_called:
             decision_json = {
                 "action": "crossref_search",
-                "reasoning_status": "Gathering peer-reviewed publication data from CrossRef.",
+                "reasoning_status": "Need research paper evidence from CrossRef to validate peer-reviewed publications.",
                 "search_query": objective
             }
         elif not analyze_called:
@@ -214,11 +214,11 @@ def web_search_node(state: AgentState) -> Dict[str, Any]:
     new_trace_events = [
         {
             "event": "[ACTION]",
-            "detail": f"Tool: web_search | Query: '{query}'"
+            "detail": f"Tool: web_search (Tavily Search API) | Query: '{query}'"
         },
         {
             "event": "[TOOL_RESULT]",
-            "detail": f"web_search returned {len(results)} structured results."
+            "detail": f"web_search (Tavily Web Search) returned {len(results)} structured results."
         }
     ]
     
@@ -237,7 +237,7 @@ def research_search_node(state: AgentState) -> Dict[str, Any]:
     new_trace_events = [
         {
             "event": "[ACTION]",
-            "detail": f"Tool: research_search | Query: '{query}'"
+            "detail": f"Tool: research_search (arXiv REST API) | Query: '{query}'"
         },
         {
             "event": "[TOOL_RESULT]",
@@ -260,11 +260,11 @@ def crossref_search_node(state: AgentState) -> Dict[str, Any]:
     new_trace_events = [
         {
             "event": "[ACTION]",
-            "detail": f"Tool: crossref_search | Query: '{query}'"
+            "detail": f"Tool: crossref_search (CrossRef REST API) | Query: '{query}'"
         },
         {
             "event": "[TOOL_RESULT]",
-            "detail": f"crossref_search returned {len(results)} CrossRef publications."
+            "detail": f"crossref_search returned {len(results)} CrossRef papers."
         }
     ]
     
@@ -286,7 +286,7 @@ def analyze_node(state: AgentState) -> Dict[str, Any]:
     new_trace_events = [
         {
             "event": "[ACTION]",
-            "detail": "Tool: analyze_information | Synthesizing web, arXiv, and CrossRef evidence."
+            "detail": "Tool: analyze_information (Gemini 3.6 Flash) | Synthesizing Tavily web, arXiv, and CrossRef evidence."
         },
         {
             "event": "[TOOL_RESULT]",
@@ -312,7 +312,7 @@ def finish_node(state: AgentState) -> Dict[str, Any]:
     sources_used = []
     for item in web_results:
         if item.get("url"):
-            sources_used.append(f"Web: {item.get('title')} ({item.get('url')})")
+            sources_used.append(f"Web (Tavily): {item.get('title')} ({item.get('url')})")
     for item in research_results:
         if item.get("url"):
             sources_used.append(f"arXiv: {item.get('title')} ({item.get('url')})")
@@ -323,23 +323,23 @@ def finish_node(state: AgentState) -> Dict[str, Any]:
     # Important evidence summary
     important_evidence = []
     for item in web_results[:2]:
-        important_evidence.append(f"Web Evidence: {item.get('title')} - {item.get('content')[:150]}...")
+        important_evidence.append(f"Web Evidence (Tavily): {item.get('title')} - {item.get('content')[:150]}...")
     for item in research_results[:2]:
-        important_evidence.append(f"arXiv Paper: {item.get('title')} - {item.get('summary')[:150]}...")
+        important_evidence.append(f"Research Paper (arXiv): {item.get('title')} - {item.get('summary')[:150]}...")
     for item in crossref_results[:2]:
-        important_evidence.append(f"CrossRef Publication: {item.get('title')} - {item.get('summary')[:150]}...")
+        important_evidence.append(f"Research Paper (CrossRef): {item.get('title')} - {item.get('summary')[:150]}...")
 
     final_report = {
-        "EXECUTIVE SUMMARY": f"Competitive intelligence assessment regarding '{objective}'. Analyzed {len(web_results)} web sources, {len(research_results)} arXiv papers, and {len(crossref_results)} CrossRef publications.",
+        "EXECUTIVE SUMMARY": f"Competitive intelligence assessment regarding '{objective}'. Analyzed {len(web_results)} web sources via Tavily API, {len(research_results)} arXiv research papers, and {len(crossref_results)} CrossRef research papers.",
         "KEY DEVELOPMENTS": analysis.get("key_developments", ["Active developments observed in market and research data."]),
-        "IMPORTANT EVIDENCE": important_evidence if important_evidence else ["Collected empirical data from web, arXiv, and CrossRef."],
+        "IMPORTANT EVIDENCE": important_evidence if important_evidence else ["Collected empirical data from Tavily web search, arXiv, and CrossRef."],
         "EMERGING TRENDS": analysis.get("emerging_trends", ["Accelerated momentum in key technological capabilities."]),
         "OPPORTUNITIES": analysis.get("opportunities", ["Strategic expansion into identified high-impact sectors."]),
         "THREATS AND RISKS": analysis.get("threats_and_risks", ["Potential market displacement and technological disruption."]),
         "STRATEGIC IMPLICATIONS": analysis.get("strategic_implications", ["Organisations should maintain proactive monitoring and agile response capability."]),
         "RECOMMENDED ACTIONS": analysis.get("recommended_actions", ["Implement regular intelligence updates and evaluate strategic pilot initiatives."]),
         "CONFIDENCE LEVEL": analysis.get("confidence_level", "HIGH"),
-        "SOURCES USED": sources_used if sources_used else ["Web, arXiv, and CrossRef feeds"]
+        "SOURCES USED": sources_used if sources_used else ["Tavily Web, arXiv, and CrossRef research feeds"]
     }
 
     new_trace_events = [
