@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA Agent — Autonomous Competitive Intelligence System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Main Container with Persistent Left Sidebar -->
+    <div class="app-layout">
+        
+        <!-- Left Investigation History & Search Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">N</div>
+                <div class="brand-info">
+                    <span class="brand-title">NOVA Agent</span>
+                    <span class="brand-subtitle">Competitive Intelligence</span>
+                </div>
+            </div>
+
+            <!-- New Investigation Action -->
+            <button class="btn-new-investigation" onclick="startNewInvestigation()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>New Investigation</span>
+            </button>
+
+            <!-- Search Investigations Input -->
+            <div class="sidebar-search">
+                <label for="historySearchInput" class="search-label">Search Investigations</label>
+                <div class="search-input-wrapper">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="historySearchInput" placeholder="Type to search past reports..." onkeyup="filterHistory()">
+                </div>
+            </div>
+
+            <!-- History Scroll List -->
+            <div class="history-scroll-container">
+                
+                <!-- PINNED -->
+                <div class="history-section">
+                    <div class="history-section-title">PINNED</div>
+                    <div class="history-list" id="pinnedHistoryList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- RECENT INVESTIGATIONS -->
+                <div class="history-section">
+                    <div class="history-section-title">RECENT INVESTIGATIONS</div>
+                    <div class="history-list" id="recentHistoryList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sidebar-footer">
+                <span class="status-indicator"></span>
+                <span>LangGraph Framework Live</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Controls Header -->
+            <header class="top-bar">
+                <div class="top-bar-title">
+                    <h1>Intelligence Workspace</h1>
+                    <p>Adaptive multi-agent research, market analysis, and evidence synthesis</p>
+                </div>
+                
+                <!-- Memory Visualization Indicator -->
+                <div class="memory-indicator" id="memoryIndicator">
+                    <div class="mem-pill short-term">
+                        <span class="mem-dot green"></span>
+                        <span>Short-Term Memory: Active LangGraph State</span>
+                    </div>
+                    <div class="mem-pill long-term" id="longTermMemBadge" style="display: none;">
+                        <span class="mem-dot blue"></span>
+                        <span id="longTermMemText">Long-Term Memory: 1 Past Investigation Loaded</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Objective Input & Preset Section -->
+            <section class="input-section">
+                <div class="objective-input-container">
+                    <input type="text" id="objectiveInput" placeholder="Enter an intelligence objective (e.g. Find the latest developments in AI agents and determine opportunities/threats)..." autocomplete="off">
+                    <button class="btn-execute" id="btnExecute" onclick="runAnalysis()">
+                        <span id="btnText">Execute Agent</span>
+                        <div class="spinner" id="btnSpinner" style="display: none;"></div>
+                    </button>
+                </div>
+
+                <!-- Preset Quick Prompts -->
+                <div class="presets-row">
+                    <span class="preset-label">Quick Objectives:</span>
+                    <button class="preset-chip" onclick="setPrompt(this)">Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.</button>
+                    <button class="preset-chip" onclick="setPrompt(this)">Find recent research papers about multi-agent AI systems.</button>
+                    <button class="preset-chip" onclick="setPrompt(this)">Identify recent competitor and industry developments in AI agent platforms.</button>
+                </div>
+            </section>
+
+            <!-- Workspace Grid (Split Pane) -->
+            <div class="workspace-grid">
+                
+                <!-- Left Execution Stream Pane (Process & Adaptive Orchestration Only) -->
+                <section class="pane execution-pane">
+                    <div class="pane-header">
+                        <div class="pane-title">
+                            <h2>Agent Execution</h2>
+                            <span class="pane-subtitle">Adaptive Task Orchestration</span>
+                        </div>
+                        <span class="badge-step" id="iterationBadge">Ready</span>
+                    </div>
+
+                    <div class="execution-scroll-container">
+                        <div class="timeline" id="timeline">
+                            <div class="timeline-empty">
+                                <p>Submit an objective to view adaptive agent planning and orchestration trace logs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Main Intelligence Report Pane (11-Part Intelligence Dashboard) -->
+                <section class="pane report-pane">
+                    <div class="pane-header">
+                        <div class="pane-title">
+                            <h2>Final Intelligence Report</h2>
+                            <span class="pane-subtitle" id="reportSubtitle">Evidence-Grounded Intelligence Analysis</span>
+                        </div>
+                        <span class="confidence-badge" id="confidenceBadge">Confidence: Pending</span>
+                    </div>
+
+                    <div class="report-scroll-container" id="reportScrollContainer">
+                        
+                        <!-- Initial Welcome Card -->
+                        <div class="report-welcome" id="reportWelcome">
+                            <div class="welcome-card">
+                                <h3>NOVA Agent Intelligence Platform</h3>
+                                <p>Select a past investigation from the sidebar or enter a new objective to generate an adaptive intelligence report.</p>
+                                <div class="features-list">
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Dynamic Planning & Adaptive Task Decomposition</span>
+                                    </div>
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Parallel Execution, Checkpointing & Autonomous Replanning</span>
+                                    </div>
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Self-Evaluation, Hypothesis Verification & Conflict Resolution</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 11-Part Structured Intelligence Report -->
+                        <div class="report-content" id="reportContent" style="display: none;">
+                            
+                            <!-- 1. Executive Summary -->
+                            <div class="report-block">
+                                <h3 class="block-title">1. Executive Summary</h3>
+                                <div class="summary-box" id="execSummary"></div>
+                            </div>
+
+                            <!-- 2. Key Developments -->
+                            <div class="report-block">
+                                <h3 class="block-title">2. Key Developments</h3>
+                                <div class="developments-grid" id="keyDevelopments"></div>
+                            </div>
+
+                            <!-- 3. Emerging Trends -->
+                            <div class="report-block">
+                                <h3 class="block-title">3. Emerging Trends</h3>
+                                <ul class="trends-list" id="emergingTrends"></ul>
+                            </div>
+
+                            <!-- 4. Strategic Opportunities -->
+                            <div class="report-block">
+                                <h3 class="block-title">4. Strategic Opportunities</h3>
+                                <div class="opportunities-grid" id="opportunities"></div>
+                            </div>
+
+                            <!-- 5. Threats and Risks -->
+                            <div class="report-block">
+                                <h3 class="block-title">5. Threats and Risks</h3>
+                                <div class="risks-list" id="threats"></div>
+                            </div>
+
+                            <!-- 6. Evidence Conflicts -->
+                            <div class="report-block">
+                                <h3 class="block-title">6. Evidence Conflicts</h3>
+                                <div class="conflicts-box" id="evidenceConflicts"></div>
+                            </div>
+
+                            <!-- 7. Hypothesis Verification -->
+                            <div class="report-block">
+                                <h3 class="block-title">7. Hypothesis Verification</h3>
+                                <div class="hypothesis-box" id="hypothesisVerification"></div>
+                            </div>
+
+                            <!-- 8. Strategic Implications -->
+                            <div class="report-block">
+                                <h3 class="block-title">8. Strategic Implications</h3>
+                                <div class="implications-box" id="strategicImplications"></div>
+                            </div>
+
+                            <!-- 9. Recommended Actions -->
+                            <div class="report-block">
+                                <h3 class="block-title">9. Recommended Actions</h3>
+                                <div class="actions-priority-list" id="recommendedActions"></div>
+                            </div>
+
+                            <!-- 10. Confidence and Uncertainty -->
+                            <div class="report-block">
+                                <h3 class="block-title">10. Confidence and Uncertainty Assessment</h3>
+                                <div class="confidence-box" id="confidenceUncertainty"></div>
+                            </div>
+
+                            <!-- 11. Dedicated Evidence and Sources -->
+                            <div class="report-block">
+                                <h3 class="block-title">11. Dedicated Evidence & Sources</h3>
+                                <div class="sources-grid" id="sourcesContainer"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

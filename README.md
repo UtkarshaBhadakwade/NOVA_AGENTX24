@@ -7,6 +7,35 @@
 
 ---
 
+## 📁 Repository Folder Structure
+
+```text
+NOVA_AGENTX24/
+├── Dataset/                     # Datasets & Benchmarks (1, 2, 3)
+│   ├── sample_investigations.json
+│   └── README.md
+├── Model/                       # Multi-Agent Models
+│   ├── Model_1_Supervisor/      # Supervisor Dynamic Planning Model (supervisor.py)
+│   ├── Model_2_Evaluator/       # Evaluator Hypothesis & Conflict Model (evaluator.py)
+│   ├── Model_3_Synthesis/       # Strategic Synthesis Model (synthesis_agent.py)
+│   └── README.md
+├── Documents/                   # Presentation & Generated Reports
+│   ├── PPT/                     # Presentation Slide Outlines
+│   ├── screenshots/             # System UI Screenshots
+│   └── Document_Generated_Report.md
+├── App/                         # Main Application Directory (.py, backend, frontend, api)
+│   ├── backend/                 # FastAPI, LangGraph agents, main.py, agent.py
+│   ├── frontend/                # Single-Page Web Dashboard (index.html, styles.css, app.js)
+│   ├── api/                     # Vercel Serverless Function entry point (index.py)
+│   └── app.py                   # Standalone Python Application Launcher
+├── vercel.json                  # Vercel deployment configuration
+├── requirements.txt             # Project dependencies
+├── LICENSE                      # License
+└── README.md                    # Master Documentation File
+```
+
+---
+
 ## 👥 Team Members
 
 - **Utkarsha Bhadakwade**
@@ -220,9 +249,9 @@ TAVILY_API_KEY=your_tavily_api_key_here
 ```
 
 ### 4. Run Locally
-- **Option A: Automated Test Suite**
+- **Option A: Automated Launcher**
   ```powershell
-  .\venv\Scripts\python backend/test_agent.py
+  .\venv\Scripts\python App/app.py
   ```
 - **Option B: FastAPI Web Server**
   ```powershell

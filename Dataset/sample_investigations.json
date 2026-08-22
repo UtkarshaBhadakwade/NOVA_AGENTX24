@@ -1,0 +1,23 @@
+[
+  {
+    "id": "eval_dataset_01",
+    "objective": "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.",
+    "category": "Artificial Intelligence",
+    "expected_sources": ["arXiv", "CrossRef", "Tavily"],
+    "ground_truth_summary": "Autonomous multi-agent systems and ReAct reasoning frameworks are rapidly accelerating in enterprise adoption, presenting high growth opportunities alongside security and compliance risks."
+  },
+  {
+    "id": "eval_dataset_02",
+    "objective": "Competitor activities & trends in quantum computing.",
+    "category": "Quantum Computing",
+    "expected_sources": ["arXiv", "CrossRef", "Tavily"],
+    "ground_truth_summary": "Quantum computing advances in fault-tolerant qubits and hybrid quantum-classical algorithms present strategic competitive positioning imperatives."
+  },
+  {
+    "id": "eval_dataset_03",
+    "objective": "Research papers & market advances in robotics.",
+    "category": "Robotics & Automation",
+    "expected_sources": ["arXiv", "CrossRef"],
+    "ground_truth_summary": "Humanoid robotics, vision-language-action (VLA) models, and embodied AI represent emerging industry transformation vectors."
+  }
+]
