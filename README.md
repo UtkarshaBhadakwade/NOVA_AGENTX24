@@ -202,14 +202,4 @@ TAVILY_API_KEY=your_tavily_api_key_here
   ```
   Visit **`http://localhost:8000`** in your web browser.
 
----
 
-## 🧪 Task 5 Adversarial Verification Table
-
-| Test Name | Status | Key Capabilities Demonstrated |
-| :--- | :--- | :--- |
-| **Normal Adaptive Flow** | **PASS** | `[PLANNING]`, `[PARALLEL_EXECUTION]`, `[SELF_EVALUATION]`, `[CHECKPOINT]` |
-| **Tool Failure & Fallback** | **PASS** | `[TOOL_FAILURE]` ➔ `[FALLBACK]` to Research Agent |
-| **Conflicting Evidence** | **PASS** | `[CONFLICT_DETECTED]` ➔ Reconciled in Report |
-| **Resource Constraint** | **PASS** | `[RESOURCE_DECISION]` ➔ Budget Prioritization |
-| **Self-Evaluation Failure** | **PASS** | `[SELF_EVALUATION]` ➔ Replanning Request |
