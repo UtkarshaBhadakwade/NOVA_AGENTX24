@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "functions": {
+    "backend/main.py": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
   "builds": [
     {
       "src": "backend/main.py",
@@ -11,6 +17,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/investigations.*",
+      "dest": "backend/main.py"
+    },
     {
       "src": "/analyze",
       "dest": "backend/main.py"

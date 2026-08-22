@@ -49,7 +49,7 @@ def crossref_search(query: str, year: Optional[str] = None, timeframe: Optional[
             }
         )
         
-        with urllib.request.urlopen(req, timeout=10) as response:
+        with urllib.request.urlopen(req, timeout=5) as response:
             data = json.loads(response.read().decode('utf-8'))
 
         items = data.get('message', {}).get('items', [])

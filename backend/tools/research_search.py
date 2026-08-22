@@ -65,7 +65,7 @@ def research_search(query: str, year: Optional[str] = None, timeframe: Optional[
             headers={'User-Agent': 'NOVAagent-CompetitiveIntelligence/1.0'}
         )
         
-        with urllib.request.urlopen(req, timeout=10) as response:
+        with urllib.request.urlopen(req, timeout=5) as response:
             xml_data = response.read()
 
         root = ET.fromstring(xml_data)
