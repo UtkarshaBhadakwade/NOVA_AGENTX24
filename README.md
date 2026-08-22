@@ -25,6 +25,20 @@ Organizations, startups, and research institutions operate in rapidly changing c
 
 ---
 
+## 🧠 Task 1: Agentic Reasoning Capabilities
+
+### Mandatory Capabilities
+
+#### 1. Agentic Reasoning
+> Implement a reasoning pattern such as **ReAct** or an equivalent approach. The agent should reason, decide the next action, use tools, observe results, and continue until the task is completed.
+
+NOVA Agent satisfies Task 1 by building a stateful **ReAct (Reasoning + Action)** loop in LangGraph:
+- **Reason**: Inspects internal state and determines what information is required.
+- **Act**: Dynamically chooses tools (`web_search`, `research_search`, `crossref_search`, `analyze_information`).
+- **Observe**: Collects tool outputs, updates shared state via list reducers, and continues until evidence is sufficient or safety limits are reached.
+
+---
+
 ## 🏗️ Workflow & System Architecture
 
 NOVA Agent is built on **LangGraph**, providing a stateful, cyclic, multi-agent orchestration graph equipped with shared state reducers, thread checkpointing (`MemorySaver`), parallel execution nodes, and autonomous replanning logic.
@@ -131,14 +145,17 @@ Structured intelligence output containing:
 
 ## 🖼️ Application Screenshots
 
-### 1. Adaptive Multi-Agent Workspace (Task 5 Architecture)
-![Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
+### 1. Task 1: ReAct Agent Workspace (Initial View)
+![Task 1 Initial Workspace View](docs/screenshots/task1_workspace_initial.png)
 
-### 2. Final Intelligence Dashboard & Grounded Sources
-![Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
+### 2. Task 1: ReAct Agent Execution & Completed Task Report
+![Task 1 Completed Task Report](docs/screenshots/task1_execution_completed.png)
 
-### 3. ReAct Execution Engine
-![ReAct Agent Execution Engine](docs/screenshots/task1_react_execution.png)
+### 3. Task 5: Adaptive Multi-Agent Workspace
+![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
+
+### 4. Task 5: Final Intelligence Dashboard & Grounded Sources
+![Task 5 Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
 
 ---
 
@@ -201,5 +218,3 @@ TAVILY_API_KEY=your_tavily_api_key_here
   .\venv\Scripts\uvicorn backend.main:app --reload --port 8000
   ```
   Visit **`http://localhost:8000`** in your web browser.
-
-
