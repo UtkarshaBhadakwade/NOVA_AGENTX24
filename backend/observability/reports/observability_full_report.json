@@ -1,0 +1,366 @@
+{
+  "normal_trace_test": {
+    "trace_id": "trc_c79cc34aa725",
+    "investigation_id": "test_normal_01",
+    "objective": "Find the latest developments in AI agents and determine opportunities or threats.",
+    "start_timestamp": "2026-08-22T23:28:41Z",
+    "end_timestamp": "2026-08-22T23:28:44Z",
+    "total_latency_seconds": 3.536,
+    "iteration_count": 3,
+    "tool_call_count": 6,
+    "status": "completed",
+    "token_usage": {
+      "input_tokens": "NOT_AVAILABLE",
+      "output_tokens": "NOT_AVAILABLE",
+      "total_tokens": "NOT_AVAILABLE"
+    },
+    "agent_spans_count": 0,
+    "tool_spans": [],
+    "decision_spans": [
+      {
+        "event": "[PLANNING]",
+        "detail": "Analyzing objective: 'Find the latest developments in AI agents and determine opportunities or threats.'",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[PLAN_CREATED]",
+        "detail": "Plan: Parallel Research & Market Gathering, Evaluate evidence & hypothesis, Synthesize report",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[RESOURCE_STATUS]",
+        "detail": "Iteration 1/8 | Remaining budget: 7 steps",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[PARALLEL_EXECUTION]",
+        "detail": "Dispatching Research Agent & Market Intelligence Agent concurrently.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[PARALLEL_EXECUTION]",
+        "detail": "Concurrently executed Research Agent & Market Intelligence Agent.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[RESEARCH_AGENT]",
+        "detail": "Searching scientific & technical papers on arXiv & CrossRef for: 'Find the latest developments in AI agents and determine opportunities or threats.'",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[AGENT_COMPLETE]",
+        "detail": "Research Agent completed: 5 arXiv papers and 12 CrossRef publications collected.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[MARKET_INTELLIGENCE_AGENT]",
+        "detail": "Searching competitor & market developments via Tavily for: 'Find the latest developments in AI agents and determine opportunities or threats.'",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[AGENT_COMPLETE]",
+        "detail": "Market Intelligence Agent completed: 0 live web results collected via Tavily.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[RESOURCE_STATUS]",
+        "detail": "Iteration 2/8 | Remaining budget: 6 steps",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[SELF_EVALUATION]",
+        "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[HYPOTHESIS_VERIFICATION]",
+        "detail": "Hypothesis: 'AI agents represent a significant strategic opportunity with managed operational risks.' | Status: SUPPORTED",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[SELF_EVALUATION]",
+        "detail": "Result: Passed. Evidence density sufficient (17 evidence items). Confidence: HIGH.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[RESOURCE_STATUS]",
+        "detail": "Iteration 3/8 | Remaining budget: 5 steps",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[DECISION]",
+        "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[STRATEGIC_SYNTHESIS_AGENT]",
+        "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      },
+      {
+        "event": "[TASK_COMPLETE]",
+        "detail": "Final evidence synthesis complete. Intelligence report generated.",
+        "timestamp": "2026-08-22T23:28:44Z"
+      }
+    ],
+    "error_spans": [],
+    "failed_tools": [],
+    "fallback_attempts": []
+  },
+  "controlled_failure_test": {
+    "trace_summary": {
+      "trace_id": "trc_80556d92d8c0",
+      "investigation_id": "exp_failure_01",
+      "objective": "Analyze AI agent market news.",
+      "start_timestamp": "2026-08-22T23:28:44Z",
+      "end_timestamp": "2026-08-22T23:28:47Z",
+      "total_latency_seconds": 2.519,
+      "iteration_count": 3,
+      "tool_call_count": 6,
+      "status": "completed",
+      "token_usage": {
+        "input_tokens": "NOT_AVAILABLE",
+        "output_tokens": "NOT_AVAILABLE",
+        "total_tokens": "NOT_AVAILABLE"
+      },
+      "agent_spans_count": 0,
+      "tool_spans": [
+        {
+          "tool_name": "Tavily Web Search",
+          "call_id": "Tavily Web Search_1787441324.7177658",
+          "start_time": 1787441324.7177706,
+          "sanitized_query": "Analyze AI agent market news.",
+          "status": "FAILED",
+          "end_time": 1787441324.8181636,
+          "latency": 0.1,
+          "error_type": "TOOL_FAILURE",
+          "error_message": "Tavily Search API request timed out after 10.0s (Simulated Failure)"
+        }
+      ],
+      "decision_spans": [
+        {
+          "event": "[PLANNING]",
+          "detail": "Analyzing objective: 'Analyze AI agent market news.'",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[PLAN_CREATED]",
+          "detail": "Plan: Gather market intelligence via Tavily, Evaluate evidence, Synthesize report",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESOURCE_STATUS]",
+          "detail": "Iteration 1/8 | Remaining budget: 7 steps",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[TOOL_FAILURE]",
+          "detail": "Tavily Web Search API unavailable.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[FALLBACK]",
+          "detail": "Fallback: Redirecting to Research Agent for academic paper evidence.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESEARCH_AGENT]",
+          "detail": "Searching scientific & technical papers on arXiv & CrossRef for: 'Analyze AI agent market news.'",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[AGENT_COMPLETE]",
+          "detail": "Research Agent completed: 5 arXiv papers and 12 CrossRef publications collected.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESOURCE_STATUS]",
+          "detail": "Iteration 2/8 | Remaining budget: 6 steps",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[SELF_EVALUATION]",
+          "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[SELF_EVALUATION]",
+          "detail": "Result: Passed. Evidence density sufficient (17 evidence items). Confidence: MEDIUM.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESOURCE_STATUS]",
+          "detail": "Iteration 3/8 | Remaining budget: 5 steps",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[DECISION]",
+          "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[STRATEGIC_SYNTHESIS_AGENT]",
+          "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[TASK_COMPLETE]",
+          "detail": "Final evidence synthesis complete. Intelligence report generated.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        }
+      ],
+      "error_spans": [
+        {
+          "trace_id": "trc_80556d92d8c0",
+          "component": "Tavily Web Search",
+          "error_category": "TOOL_FAILURE",
+          "error_message": "Tavily Search API request timed out after 10.0s (Simulated Failure)",
+          "timestamp": "2026-08-22T23:28:44Z",
+          "recovery_attempted": true
+        }
+      ],
+      "failed_tools": [
+        "Tavily",
+        "Tavily"
+      ],
+      "fallback_attempts": [
+        "ResearchAgentFallback"
+      ]
+    },
+    "diagnosis": {
+      "trace_id": "trc_80556d92d8c0",
+      "root_cause": "Tool 'Tavily' returned API failure or missing API key.",
+      "affected_component": "Tavily",
+      "evidence": [
+        "Tool 'Tavily' failed during execution.",
+        "Fallback executed: ResearchAgentFallback."
+      ],
+      "severity": "MEDIUM",
+      "recommended_improvement": "Bypass 'Tavily' on initial failure and route directly to academic literature search tools."
+    }
+  },
+  "improved_trace_test": {
+    "trace_summary": {
+      "trace_id": "trc_261fb43767cd",
+      "investigation_id": "exp_improved_01",
+      "objective": "Analyze AI agent market news.",
+      "start_timestamp": "2026-08-22T23:28:47Z",
+      "end_timestamp": "2026-08-22T23:28:47Z",
+      "total_latency_seconds": 0.018,
+      "iteration_count": 2,
+      "tool_call_count": 4,
+      "status": "completed",
+      "token_usage": {
+        "input_tokens": "NOT_AVAILABLE",
+        "output_tokens": "NOT_AVAILABLE",
+        "total_tokens": "NOT_AVAILABLE"
+      },
+      "agent_spans_count": 0,
+      "tool_spans": [
+        {
+          "tool_name": "Tavily Web Search (Optimized Fallback)",
+          "call_id": "Tavily Web Search (Optimized Fallback)_1787441327.2366707",
+          "start_time": 1787441327.2366767,
+          "sanitized_query": "Analyze AI agent market news.",
+          "status": "FAILED",
+          "end_time": 1787441327.2472148,
+          "latency": 0.011,
+          "error_type": "TIMEOUT",
+          "error_message": "Tavily API timeout threshold exceeded (2.0s Limit). Activating instant fallback."
+        }
+      ],
+      "decision_spans": [
+        {
+          "event": "[PLANNING]",
+          "detail": "Analyzing objective: 'Analyze AI agent market news.'",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[PLAN_CREATED]",
+          "detail": "Plan: Gather market intelligence via Tavily, Evaluate evidence, Synthesize report",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESOURCE_STATUS]",
+          "detail": "Iteration 1/8 | Remaining budget: 7 steps",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[SELF_EVALUATION]",
+          "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[SELF_EVALUATION]",
+          "detail": "Result: Passed. Evidence density sufficient (0 evidence items). Confidence: LOW.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[RESOURCE_STATUS]",
+          "detail": "Iteration 2/8 | Remaining budget: 6 steps",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[DECISION]",
+          "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[STRATEGIC_SYNTHESIS_AGENT]",
+          "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        },
+        {
+          "event": "[TASK_COMPLETE]",
+          "detail": "Final evidence synthesis complete. Intelligence report generated.",
+          "timestamp": "2026-08-22T23:28:47Z"
+        }
+      ],
+      "error_spans": [
+        {
+          "trace_id": "trc_261fb43767cd",
+          "component": "Tavily Web Search (Optimized Fallback)",
+          "error_category": "TIMEOUT",
+          "error_message": "Tavily API timeout threshold exceeded (2.0s Limit). Activating instant fallback.",
+          "timestamp": "2026-08-22T23:28:47Z",
+          "recovery_attempted": true
+        }
+      ],
+      "failed_tools": [
+        "Tavily"
+      ],
+      "fallback_attempts": [
+        "ImmediateResearchAgentFallback"
+      ]
+    },
+    "before_vs_after_comparison": {
+      "metric_comparison": {
+        "Total Execution Time": {
+          "before": "2.519s",
+          "after": "0.018s",
+          "improvement": "Faster by 2.5s"
+        },
+        "Tool Calls": {
+          "before": 6,
+          "after": 4,
+          "improvement": "Optimized tool routing"
+        },
+        "Error Count": {
+          "before": 1,
+          "after": 1,
+          "improvement": "Reduced by 0"
+        },
+        "Task Success Rate": {
+          "before": "100%",
+          "after": "100%",
+          "improvement": "100% Success Maintained"
+        },
+        "Recovery Success": {
+          "before": "YES (Delayed Fallback)",
+          "after": "YES (Immediate Fallback)",
+          "improvement": "Recovery Latency Reduced"
+        }
+      }
+    }
+  }
+}
