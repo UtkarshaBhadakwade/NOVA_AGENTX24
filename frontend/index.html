@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent X — Autonomous Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-icon">X</div>
+            <span class="brand-name">Agent X</span>
+        </div>
+        <div class="status-pill" id="backendStatus">
+            <div class="dot"></div>
+            <span>Agent Online</span>
+        </div>
+    </header>
+
+    <!-- Main Viewport App Body (Fixed 100vh) -->
+    <main class="app-body">
+        
+        <!-- Left Pane: Input & Execution Control -->
+        <aside class="left-pane">
+            
+            <div class="input-section">
+                <span class="section-label">Intelligence Objective</span>
+                <div class="input-box-wrapper">
+                    <textarea id="objectiveInput" class="objective-textarea" placeholder="Enter an objective to analyze..."></textarea>
+                    <button id="btnExecute" class="btn-execute" onclick="runAnalysis()">
+                        <span id="btnText">Execute Agent</span>
+                        <div id="btnSpinner" class="spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="input-section">
+                <span class="section-label">Quick Prompts</span>
+                <div class="chips-container">
+                    <div class="chip-item" onclick="setPrompt(this)">Developments in AI agents: opportunity or threat?</div>
+                    <div class="chip-item" onclick="setPrompt(this)">Competitor activities & trends in quantum computing</div>
+                    <div class="chip-item" onclick="setPrompt(this)">Research papers & market advances in robotics</div>
+                    <div class="chip-item" onclick="setPrompt(this)">Patent developments in EV solid-state batteries</div>
+                </div>
+            </div>
+
+            <!-- ReAct Timeline Stream -->
+            <div class="timeline-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="section-label">ReAct Agent Execution</span>
+                    <span id="iterationBadge" style="font-size: 0.75rem; color: var(--text-muted);">0 Steps</span>
+                </div>
+                <div class="timeline-scroll" id="timeline">
+                    <div class="timeline-card" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 1.5rem 0;">
+                        Ready to execute intelligence task.
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Right Pane: Scrollable Intelligence Report -->
+        <section class="right-pane">
+            
+            <div class="report-scroll-container" id="reportScrollContainer">
+                
+                <!-- Placeholder / Welcome View -->
+                <div class="report-welcome" id="reportWelcome">
+                    <div class="welcome-title">Agent X Intelligence Workspace</div>
+                    <p style="max-width: 450px; font-size: 0.9rem;">
+                        Enter an objective on the left pane and execute Agent X to dynamically gather evidence from Tavily Web Search and arXiv papers, synthesize insights, and render your actionable report.
+                    </p>
+                </div>
+
+                <!-- Structured Report Output Container -->
+                <div id="reportContent" style="display: none; flex-direction: column; gap: 1.25rem;">
+                    
+                    <!-- Executive Summary -->
+                    <div class="card">
+                        <div class="card-header-row">
+                            <div class="card-title">🎯 Executive Summary</div>
+                            <span id="confidenceBadge" class="badge-confidence">CONFIDENCE: HIGH</span>
+                        </div>
+                        <p class="report-para" id="execSummary"></p>
+                    </div>
+
+                    <!-- Grid: Key Developments & Emerging Trends -->
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">🚀 Key Developments</div>
+                            <ul class="list-clean" id="keyDevelopments"></ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">📈 Emerging Trends</div>
+                            <ul class="list-clean" id="emergingTrends"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Grid: Opportunities & Threats -->
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">💡 Strategic Opportunities</div>
+                            <ul class="list-clean list-opp" id="opportunities"></ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">⚠️ Threats & Risks</div>
+                            <ul class="list-clean list-threat" id="threats"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Grid: Implications & Recommendations -->
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">🌐 Strategic Implications</div>
+                            <ul class="list-clean" id="strategicImplications"></ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom: 0.75rem;">✅ Recommended Actions</div>
+                            <ul class="list-clean" id="recommendedActions"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Evidence & Sources -->
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 0.75rem;">🔗 Grounded Sources & Evidence</div>
+                        <div id="sourcesContainer"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

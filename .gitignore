@@ -1,0 +1,22 @@
+# Environment variables & secrets (CRITICAL: DO NOT COMMIT)
+.env
+backend/.env
+*.env
+
+# Python Virtual Environments
+venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+
+# IDE & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
