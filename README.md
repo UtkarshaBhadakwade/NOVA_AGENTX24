@@ -28,6 +28,8 @@ NOVA_AGENTX24/
 │   ├── frontend/                # Single-Page Web Dashboard (index.html, styles.css, app.js)
 │   ├── api/                     # Vercel Serverless Function entry point (index.py)
 │   └── app.py                   # Standalone Python Application Launcher
+├── backend/
+│   └── evaluation/              # Isolated System Evaluation Module & Reports
 ├── vercel.json                  # Vercel deployment configuration
 ├── requirements.txt             # Project dependencies
 ├── LICENSE                      # License
@@ -54,7 +56,7 @@ Organizations, startups, and research institutions operate in rapidly changing c
 
 ---
 
-## 🧠 Agentic Reasoning & Tool Calling Architecture
+## 🧠 Agentic Reasoning, Tool Calling & Evaluation Architecture
 
 ### Mandatory Capabilities
 
@@ -73,6 +75,11 @@ NOVA Agent integrates 3 specialized external tools/APIs:
 - **Tavily Web Search API**: Live web market news, product launches, and competitor activities.
 - **arXiv REST XML API**: Scientific research papers, technical preprints, and open-access literature.
 - **CrossRef REST API**: Peer-reviewed journal publications, DOIs, and citation metadata.
+
+#### 3. Evaluation
+> Define measurable criteria for accuracy, task completion, reliability, robustness, evidence quality, and efficiency using automated and human evaluation. Test the agent across normal, ambiguous, adversarial, contradictory, incomplete, and tool-failure scenarios, including repeated runs and baseline comparison. Measure accuracy, groundedness, hallucination, recovery, consistency, latency, and resource efficiency, while evaluating whether the agent can identify uncertainty, refuse unsupported conclusions, and recover from failures.
+
+NOVA Agent includes an isolated evaluation framework (`backend/evaluation/`) testing 8 benchmark scenarios (`NORMAL`, `AMBIGUOUS`, `ADVERSARIAL`, `CONTRADICTORY`, `INCOMPLETE_EVIDENCE`, `TOOL_FAILURE`, `REPEATED_RUNS`, `BASELINE_COMPARISON`). It measures task completion, latency, iterations, tool calls, groundedness ratios, failure recovery, uncertainty qualifications, statistical consistency across 5 repeated runs, and comparative performance against a single-call LLM baseline.
 
 ---
 
@@ -197,6 +204,9 @@ Structured intelligence output containing:
 ### 5. Adaptive Multi-Agent Workspace
 ![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
 
+### 6. System Evaluation & Live Intelligence Execution
+![System Evaluation & Live Intelligence Execution](docs/screenshots/task6_evaluation_execution.png)
+
 ---
 
 ## 🛠️ Technology Stack
@@ -249,9 +259,9 @@ TAVILY_API_KEY=your_tavily_api_key_here
 ```
 
 ### 4. Run Locally
-- **Option A: Automated Launcher**
+- **Option A: Run Isolated Evaluation Suite**
   ```powershell
-  .\venv\Scripts\python App/app.py
+  .\venv\Scripts\python -m backend.evaluation.run_evaluation
   ```
 - **Option B: FastAPI Web Server**
   ```powershell
