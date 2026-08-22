@@ -5,20 +5,18 @@ from typing import List, Dict, Any
 
 logger = logging.getLogger("agent_x.analyze")
 
-def analyze_information(objective: str, web_results: List[Dict[str, Any]], research_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def analyze_information(
+    objective: str,
+    web_results: List[Dict[str, Any]],
+    research_results: List[Dict[str, Any]],
+    crossref_results: List[Dict[str, Any]] = None
+) -> Dict[str, Any]:
     """
-    Uses Gemini API to synthesize and analyze collected evidence (web + research results).
-    
-    Identifies:
-    - Key developments
-    - Competitor implications
-    - Emerging trends
-    - Opportunities
-    - Threats and risks
-    - Strategic implications
-    - Confidence level
-    - Recommended actions
+    Uses Gemini API to synthesize and analyze collected evidence (web + arXiv + CrossRef results).
     """
+    if crossref_results is None:
+        crossref_results = []
+
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     
     # Prepare text summary of collected evidence
@@ -30,18 +28,26 @@ def analyze_information(objective: str, web_results: List[Dict[str, Any]], resea
     else:
         evidence_text += "No web search evidence collected.\n\n"
 
-    evidence_text += "--- RESEARCH PAPER EVIDENCE ---\n"
+    evidence_text += "--- arXiv RESEARCH PAPER EVIDENCE ---\n"
     if research_results:
         for idx, item in enumerate(research_results, 1):
             authors = ", ".join(item.get("authors", []))
             evidence_text += f"[{idx}] Title: {item.get('title')}\n    Authors: {authors}\n    Published: {item.get('published_date')}\n    Summary: {item.get('summary')}\n    URL: {item.get('url')}\n\n"
     else:
-        evidence_text += "No research paper evidence collected.\n\n"
+        evidence_text += "No arXiv paper evidence collected.\n\n"
+
+    evidence_text += "--- CROSSREF ACADEMIC PUBLICATION EVIDENCE ---\n"
+    if crossref_results:
+        for idx, item in enumerate(crossref_results, 1):
+            authors = ", ".join(item.get("authors", []))
+            evidence_text += f"[{idx}] Title: {item.get('title')}\n    Authors: {authors}\n    Published: {item.get('published_date')}\n    Summary: {item.get('summary')}\n    URL: {item.get('url')}\n\n"
+    else:
+        evidence_text += "No CrossRef paper evidence collected.\n\n"
 
     if not api_key:
         logger.warning("GEMINI_API_KEY is missing. Providing fallback analysis based directly on raw text.")
         return {
-            "key_developments": ["Evidence collected from web and research search queries."],
+            "key_developments": ["Evidence collected from web, arXiv, and CrossRef queries."],
             "competitor_implications": ["Analysis pending Gemini API key configuration."],
             "emerging_trends": ["Trends synthesized from available titles and summaries."],
             "opportunities": ["Potential opportunities identified in market/tech space."],
@@ -106,9 +112,8 @@ Respond strictly with a JSON object containing the following keys (no markdown c
 
     except Exception as e:
         logger.error(f"Analysis tool Gemini API call error: {str(e)}")
-        # Provide structured fallback analysis if Gemini call fails
         return {
-            "key_developments": [f"Evidence analyzed from {len(web_results)} web results and {len(research_results)} research papers."],
+            "key_developments": [f"Evidence analyzed from {len(web_results)} web results, {len(research_results)} arXiv papers, and {len(crossref_results)} CrossRef publications."],
             "competitor_implications": ["Competitors are actively developing technologies in this domain."],
             "emerging_trends": ["Accelerating adoption of autonomous and AI-driven capabilities."],
             "opportunities": ["Strategic positioning in high-growth technological vectors."],

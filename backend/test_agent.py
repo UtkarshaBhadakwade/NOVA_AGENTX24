@@ -11,7 +11,6 @@ load_dotenv()
 
 from backend.agent import agent_graph, MAX_ITERATIONS
 from backend.state import AgentState
-from backend.tools import web_search, research_search
 
 def run_verification_test():
     objective = "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization."
@@ -20,12 +19,13 @@ def run_verification_test():
     gemini_key_set = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
     tavily_key_set = bool(os.environ.get("TAVILY_API_KEY"))
 
-    print(f"\n--- Initiating End-to-End Agent X Execution for Objective: '{objective}' ---")
+    print(f"\n--- Initiating End-to-End NOVAagent Execution for Objective: '{objective}' ---")
 
     initial_state: AgentState = {
         "objective": objective,
         "web_results": [],
         "research_results": [],
+        "crossref_results": [],
         "analysis_results": None,
         "actions_taken": [],
         "iteration_count": 0,
@@ -47,6 +47,7 @@ def run_verification_test():
 
     web_results = final_state.get("web_results", [])
     research_results = final_state.get("research_results", [])
+    crossref_results = final_state.get("crossref_results", [])
     actions_taken = final_state.get("actions_taken", [])
     iterations = final_state.get("iteration_count", 0)
     trace_events = final_state.get("trace_events", [])
@@ -55,7 +56,8 @@ def run_verification_test():
 
     # Evaluate individual tool health
     tavily_working = "WORKING" if any("tavily" in str(r.get("source", "")).lower() or r.get("url") for r in web_results) else ("CONFIGURED (No hits)" if tavily_key_set else "FAILED (Key Missing)")
-    research_working = "WORKING" if any(r.get("source") == "arXiv" and r.get("title") != "Research Search Execution Failure" for r in research_results) else "FAILED"
+    arxiv_working = "WORKING" if any(r.get("source") == "arXiv" and r.get("title") != "Research Search Execution Failure" for r in research_results) else "FAILED"
+    crossref_working = "WORKING" if any(r.get("source") == "CrossRef" and r.get("title") != "CrossRef Search Execution Failure" for r in crossref_results) else "FAILED"
     gemini_working = "WORKING" if gemini_key_set and final_state.get("analysis_results") and "analysis_error" not in final_state.get("analysis_results", {}) else ("WORKING (Fallback state)" if graph_status == "WORKING" else "FAILED")
 
     react_loop_working = "WORKING" if len(actions_taken) > 1 and iterations > 1 else "FAILED"
@@ -73,7 +75,7 @@ def run_verification_test():
 
     # Print Verification Summary Table
     print("\n================================================")
-    print("AGENT X BACKEND MVP VERIFICATION")
+    print("NOVAagent BACKEND MVP VERIFICATION")
     print("================================================")
     print(f"TEST STATUS:\n{overall_status}\n")
     print(f"OBJECTIVE:\n{objective}\n")
@@ -83,7 +85,8 @@ def run_verification_test():
     print(f"Tavily API Key: {'CONFIGURED' if tavily_key_set else 'NOT CONFIGURED'}\n")
     print(f"GEMINI:\n{gemini_working}\n")
     print(f"TAVILY:\n{tavily_working}\n")
-    print(f"RESEARCH SEARCH:\n{research_working}\n")
+    print(f"RESEARCH SEARCH (arXiv):\n{arxiv_working}\n")
+    print(f"CROSSREF SEARCH:\n{crossref_working}\n")
     print(f"LANGGRAPH:\n{graph_status}\n")
     print("TOOLS ACTUALLY CALLED:")
     for idx, tool in enumerate(tools_called, 1):
@@ -92,7 +95,8 @@ def run_verification_test():
         print("None")
     print(f"\nAGENT ITERATIONS:\n{iterations}\n")
     print(f"WEB RESULTS:\n{len(web_results)} items collected\n")
-    print(f"RESEARCH RESULTS:\n{len(research_results)} items collected\n")
+    print(f"RESEARCH RESULTS (arXiv):\n{len(research_results)} items collected\n")
+    print(f"CROSSREF RESULTS:\n{len(crossref_results)} items collected\n")
     print(f"REACT LOOP:\n{react_loop_working}\n")
     print(f"DYNAMIC TOOL SELECTION:\n{dynamic_tool_selection}\n")
     print(f"ITERATION LIMIT:\n{iteration_limit_working}\n")

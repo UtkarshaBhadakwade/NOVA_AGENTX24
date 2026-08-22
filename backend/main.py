@@ -18,8 +18,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("agent_x.main")
 
 app = FastAPI(
-    title="Agent X - Autonomous Competitive Intelligence Agent",
-    description="Powered by LangGraph, Gemini 3.6 Flash, Tavily, and arXiv.",
+    title="NOVAagent - Autonomous Competitive Intelligence Agent",
+    description="Powered by LangGraph, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
     version="1.0.0"
 )
 
@@ -48,11 +48,12 @@ class AnalyzeResponse(BaseModel):
     final_report: Optional[Dict[str, Any]]
     web_results_count: int
     research_results_count: int
+    crossref_results_count: int
     errors: List[str]
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "Agent X Autonomous Agent"}
+    return {"status": "ok", "service": "NOVAagent Autonomous Agent"}
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def run_intelligence_analysis(request: AnalyzeRequest):
@@ -63,6 +64,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "objective": request.objective,
         "web_results": [],
         "research_results": [],
+        "crossref_results": [],
         "analysis_results": None,
         "actions_taken": [],
         "iteration_count": 0,
@@ -73,7 +75,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "errors": []
     }
 
-    logger.info(f"Starting Agent X intelligence run for objective: '{request.objective}'")
+    logger.info(f"Starting NOVAagent intelligence run for objective: '{request.objective}'")
     try:
         final_state = agent_graph.invoke(initial_state)
 
@@ -92,6 +94,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             final_report=final_state.get("final_report"),
             web_results_count=len(final_state.get("web_results", [])),
             research_results_count=len(final_state.get("research_results", [])),
+            crossref_results_count=len(final_state.get("crossref_results", [])),
             errors=final_state.get("errors", [])
         )
     except Exception as e:

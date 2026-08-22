@@ -10,12 +10,13 @@ def merge_lists(left: Optional[List[Any]], right: Optional[List[Any]]) -> List[A
 
 class AgentState(TypedDict):
     """
-    LangGraph state schema for Agent X Competitive Intelligence Agent.
-    Uses list merge reducers to persist trace events, results, and actions across graph steps.
+    LangGraph state schema for NOVAagent Competitive Intelligence Agent.
+    Persists web, arXiv, CrossRef search results and trace events across graph steps.
     """
     objective: str
     web_results: Annotated[List[Dict[str, Any]], merge_lists]
     research_results: Annotated[List[Dict[str, Any]], merge_lists]
+    crossref_results: Annotated[List[Dict[str, Any]], merge_lists]
     analysis_results: Optional[Dict[str, Any]]
     actions_taken: Annotated[List[str], merge_lists]
     iteration_count: int

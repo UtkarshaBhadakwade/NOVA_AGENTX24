@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from langgraph.graph import StateGraph, END
 from backend.state import AgentState
-from backend.tools import web_search, research_search, analyze_information
+from backend.tools import web_search, research_search, crossref_search, analyze_information
 
 # Load environment variables
 load_dotenv()
@@ -24,6 +24,7 @@ def reasoning_node(state: AgentState) -> Dict[str, Any]:
     objective = state["objective"]
     web_results = state.get("web_results", [])
     research_results = state.get("research_results", [])
+    crossref_results = state.get("crossref_results", [])
     analysis_results = state.get("analysis_results")
     actions_taken = state.get("actions_taken", [])
     iteration_count = state.get("iteration_count", 0) + 1
@@ -77,7 +78,7 @@ def reasoning_node(state: AgentState) -> Dict[str, Any]:
             )
 
             prompt = f"""
-You are the central decision node for Agent X, an autonomous competitive intelligence agent.
+You are the central decision node for NOVAagent, an autonomous competitive intelligence agent.
 
 USER OBJECTIVE:
 "{objective}"
@@ -86,29 +87,33 @@ CURRENT AGENT STATE:
 - Iteration Count: {iteration_count}/{MAX_ITERATIONS}
 - Actions Taken So Far: {actions_taken}
 - Web Search Results Count: {len(web_results)}
-- Research Search Results Count: {len(research_results)}
+- arXiv Research Results Count: {len(research_results)}
+- CrossRef Academic Results Count: {len(crossref_results)}
 - Strategic Analysis Completed: {bool(analysis_results)}
 
 EVIDENCE SUMMARY:
 Web Results Titles: {[r.get('title') for r in web_results]}
-Research Results Titles: {[r.get('title') for r in research_results]}
+arXiv Results Titles: {[r.get('title') for r in research_results]}
+CrossRef Results Titles: {[r.get('title') for r in crossref_results]}
 
 INSTRUCTIONS:
 Evaluate missing information needed for the objective. Select ONE next action:
 1. "web_search": Need real-time web data, industry news, competitor launches, market developments.
 2. "research_search": Need academic papers, scientific publications, patent/technical trends on arXiv.
-3. "analyze_information": Have collected raw web/research evidence; now need to synthesize into strategic insights.
-4. "finish": Analysis is complete, and sufficient evidence has been gathered to produce the final intelligence report.
+3. "crossref_search": Need peer-reviewed academic journal publications, DOIs, or publisher data from CrossRef.
+4. "analyze_information": Have collected raw web/research evidence; now need to synthesize into strategic insights.
+5. "finish": Analysis is complete, and sufficient evidence has been gathered to produce the final intelligence report.
 
 RULES FOR SELECTION:
 - If web_search has NOT been run yet, pick "web_search".
 - If research_search has NOT been run yet, pick "research_search".
-- If web or research evidence exists (or search tools were run) but analyze_information has NOT been run yet, pick "analyze_information".
+- If crossref_search has NOT been run yet and deep academic/journal evidence is needed, pick "crossref_search".
+- If evidence exists (or search tools were run) but analyze_information has NOT been run yet, pick "analyze_information".
 - If analyze_information has been completed, pick "finish".
 
 Output strictly valid JSON matching this schema:
 {{
-  "action": "web_search" | "research_search" | "analyze_information" | "finish",
+  "action": "web_search" | "research_search" | "crossref_search" | "analyze_information" | "finish",
   "reasoning_status": "<High-level 1-sentence safe status describing why this action is selected without private CoT>",
   "search_query": "<Focused query string for search action, or empty string if analyze/finish>"
 }}
@@ -142,6 +147,7 @@ Output strictly valid JSON matching this schema:
     if not decision_json:
         web_called = any("web_search" in a for a in actions_taken)
         research_called = any("research_search" in a for a in actions_taken)
+        crossref_called = any("crossref_search" in a for a in actions_taken)
         analyze_called = any("analyze_information" in a for a in actions_taken)
 
         if not web_called:
@@ -154,6 +160,12 @@ Output strictly valid JSON matching this schema:
             decision_json = {
                 "action": "research_search",
                 "reasoning_status": "Need research evidence to validate emerging technical trends.",
+                "search_query": objective
+            }
+        elif not crossref_called:
+            decision_json = {
+                "action": "crossref_search",
+                "reasoning_status": "Gathering peer-reviewed publication data from CrossRef.",
                 "search_query": objective
             }
         elif not analyze_called:
@@ -174,7 +186,7 @@ Output strictly valid JSON matching this schema:
     search_query = decision_json.get("search_query", objective) or objective
 
     # Validate action
-    valid_actions = ["web_search", "research_search", "analyze_information", "finish"]
+    valid_actions = ["web_search", "research_search", "crossref_search", "analyze_information", "finish"]
     if action not in valid_actions:
         new_errors.append(f"Invalid action '{action}' returned by reasoning node. Defaulting safely.")
         action = "finish"
@@ -240,17 +252,41 @@ def research_search_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
+def crossref_search_node(state: AgentState) -> Dict[str, Any]:
+    query = state.get("search_query", state["objective"])
+    
+    results = crossref_search(query)
+    
+    new_trace_events = [
+        {
+            "event": "[ACTION]",
+            "detail": f"Tool: crossref_search | Query: '{query}'"
+        },
+        {
+            "event": "[TOOL_RESULT]",
+            "detail": f"crossref_search returned {len(results)} CrossRef publications."
+        }
+    ]
+    
+    return {
+        "crossref_results": results,
+        "actions_taken": [f"crossref_search (query: {query})"],
+        "trace_events": new_trace_events
+    }
+
+
 def analyze_node(state: AgentState) -> Dict[str, Any]:
     objective = state["objective"]
     web_results = state.get("web_results", [])
     research_results = state.get("research_results", [])
+    crossref_results = state.get("crossref_results", [])
 
-    analysis = analyze_information(objective, web_results, research_results)
+    analysis = analyze_information(objective, web_results, research_results, crossref_results)
 
     new_trace_events = [
         {
             "event": "[ACTION]",
-            "detail": "Tool: analyze_information | Synthesizing web and research evidence."
+            "detail": "Tool: analyze_information | Synthesizing web, arXiv, and CrossRef evidence."
         },
         {
             "event": "[TOOL_RESULT]",
@@ -269,6 +305,7 @@ def finish_node(state: AgentState) -> Dict[str, Any]:
     objective = state["objective"]
     web_results = state.get("web_results", [])
     research_results = state.get("research_results", [])
+    crossref_results = state.get("crossref_results", [])
     analysis = state.get("analysis_results") or {}
 
     # Compile Sources Used
@@ -279,25 +316,30 @@ def finish_node(state: AgentState) -> Dict[str, Any]:
     for item in research_results:
         if item.get("url"):
             sources_used.append(f"arXiv: {item.get('title')} ({item.get('url')})")
+    for item in crossref_results:
+        if item.get("url"):
+            sources_used.append(f"CrossRef: {item.get('title')} ({item.get('url')})")
 
     # Important evidence summary
     important_evidence = []
-    for item in web_results[:3]:
+    for item in web_results[:2]:
         important_evidence.append(f"Web Evidence: {item.get('title')} - {item.get('content')[:150]}...")
-    for item in research_results[:3]:
-        important_evidence.append(f"Research Paper: {item.get('title')} - {item.get('summary')[:150]}...")
+    for item in research_results[:2]:
+        important_evidence.append(f"arXiv Paper: {item.get('title')} - {item.get('summary')[:150]}...")
+    for item in crossref_results[:2]:
+        important_evidence.append(f"CrossRef Publication: {item.get('title')} - {item.get('summary')[:150]}...")
 
     final_report = {
-        "EXECUTIVE SUMMARY": f"Competitive intelligence assessment regarding '{objective}'. Analyzed {len(web_results)} web sources and {len(research_results)} research publications.",
+        "EXECUTIVE SUMMARY": f"Competitive intelligence assessment regarding '{objective}'. Analyzed {len(web_results)} web sources, {len(research_results)} arXiv papers, and {len(crossref_results)} CrossRef publications.",
         "KEY DEVELOPMENTS": analysis.get("key_developments", ["Active developments observed in market and research data."]),
-        "IMPORTANT EVIDENCE": important_evidence if important_evidence else ["Collected empirical data from web search and arXiv repository."],
+        "IMPORTANT EVIDENCE": important_evidence if important_evidence else ["Collected empirical data from web, arXiv, and CrossRef."],
         "EMERGING TRENDS": analysis.get("emerging_trends", ["Accelerated momentum in key technological capabilities."]),
         "OPPORTUNITIES": analysis.get("opportunities", ["Strategic expansion into identified high-impact sectors."]),
         "THREATS AND RISKS": analysis.get("threats_and_risks", ["Potential market displacement and technological disruption."]),
         "STRATEGIC IMPLICATIONS": analysis.get("strategic_implications", ["Organisations should maintain proactive monitoring and agile response capability."]),
         "RECOMMENDED ACTIONS": analysis.get("recommended_actions", ["Implement regular intelligence updates and evaluate strategic pilot initiatives."]),
         "CONFIDENCE LEVEL": analysis.get("confidence_level", "HIGH"),
-        "SOURCES USED": sources_used if sources_used else ["Web and arXiv research feeds"]
+        "SOURCES USED": sources_used if sources_used else ["Web, arXiv, and CrossRef feeds"]
     }
 
     new_trace_events = [
@@ -337,6 +379,7 @@ graph_builder = StateGraph(AgentState)
 graph_builder.add_node("reason", reasoning_node)
 graph_builder.add_node("web_search", web_search_node)
 graph_builder.add_node("research_search", research_search_node)
+graph_builder.add_node("crossref_search", crossref_search_node)
 graph_builder.add_node("analyze_information", analyze_node)
 graph_builder.add_node("finish", finish_node)
 
@@ -350,6 +393,7 @@ graph_builder.add_conditional_edges(
     {
         "web_search": "web_search",
         "research_search": "research_search",
+        "crossref_search": "crossref_search",
         "analyze_information": "analyze_information",
         "finish": "finish"
     }
@@ -358,6 +402,7 @@ graph_builder.add_conditional_edges(
 # Connect tool execution back to reason node (ReAct loop)
 graph_builder.add_edge("web_search", "reason")
 graph_builder.add_edge("research_search", "reason")
+graph_builder.add_edge("crossref_search", "reason")
 graph_builder.add_edge("analyze_information", "reason")
 
 # Connect finish to END
