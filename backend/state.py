@@ -14,6 +14,9 @@ class AgentState(TypedDict):
     Tracks delegation, findings, trace events, and report state across graph loops.
     """
     objective: str
+    timeframe: Optional[str]
+    year: Optional[str]
+    source_filter: Optional[str]
     current_task: Optional[str]
     delegated_agent: Optional[str]
     research_results: Annotated[List[Dict[str, Any]], merge_lists]

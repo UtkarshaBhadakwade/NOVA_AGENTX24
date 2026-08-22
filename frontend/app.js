@@ -1,5 +1,146 @@
+// ==========================================================================
+// NOVA Agent — Frontend Application Script
+// ==========================================================================
+
+let activeInvestigationId = null;
+let currentInvestigations = { pinned: [], recent: [] };
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadInvestigationHistory();
+});
+
 function setPrompt(element) {
-    document.getElementById('objectiveInput').value = element.innerText;
+    document.getElementById('objectiveInput').value = element.innerText.trim();
+}
+
+function startNewInvestigation() {
+    activeInvestigationId = null;
+    document.getElementById('objectiveInput').value = "";
+    document.getElementById('timeframeSelect').value = "Latest";
+    document.getElementById('yearSelect').value = "Any Year";
+    document.getElementById('sourceSelect').value = "All Sources";
+    
+    document.getElementById('iterationBadge').innerText = "Ready";
+    document.getElementById('confidenceBadge').innerText = "Confidence: Pending";
+    document.getElementById('confidenceBadge').className = "confidence-badge";
+
+    document.getElementById('timeline').innerHTML = `
+        <div class="timeline-empty">
+            <p>Submit an objective to view real-time agent process logs.</p>
+        </div>
+    `;
+
+    document.getElementById('reportWelcome').style.display = "flex";
+    document.getElementById('reportContent').style.display = "none";
+    
+    // Clear active selection in sidebar
+    document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+}
+
+async function loadInvestigationHistory() {
+    try {
+        const response = await fetch('/investigations');
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        currentInvestigations = data;
+        renderHistoryList(data.pinned, 'pinnedHistoryList', true);
+        renderHistoryList(data.recent, 'recentHistoryList', false);
+    } catch (err) {
+        console.error("Failed to load investigation history:", err);
+    }
+}
+
+function renderHistoryList(items, containerId, isPinnedSection) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    
+    if (!items || items.length === 0) {
+        container.innerHTML = `<div style="font-size: 0.75rem; color: var(--text-muted); padding: 4px;">No ${isPinnedSection ? 'pinned' : 'recent'} investigations.</div>`;
+        return;
+    }
+
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `history-item ${item.id === activeInvestigationId ? 'active' : ''} ${item.pinned ? 'pinned' : ''}`;
+        div.onclick = () => loadInvestigationDetails(item.id);
+
+        const formattedDate = item.created_at ? item.created_at.split(' ')[0] : 'Recent';
+
+        div.innerHTML = `
+            <div class="history-item-header">
+                <span class="history-item-title" title="${escapeHtml(item.objective)}">${escapeHtml(item.objective)}</span>
+                <button class="btn-pin" onclick="event.stopPropagation(); togglePin('${item.id}')" title="${item.pinned ? 'Unpin' : 'Pin'}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="${item.pinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+            </div>
+            <div class="history-item-meta">${formattedDate} • ${item.iterations || 1} steps</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+async function togglePin(id) {
+    try {
+        const res = await fetch(`/investigations/${id}/pin`, { method: 'POST' });
+        if (res.ok) {
+            loadInvestigationHistory();
+        }
+    } catch (err) {
+        console.error("Failed to toggle pin status:", err);
+    }
+}
+
+async function filterHistory() {
+    const query = document.getElementById('historySearchInput').value.trim();
+    if (!query) {
+        loadInvestigationHistory();
+        return;
+    }
+
+    try {
+        const res = await fetch(`/investigations/search?q=${encodeURIComponent(query)}`);
+        if (!res.ok) return;
+        const results = await res.json();
+        
+        document.getElementById('pinnedHistoryList').innerHTML = "";
+        renderHistoryList(results, 'recentHistoryList', false);
+    } catch (err) {
+        console.error("History search error:", err);
+    }
+}
+
+async function loadInvestigationDetails(id) {
+    activeInvestigationId = id;
+    try {
+        const res = await fetch(`/investigations/${id}`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById('objectiveInput').value = data.objective || "";
+        document.getElementById('timeframeSelect').value = data.timeframe || "Latest";
+        document.getElementById('yearSelect').value = data.year || "Any Year";
+        document.getElementById('sourceSelect').value = data.source_filter || "All Sources";
+
+        // Highlight active item in sidebar
+        document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+
+        document.getElementById('iterationBadge').innerText = `${data.iterations || 1} Steps | ${(data.tools_called || []).length} Tools`;
+
+        // Render Compact Process Timeline
+        renderCompactTimeline(data.trace_events || []);
+
+        // Render 9-Part Intelligence Report
+        if (data.final_report) {
+            renderReport(data.final_report, data);
+            document.getElementById('reportWelcome').style.display = "none";
+            document.getElementById('reportContent').style.display = "flex";
+        }
+        
+        loadInvestigationHistory();
+    } catch (err) {
+        console.error("Failed to load investigation details:", err);
+    }
 }
 
 async function runAnalysis() {
@@ -10,6 +151,10 @@ async function runAnalysis() {
         return;
     }
 
+    const timeframe = document.getElementById('timeframeSelect').value;
+    const year = document.getElementById('yearSelect').value;
+    const sourceFilter = document.getElementById('sourceSelect').value;
+
     const btn = document.getElementById('btnExecute');
     const btnText = document.getElementById('btnText');
     const btnSpinner = document.getElementById('btnSpinner');
@@ -19,18 +164,19 @@ async function runAnalysis() {
 
     // UI Loading State
     btn.disabled = true;
-    btnText.innerText = "Running...";
+    btnText.innerText = "Executing...";
     btnSpinner.style.display = "block";
     
     reportWelcome.style.display = "none";
     reportContent.style.display = "none";
 
     timeline.innerHTML = `
-        <div class="timeline-card">
-            <div class="event-header">
-                <span class="event-type">[INITIATING]</span>
+        <div class="process-card">
+            <div class="process-header">
+                <span class="process-agent-name">Supervisor Agent</span>
+                <span class="process-status">Initiating</span>
             </div>
-            <div class="event-text">Starting NOVAagent ReAct loop for objective...</div>
+            <div class="process-detail">Initializing multi-agent workflow for objective...</div>
         </div>
     `;
 
@@ -40,7 +186,12 @@ async function runAnalysis() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ objective: objective })
+            body: JSON.stringify({
+                objective: objective,
+                timeframe: timeframe,
+                year: year,
+                source_filter: sourceFilter
+            })
         });
 
         if (!response.ok) {
@@ -48,42 +199,33 @@ async function runAnalysis() {
         }
 
         const data = await response.json();
+        activeInvestigationId = data.id;
         
-        // Render Iterations Badge
+        // Update Iterations Badge
         document.getElementById('iterationBadge').innerText = `${data.iterations} Steps | ${data.tools_called.length} Tools`;
 
-        // Render Trace Events
-        timeline.innerHTML = "";
-        data.trace_events.forEach(item => {
-            const card = document.createElement('div');
-            card.className = "timeline-card";
+        // Render Compact Process Timeline
+        renderCompactTimeline(data.trace_events || []);
 
-            let detailText = typeof item.detail === 'object' ? JSON.stringify(item.detail, null, 2) : item.detail;
-
-            card.innerHTML = `
-                <div class="event-header">
-                    <span class="event-type">${escapeHtml(item.event)}</span>
-                </div>
-                <div class="event-text">${escapeHtml(detailText)}</div>
-            `;
-            timeline.appendChild(card);
-        });
-
-        // Render Report Dashboard
+        // Render 9-Part Intelligence Report
         if (data.final_report) {
-            renderReport(data.final_report);
+            renderReport(data.final_report, data);
             reportContent.style.display = "flex";
             document.getElementById('reportScrollContainer').scrollTop = 0;
         }
 
+        // Refresh History Sidebar
+        loadInvestigationHistory();
+
     } catch (error) {
         console.error("Error executing agent:", error);
         timeline.innerHTML += `
-            <div class="timeline-card" style="border-color: var(--accent-red);">
-                <div class="event-header">
-                    <span class="event-type" style="color: var(--accent-red);">[ERROR]</span>
+            <div class="process-card" style="border-color: var(--status-low);">
+                <div class="process-header">
+                    <span class="process-agent-name">Execution Alert</span>
+                    <span class="process-status" style="color: var(--status-low);">Error</span>
                 </div>
-                <div class="event-text">Execution failed: ${escapeHtml(error.message)}</div>
+                <div class="process-detail">${escapeHtml(error.message)}</div>
             </div>
         `;
         reportWelcome.style.display = "flex";
@@ -94,61 +236,226 @@ async function runAnalysis() {
     }
 }
 
-function renderReport(report) {
-    document.getElementById('execSummary').innerText = report["EXECUTIVE SUMMARY"] || "N/A";
+// Render Compact Process Timeline (Process Only - No Duplicated Full Results)
+function renderCompactTimeline(events) {
+    const timeline = document.getElementById('timeline');
+    timeline.innerHTML = "";
+
+    if (!events || events.length === 0) {
+        timeline.innerHTML = `<div class="timeline-empty"><p>No process events recorded.</p></div>`;
+        return;
+    }
+
+    events.forEach(item => {
+        const type = item.event || "";
+        // Skip large raw report payload object from timeline box
+        if (type === "[FINAL INTELLIGENCE REPORT]") return;
+
+        const card = document.createElement('div');
+        card.className = "process-card";
+
+        let agentName = "System";
+        if (type.includes("SUPERVISOR") || type.includes("AGENT START")) agentName = "Supervisor Agent";
+        else if (type.includes("RESEARCH")) agentName = "Research Agent";
+        else if (type.includes("MARKET")) agentName = "Market Intelligence Agent";
+        else if (type.includes("SYNTHESIS")) agentName = "Strategic Synthesis Agent";
+        else if (type.includes("DELEGATION")) agentName = "Supervisor Agent";
+        else if (type.includes("TOOL_RESULT")) agentName = "Specialized Tool";
+        else if (type.includes("DECISION") || type.includes("TASK_COMPLETE")) agentName = "Supervisor Agent";
+
+        let detailText = typeof item.detail === 'object' ? JSON.stringify(item.detail) : item.detail;
+
+        card.innerHTML = `
+            <div class="process-header">
+                <span class="process-agent-name">${escapeHtml(agentName)}</span>
+                <span class="process-status">${escapeHtml(type)}</span>
+            </div>
+            <div class="process-detail">${escapeHtml(detailText)}</div>
+        `;
+        timeline.appendChild(card);
+    });
+}
+
+// Render 9-Part Redesigned Final Intelligence Report
+function renderReport(report, meta) {
+    // 1. Executive Summary
+    document.getElementById('execSummary').innerText = report["EXECUTIVE SUMMARY"] || "No summary available.";
     
-    renderList('keyDevelopments', report["KEY DEVELOPMENTS"]);
-    renderList('emergingTrends', report["EMERGING TRENDS"]);
-    renderList('opportunities', report["OPPORTUNITIES"]);
-    renderList('threats', report["THREATS AND RISKS"]);
-    renderList('strategicImplications', report["STRATEGIC IMPLICATIONS"]);
-    renderList('recommendedActions', report["RECOMMENDED ACTIONS"]);
+    // 2. Key Developments
+    const devContainer = document.getElementById('keyDevelopments');
+    devContainer.innerHTML = "";
+    const devs = report["KEY DEVELOPMENTS"] || [];
+    if (devs.length === 0) {
+        devContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No key developments recorded.</p>";
+    } else {
+        devs.forEach((dev, idx) => {
+            const card = document.createElement('div');
+            card.className = "dev-card";
+            const category = idx % 2 === 0 ? "Research" : "Market";
+            card.innerHTML = `
+                <div class="dev-header">
+                    <span class="dev-title">Development #${idx + 1}</span>
+                    <span class="category-tag">${category}</span>
+                </div>
+                <div class="dev-text">${escapeHtml(dev)}</div>
+            `;
+            devContainer.appendChild(card);
+        });
+    }
 
-    // Confidence Level
-    const confBadge = document.getElementById('confidenceBadge');
-    const confidenceText = report["CONFIDENCE LEVEL"] || "HIGH";
-    confBadge.innerText = `CONFIDENCE: ${confidenceText}`;
+    // 3. Emerging Trends
+    const trendsList = document.getElementById('emergingTrends');
+    trendsList.innerHTML = "";
+    const trends = report["EMERGING TRENDS"] || [];
+    if (trends.length === 0) {
+        trendsList.innerHTML = "<li>No emerging trends recorded.</li>";
+    } else {
+        trends.forEach(t => {
+            const li = document.createElement('li');
+            li.innerText = t;
+            trendsList.appendChild(li);
+        });
+    }
 
-    // Sources
+    // 4. Strategic Opportunities
+    const oppContainer = document.getElementById('opportunities');
+    oppContainer.innerHTML = "";
+    const opps = report["OPPORTUNITIES"] || [];
+    if (opps.length === 0) {
+        oppContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No strategic opportunities identified.</p>";
+    } else {
+        opps.forEach((opp, idx) => {
+            const card = document.createElement('div');
+            card.className = "opp-card";
+            card.innerHTML = `
+                <div class="opp-title">Opportunity #${idx + 1}</div>
+                <div class="opp-text">${escapeHtml(opp)}</div>
+            `;
+            oppContainer.appendChild(card);
+        });
+    }
+
+    // 5. Threats and Risks
+    const risksContainer = document.getElementById('threats');
+    risksContainer.innerHTML = "";
+    const risks = report["THREATS AND RISKS"] || [];
+    if (risks.length === 0) {
+        risksContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No threats or risks identified.</p>";
+    } else {
+        risks.forEach((risk, idx) => {
+            const card = document.createElement('div');
+            card.className = "risk-card";
+            const pClass = idx === 0 ? "priority-high" : (idx === 1 ? "priority-medium" : "priority-low");
+            const pLabel = idx === 0 ? "High Risk" : (idx === 1 ? "Medium Risk" : "Low Risk");
+            card.innerHTML = `
+                <div class="risk-info">${escapeHtml(risk)}</div>
+                <span class="priority-tag ${pClass}">${pLabel}</span>
+            `;
+            risksContainer.appendChild(card);
+        });
+    }
+
+    // 6. Strategic Implications
+    const impContainer = document.getElementById('strategicImplications');
+    const imps = report["STRATEGIC IMPLICATIONS"] || [];
+    impContainer.innerHTML = Array.isArray(imps) ? imps.map(i => `<p style='margin-bottom: 8px;'>• ${escapeHtml(i)}</p>`).join('') : escapeHtml(imps);
+
+    // 7. Recommended Actions
+    const actionsContainer = document.getElementById('recommendedActions');
+    actionsContainer.innerHTML = "";
+    const actions = report["RECOMMENDED ACTIONS"] || [];
+    if (actions.length === 0) {
+        actionsContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No specific actions recommended.</p>";
+    } else {
+        actions.forEach((act, idx) => {
+            const card = document.createElement('div');
+            card.className = "action-card";
+            const pText = idx === 0 ? "Priority 1: Immediate" : (idx === 1 ? "Priority 2: Short-Term" : "Priority 3: Long-Term");
+            card.innerHTML = `
+                <span class="action-badge">${pText}</span>
+                <div class="action-text">${escapeHtml(act)}</div>
+            `;
+            actionsContainer.appendChild(card);
+        });
+    }
+
+    // 8. Dedicated Evidence & Sources
     const sourcesContainer = document.getElementById('sourcesContainer');
     sourcesContainer.innerHTML = "";
     const sources = report["SOURCES USED"] || [];
     if (sources.length === 0) {
-        sourcesContainer.innerHTML = "<p style='color: var(--text-secondary); font-size: 0.85rem;'>No external sources referenced.</p>";
+        sourcesContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No external sources referenced.</p>";
     } else {
         sources.forEach(src => {
-            const div = document.createElement('div');
-            div.className = "source-box";
+            const card = document.createElement('div');
+            card.className = "source-card";
             
             const match = src.match(/(Web|Web \(Tavily\)|arXiv|CrossRef):\s*(.*?)\s*\((https?:\/\/[^\s]+)\)/);
             if (match) {
-                const type = match[1];
+                const rawType = match[1];
                 const title = match[2];
                 const url = match[3];
-                div.innerHTML = `
+
+                let tagClass = "tag-web";
+                let typeLabel = "Web";
+                if (rawType.includes("arXiv")) { tagClass = "tag-arxiv"; typeLabel = "arXiv"; }
+                else if (rawType.includes("CrossRef")) { tagClass = "tag-crossref"; typeLabel = "CrossRef"; }
+
+                card.innerHTML = `
                     <a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
-                    <span class="type-tag">${type}</span>
+                    <span class="source-tag ${tagClass}">${typeLabel}</span>
                 `;
             } else {
-                div.innerHTML = `<span>${escapeHtml(src)}</span>`;
+                card.innerHTML = `<span>${escapeHtml(src)}</span><span class="source-tag tag-web">Web</span>`;
             }
-            sourcesContainer.appendChild(div);
+            sourcesContainer.appendChild(card);
         });
     }
-}
 
-function renderList(elementId, items) {
-    const ul = document.getElementById(elementId);
-    ul.innerHTML = "";
-    if (!items || items.length === 0) {
-        ul.innerHTML = "<li>No specific items recorded.</li>";
-        return;
+    // 9. Confidence & Coverage Summary
+    const confidenceText = report["CONFIDENCE LEVEL"] || "HIGH";
+    const confBadge = document.getElementById('confidenceBadge');
+    confBadge.innerText = `CONFIDENCE: ${confidenceText}`;
+    
+    if (confidenceText.includes("HIGH")) {
+        confBadge.className = "confidence-badge";
+        confBadge.style.color = "var(--status-high)";
+        confBadge.style.borderColor = "var(--status-high)";
+    } else {
+        confBadge.className = "confidence-badge";
+        confBadge.style.color = "var(--status-medium)";
+        confBadge.style.borderColor = "var(--status-medium)";
     }
-    items.forEach(item => {
-        const li = document.createElement('li');
-        li.innerText = item;
-        ul.appendChild(li);
-    });
+
+    const coverageBox = document.getElementById('coverageBox');
+    const webCount = meta ? meta.web_results_count || 0 : 5;
+    const arxivCount = meta ? meta.research_results_count || 0 : 5;
+    const crossrefCount = meta ? meta.crossref_results_count || 0 : 5;
+    const totalEvidence = webCount + arxivCount + crossrefCount;
+    const timeframeVal = meta ? meta.timeframe || "Latest" : "Latest";
+
+    coverageBox.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${webCount}</div>
+            <div class="stat-label">Web Sources (Tavily)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${arxivCount}</div>
+            <div class="stat-label">arXiv Papers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${crossrefCount}</div>
+            <div class="stat-label">CrossRef Publications</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${totalEvidence}</div>
+            <div class="stat-label">Total Evidence Items</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${timeframeVal}</div>
+            <div class="stat-label">Selected Timeline</div>
+        </div>
+    `;
 }
 
 function escapeHtml(text) {

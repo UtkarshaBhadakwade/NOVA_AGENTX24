@@ -2,30 +2,21 @@ import urllib.request
 import urllib.parse
 import json
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 logger = logging.getLogger("agent_x.crossref_search")
 
-def crossref_search(query: str) -> List[Dict[str, Any]]:
+def crossref_search(query: str, year: Optional[str] = None, timeframe: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Queries CrossRef REST API for academic journal articles, conference papers, and DOIs.
-    
-    Returns structured results:
-    [
-      {
-        "title": "...",
-        "authors": ["..."],
-        "published_date": "...",
-        "summary": "...",
-        "url": "...",
-        "source": "CrossRef"
-      }
-    ]
+    Filters results by publication year when specified.
     """
     try:
         encoded_query = urllib.parse.quote(query)
-        url = f"https://api.crossref.org/works?query={encoded_query}&rows=5"
-        
+        url = f"https://api.crossref.org/works?query={encoded_query}&rows=8"
+        if year and year != "Any Year" and year.isdigit():
+            url += f"&filter=from-pub-date:{year}-01-01,until-pub-date:{year}-12-31"
+
         req = urllib.request.Request(
             url,
             headers={
@@ -74,7 +65,8 @@ def crossref_search(query: str) -> List[Dict[str, Any]]:
             container = item.get('container-title', [])
             publisher = item.get('publisher', '')
             journal_name = container[0] if container else publisher
-            summary = f"Published in {journal_name}. Type: {item.get('type', 'journal-article')}."
+            pub_type = item.get('type', 'journal-article')
+            summary = f"Published in {journal_name}. Type: {pub_type}."
 
             results.append({
                 "title": title,

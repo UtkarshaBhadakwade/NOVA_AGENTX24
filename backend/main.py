@@ -1,7 +1,7 @@
 import os
 import logging
 from typing import List, Dict, Any, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -10,12 +10,23 @@ from dotenv import load_dotenv
 
 from backend.agent import agent_graph, MAX_ITERATIONS
 from backend.state import AgentState
+from backend.db import (
+    init_db,
+    save_investigation,
+    get_investigations,
+    get_investigation_by_id,
+    search_investigations,
+    toggle_pinned
+)
 
 # Load environment variables
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("nova_agent.main")
+
+# Initialize SQLite database on startup
+init_db()
 
 app = FastAPI(
     title="NOVA Agent - Autonomous Competitive Intelligence Agent",
@@ -38,9 +49,16 @@ class AnalyzeRequest(BaseModel):
         description="The intelligence objective to gather information and report on.",
         example="Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization."
     )
+    timeframe: Optional[str] = Field("Latest", description="Timeframe filter (e.g. Latest, Last 30 Days, Last 6 Months, Last 1 Year)")
+    year: Optional[str] = Field("Any Year", description="Publication year filter (e.g. Any Year, 2026, 2025, 2024, 2023)")
+    source_filter: Optional[str] = Field("All Sources", description="Source filter (e.g. All Sources, arXiv, CrossRef, Journal Articles)")
 
 class AnalyzeResponse(BaseModel):
+    id: Optional[str]
     objective: str
+    timeframe: str
+    year: str
+    source_filter: str
     status: str
     iterations: int
     tools_called: List[str]
@@ -55,6 +73,30 @@ class AnalyzeResponse(BaseModel):
 def health_check():
     return {"status": "ok", "service": "NOVA Agent Autonomous Multi-Agent System"}
 
+@app.get("/investigations")
+def list_investigations(limit: int = Query(50, ge=1, le=200)):
+    """Returns past saved investigations grouped into pinned and recent lists."""
+    return get_investigations(limit=limit)
+
+@app.get("/investigations/search")
+def search_history(q: str = Query(..., min_length=1)):
+    """Searches past investigations by objective title or report content."""
+    return search_investigations(q)
+
+@app.get("/investigations/{investigation_id}")
+def get_investigation(investigation_id: str):
+    """Retrieves full details and report for a specific saved investigation."""
+    inv = get_investigation_by_id(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found.")
+    return inv
+
+@app.post("/investigations/{investigation_id}/pin")
+def pin_investigation(investigation_id: str):
+    """Toggles pinned status for a saved investigation item."""
+    pinned = toggle_pinned(investigation_id)
+    return {"id": investigation_id, "pinned": pinned}
+
 @app.post("/analyze", response_model=AnalyzeResponse)
 def run_intelligence_analysis(request: AnalyzeRequest):
     if not request.objective.strip():
@@ -62,6 +104,9 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
     initial_state: AgentState = {
         "objective": request.objective,
+        "timeframe": request.timeframe or "Latest",
+        "year": request.year or "Any Year",
+        "source_filter": request.source_filter or "All Sources",
         "current_task": None,
         "delegated_agent": None,
         "research_results": [],
@@ -83,7 +128,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "search_query": request.objective
     }
 
-    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}'")
+    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}' (Year: {request.year}, Timeframe: {request.timeframe})")
     try:
         final_state = agent_graph.invoke(initial_state)
 
@@ -95,18 +140,27 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
         web_res = final_state.get("market_results", []) or final_state.get("web_results", [])
 
-        return AnalyzeResponse(
-            objective=final_state["objective"],
-            status="completed" if final_state.get("task_complete") else "incomplete",
-            iterations=final_state.get("iteration_count", 0),
-            tools_called=tools_called,
-            trace_events=final_state.get("trace_events", []),
-            final_report=final_state.get("final_report"),
-            web_results_count=len(web_res),
-            research_results_count=len(final_state.get("research_results", [])),
-            crossref_results_count=len(final_state.get("crossref_results", [])),
-            errors=final_state.get("errors", [])
-        )
+        response_data = {
+            "objective": final_state["objective"],
+            "timeframe": request.timeframe or "Latest",
+            "year": request.year or "Any Year",
+            "source_filter": request.source_filter or "All Sources",
+            "status": "completed" if final_state.get("task_complete") else "incomplete",
+            "iterations": final_state.get("iteration_count", 0),
+            "tools_called": tools_called,
+            "trace_events": final_state.get("trace_events", []),
+            "final_report": final_state.get("final_report"),
+            "web_results_count": len(web_res),
+            "research_results_count": len(final_state.get("research_results", [])),
+            "crossref_results_count": len(final_state.get("crossref_results", [])),
+            "errors": final_state.get("errors", [])
+        }
+
+        # Save completed investigation to SQLite database
+        saved = save_investigation(response_data)
+        response_data["id"] = saved.get("id")
+
+        return AnalyzeResponse(**response_data)
     except Exception as e:
         logger.error(f"Error executing agent graph: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")

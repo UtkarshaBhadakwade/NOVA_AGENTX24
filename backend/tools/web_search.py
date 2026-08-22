@@ -1,63 +1,62 @@
 import os
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 logger = logging.getLogger("agent_x.web_search")
 
-def web_search(query: str) -> List[Dict[str, Any]]:
+def web_search(query: str, year: Optional[str] = None, timeframe: Optional[str] = None) -> List[Dict[str, Any]]:
     """
-    Performs a web search using Tavily API to gather current industry news, competitor activities,
-    product launches, and market developments.
-    
-    Returns structured results:
-    [
-      {
-        "title": "...",
-        "url": "...",
-        "source": "...",
-        "content": "..."
-      }
-    ]
+    Queries Tavily Search API for live web market news, competitor developments, and industry updates.
     """
     api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
-        logger.warning("TAVILY_API_KEY is not set.")
+        logger.warning("TAVILY_API_KEY environment variable is missing.")
         return [{
             "title": "Tavily API Key Missing",
             "url": "",
-            "source": "tavily",
-            "content": "Error: TAVILY_API_KEY environment variable is not configured."
+            "content": "TAVILY_API_KEY environment variable is not configured. Web search results are unavailable.",
+            "source": "Tavily"
         }]
+
+    # Refine query with year/timeframe context if specified
+    search_query = query
+    if year and year != "Any Year":
+        search_query += f" {year}"
 
     try:
         from tavily import TavilyClient
-        client = TavilyClient(api_key=api_key)
-        response = client.search(query=query, max_results=5)
+        tavily = TavilyClient(api_key=api_key)
         
-        raw_results = response.get("results", [])
-        if not raw_results:
+        # Convert timeframe to Tavily search_depth or days if supported
+        response = tavily.search(query=search_query, max_results=5, search_depth="advanced")
+        
+        results = []
+        for item in response.get("results", []):
+            results.append({
+                "title": item.get("title", "Untitled Web Result"),
+                "url": item.get("url", ""),
+                "content": item.get("content", ""),
+                "published_date": item.get("published_date", year if year else ""),
+                "source": "Tavily"
+            })
+            
+        if not results:
             return [{
-                "title": "No Results Found",
+                "title": "No Web Search Results Found",
                 "url": "",
-                "source": "tavily",
-                "content": f"No relevant web search results were found for query: '{query}'."
+                "content": f"No Tavily web search results found for query: '{search_query}'.",
+                "published_date": "",
+                "source": "Tavily"
             }]
             
-        structured_results = []
-        for item in raw_results:
-            structured_results.append({
-                "title": item.get("title", "Untitled"),
-                "url": item.get("url", ""),
-                "source": item.get("source", "Tavily Web Search"),
-                "content": item.get("content", "")
-            })
-        return structured_results
+        return results
 
     except Exception as e:
-        logger.error(f"Tavily web search error: {str(e)}")
+        logger.error(f"Tavily search execution error: {str(e)}")
         return [{
             "title": "Web Search Execution Failure",
             "url": "",
-            "source": "tavily",
-            "content": f"Failed to execute Tavily web search due to error: {str(e)}"
+            "content": f"Failed to execute Tavily web search due to error: {str(e)}",
+            "published_date": "",
+            "source": "Tavily"
         }]

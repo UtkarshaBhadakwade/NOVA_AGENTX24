@@ -15,11 +15,15 @@ def market_agent_node(state: AgentState) -> Dict[str, Any]:
     - Collects industry news and returns structured findings to shared state.
     """
     query = state.get("search_query", state["objective"])
+    year = state.get("year", "Any Year")
+    timeframe = state.get("timeframe", "Latest")
+
+    filter_detail = f" | Year: {year} | Timeframe: {timeframe}" if year != "Any Year" or timeframe != "Latest" else ""
     
     new_trace_events = [
         {
             "event": "[MARKET_INTELLIGENCE_AGENT]",
-            "detail": f"Searching current competitor and industry developments via Tavily for: '{query}'"
+            "detail": f"Searching competitor & market developments via Tavily for: '{query}'{filter_detail}"
         }
     ]
     
@@ -27,12 +31,12 @@ def market_agent_node(state: AgentState) -> Dict[str, Any]:
     errors = []
     
     try:
-        web_results = web_search(query)
+        web_results = web_search(query, year=year, timeframe=timeframe)
     except Exception as e:
         logger.error(f"MarketIntelligenceAgent Tavily error: {str(e)}")
         errors.append(f"Tavily Market Search Warning: {str(e)}")
 
-    valid_web = [r for r in web_results if r.get("title") != "Web Search Execution Failure"]
+    valid_web = [r for r in web_results if "Failure" not in r.get("title", "") and "Missing" not in r.get("title", "")]
 
     new_trace_events.append({
         "event": "[TOOL_RESULT]",
@@ -42,6 +46,8 @@ def market_agent_node(state: AgentState) -> Dict[str, Any]:
     findings_summary = {
         "agent": "MarketIntelligenceAgent",
         "query": query,
+        "year": year,
+        "timeframe": timeframe,
         "web_count": len(valid_web),
         "top_titles": [r.get("title") for r in valid_web[:4]]
     }
