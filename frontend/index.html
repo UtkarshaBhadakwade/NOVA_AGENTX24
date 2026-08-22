@@ -76,12 +76,8 @@
                     <p>Adaptive multi-agent research, market analysis, and evidence synthesis</p>
                 </div>
                 
-                <!-- Memory Visualization Indicator & Evaluation Modal Button -->
+                <!-- Memory Visualization Indicator -->
                 <div class="memory-indicator" id="memoryIndicator">
-                    <button class="btn-eval-suite" onclick="openEvalModal()" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; font-size: 0.75rem; font-weight: 600; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 8px;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                        <span>Evaluation Suite</span>
-                    </button>
                     <div class="mem-pill short-term">
                         <span class="mem-dot green"></span>
                         <span>Short-Term Memory: Active LangGraph State</span>
@@ -103,138 +99,147 @@
                     </button>
                 </div>
 
-                <div class="presets-bar">
+                <!-- Preset Quick Prompts -->
+                <div class="presets-row">
                     <span class="preset-label">Quick Objectives:</span>
-                    <div class="preset-chips">
-                        <button class="chip" onclick="setPrompt(this)">Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.</button>
-                        <button class="chip" onclick="setPrompt(this)">Find recent research papers about multi-agent AI systems.</button>
-                        <button class="chip" onclick="setPrompt(this)">Identify recent competitor product launches & news for Nvidia.</button>
-                    </div>
+                    <button class="preset-chip" onclick="setPrompt(this)">Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.</button>
+                    <button class="preset-chip" onclick="setPrompt(this)">Find recent research papers about multi-agent AI systems.</button>
+                    <button class="preset-chip" onclick="setPrompt(this)">Identify recent competitor and industry developments in AI agent platforms.</button>
                 </div>
             </section>
 
-            <!-- Dashboard Split View: Process Timeline (Left) & Report (Right) -->
-            <div class="dashboard-grid">
+            <!-- Workspace Grid (Split Pane) -->
+            <div class="workspace-grid">
                 
-                <!-- Left: Compact Process & Adaptive Timeline Trace -->
-                <div class="panel timeline-panel">
-                    <div class="panel-header">
-                        <h2>Agent Execution</h2>
-                        <span class="iteration-badge" id="iterationBadge">Ready</span>
+                <!-- Left Execution Stream Pane (Process & Adaptive Orchestration Only) -->
+                <section class="pane execution-pane">
+                    <div class="pane-header">
+                        <div class="pane-title">
+                            <h2>Agent Execution</h2>
+                            <span class="pane-subtitle">Adaptive Task Orchestration</span>
+                        </div>
+                        <span class="badge-step" id="iterationBadge">Ready</span>
                     </div>
-                    <div class="timeline-container" id="timeline">
-                        <div class="timeline-empty">
-                            <p>Submit an objective to view adaptive agent planning and orchestration trace logs.</p>
+
+                    <div class="execution-scroll-container">
+                        <div class="timeline" id="timeline">
+                            <div class="timeline-empty">
+                                <p>Submit an objective to view adaptive agent planning and orchestration trace logs.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Right: 11-Part Intelligence Report Dashboard -->
-                <div class="panel report-panel">
-                    <div class="panel-header">
-                        <h2>Final Intelligence Report</h2>
-                        <div class="confidence-badge" id="confidenceBadge">Confidence: Pending</div>
+                <!-- Right Main Intelligence Report Pane (11-Part Intelligence Dashboard) -->
+                <section class="pane report-pane">
+                    <div class="pane-header">
+                        <div class="pane-title">
+                            <h2>Final Intelligence Report</h2>
+                            <span class="pane-subtitle" id="reportSubtitle">Evidence-Grounded Intelligence Analysis</span>
+                        </div>
+                        <span class="confidence-badge" id="confidenceBadge">Confidence: Pending</span>
                     </div>
-                    
+
                     <div class="report-scroll-container" id="reportScrollContainer">
                         
+                        <!-- Initial Welcome Card -->
                         <div class="report-welcome" id="reportWelcome">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                            <h3>NOVA Agent Intelligence Workspace</h3>
-                            <p>Enter a prompt above to trigger multi-agent planning, arXiv/CrossRef scientific search, Tavily web search, self-evaluation, hypothesis verification, and strategic synthesis.</p>
+                            <div class="welcome-card">
+                                <h3>NOVA Agent Intelligence Platform</h3>
+                                <p>Select a past investigation from the sidebar or enter a new objective to generate an adaptive intelligence report.</p>
+                                <div class="features-list">
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Dynamic Planning & Adaptive Task Decomposition</span>
+                                    </div>
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Parallel Execution, Checkpointing & Autonomous Replanning</span>
+                                    </div>
+                                    <div class="feat-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <span>Self-Evaluation, Hypothesis Verification & Conflict Resolution</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- 11-Part Report Output Container -->
+                        <!-- 11-Part Structured Intelligence Report -->
                         <div class="report-content" id="reportContent" style="display: none;">
                             
                             <!-- 1. Executive Summary -->
                             <div class="report-block">
-                                <h3 class="block-title"><span class="icon">🎯</span> Executive Summary</h3>
-                                <p id="execSummary" class="summary-text"></p>
+                                <h3 class="block-title">1. Executive Summary</h3>
+                                <div class="summary-box" id="execSummary"></div>
                             </div>
 
-                            <!-- 2 & 3: Grid for Key Developments & Emerging Trends -->
-                            <div class="report-row-2col">
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">🚀</span> Key Developments</h3>
-                                    <div id="keyDevelopments" class="dev-list"></div>
-                                </div>
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">📈</span> Emerging Trends</h3>
-                                    <ul id="emergingTrends" class="styled-list"></ul>
-                                </div>
+                            <!-- 2. Key Developments -->
+                            <div class="report-block">
+                                <h3 class="block-title">2. Key Developments</h3>
+                                <div class="developments-grid" id="keyDevelopments"></div>
                             </div>
 
-                            <!-- 4 & 5: Strategic Opportunities & Threats -->
-                            <div class="report-row-2col">
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">💡</span> Strategic Opportunities</h3>
-                                    <div id="opportunities" class="opp-list"></div>
-                                </div>
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">⚠️</span> Threats & Risks</h3>
-                                    <div id="threats" class="threat-list"></div>
-                                </div>
+                            <!-- 3. Emerging Trends -->
+                            <div class="report-block">
+                                <h3 class="block-title">3. Emerging Trends</h3>
+                                <ul class="trends-list" id="emergingTrends"></ul>
                             </div>
 
-                            <!-- 6 & 7: Evidence Conflicts & Hypothesis Verification -->
-                            <div class="report-row-2col">
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">🔍</span> Evidence Conflicts</h3>
-                                    <div id="evidenceConflicts" class="conflict-text"></div>
-                                </div>
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">🧪</span> Hypothesis Verification</h3>
-                                    <div id="hypothesisVerification" class="hypo-text"></div>
-                                </div>
+                            <!-- 4. Strategic Opportunities -->
+                            <div class="report-block">
+                                <h3 class="block-title">4. Strategic Opportunities</h3>
+                                <div class="opportunities-grid" id="opportunities"></div>
                             </div>
 
-                            <!-- 8 & 9: Strategic Implications & Recommended Actions -->
-                            <div class="report-row-2col">
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">🌐</span> Strategic Implications</h3>
-                                    <div id="strategicImplications" class="implications-text"></div>
-                                </div>
-                                <div class="report-block">
-                                    <h3 class="block-title"><span class="icon">✅</span> Recommended Actions</h3>
-                                    <div id="recommendedActions" class="action-list"></div>
-                                </div>
+                            <!-- 5. Threats and Risks -->
+                            <div class="report-block">
+                                <h3 class="block-title">5. Threats and Risks</h3>
+                                <div class="risks-list" id="threats"></div>
+                            </div>
+
+                            <!-- 6. Evidence Conflicts -->
+                            <div class="report-block">
+                                <h3 class="block-title">6. Evidence Conflicts</h3>
+                                <div class="conflicts-box" id="evidenceConflicts"></div>
+                            </div>
+
+                            <!-- 7. Hypothesis Verification -->
+                            <div class="report-block">
+                                <h3 class="block-title">7. Hypothesis Verification</h3>
+                                <div class="hypothesis-box" id="hypothesisVerification"></div>
+                            </div>
+
+                            <!-- 8. Strategic Implications -->
+                            <div class="report-block">
+                                <h3 class="block-title">8. Strategic Implications</h3>
+                                <div class="implications-box" id="strategicImplications"></div>
+                            </div>
+
+                            <!-- 9. Recommended Actions -->
+                            <div class="report-block">
+                                <h3 class="block-title">9. Recommended Actions</h3>
+                                <div class="actions-priority-list" id="recommendedActions"></div>
                             </div>
 
                             <!-- 10. Confidence and Uncertainty -->
                             <div class="report-block">
-                                <h3 class="block-title"><span class="icon">🛡️</span> Confidence & Uncertainty Assessment</h3>
-                                <p id="confidenceUncertainty" class="confidence-text"></p>
+                                <h3 class="block-title">10. Confidence and Uncertainty Assessment</h3>
+                                <div class="confidence-box" id="confidenceUncertainty"></div>
                             </div>
 
-                            <!-- 11. Dedicated Evidence & Sources -->
+                            <!-- 11. Dedicated Evidence and Sources -->
                             <div class="report-block">
-                                <h3 class="block-title"><span class="icon">🔗</span> Grounded Evidence & Sources</h3>
-                                <div id="sourcesContainer" class="sources-grid"></div>
+                                <h3 class="block-title">11. Dedicated Evidence & Sources</h3>
+                                <div class="sources-grid" id="sourcesContainer"></div>
                             </div>
 
                         </div>
 
                     </div>
-                </div>
+                </section>
 
             </div>
-
         </main>
-    </div>
-
-    <!-- Task 6 Compact Evaluation Modal -->
-    <div id="evalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: var(--bg-card); width: 85%; max-width: 900px; max-height: 85vh; border-radius: 8px; border: 1px solid var(--border); padding: 24px; overflow-y: auto; color: var(--text-primary); font-family: var(--font-main);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-                <h2 style="font-size: 1.25rem; font-weight: 700;">Task 6 Evaluation Suite & Benchmark Summary</h2>
-                <button onclick="closeEvalModal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
-            </div>
-            
-            <div id="evalModalBody">
-                <div style="padding: 16px; text-align: center; color: var(--text-muted);">Loading evaluation benchmarks...</div>
-            </div>
-        </div>
     </div>
 
     <script src="app.js"></script>

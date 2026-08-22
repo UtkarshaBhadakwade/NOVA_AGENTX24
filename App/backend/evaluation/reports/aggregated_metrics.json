@@ -1,0 +1,182 @@
+{
+  "timestamp": "2026-08-22T19:52:17.698434+00:00",
+  "total_test_runs": 12,
+  "overall_metrics": {
+    "task_completion_rate": 100.0,
+    "accuracy_score": 91.12,
+    "groundedness_score": 100.0,
+    "hallucination_rate": 0.0,
+    "evidence_quality_score": 100.0,
+    "recovery_rate": 100.0,
+    "consistency_score": 100.0,
+    "latency_seconds": {
+      "avg": 42.66,
+      "min": 38.85,
+      "max": 48.04
+    },
+    "resource_efficiency": {
+      "avg_iterations": 3.0,
+      "avg_tool_calls": 3.0,
+      "total_fallbacks": 1,
+      "total_replans": 0
+    },
+    "uncertainty_handling_score": 83.33,
+    "unsupported_claim_refusal_score": 100.0
+  },
+  "baseline_comparison": {
+    "nova_agent": {
+      "completion_rate": 100.0,
+      "accuracy": 91.12,
+      "groundedness": 100.0,
+      "hallucination_rate": 0.0,
+      "avg_latency": 42.66,
+      "avg_iterations": 3.0,
+      "avg_tool_calls": 3.0
+    },
+    "single_gemini_baseline": {
+      "completion_rate": 66.7,
+      "accuracy": 77.88,
+      "groundedness": 20.0,
+      "hallucination_rate": 65.0,
+      "avg_latency": 0.38,
+      "avg_iterations": 1.0,
+      "avg_tool_calls": 0.0
+    },
+    "tradeoff_notes": "Baseline is faster (~1.5s vs ~4.8s) due to lack of tool calling and multi-agent reasoning, but suffers significantly lower groundedness (20% vs 92%) and higher hallucination risk (65% vs 8%)."
+  },
+  "human_evaluation_status": "PENDING",
+  "scenario_summaries": [
+    {
+      "scenario": "Normal",
+      "test_case_id": "TC_NORM_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 40.73,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Normal",
+      "test_case_id": "TC_NORM_02",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 39.73,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Ambiguous",
+      "test_case_id": "TC_AMBIG_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 44.55,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Adversarial",
+      "test_case_id": "TC_ADV_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 43.52,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Contradictory",
+      "test_case_id": "TC_CONFLICT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 48.04,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Incomplete",
+      "test_case_id": "TC_INCOMPLETE_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 44.21,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Tool Failure",
+      "test_case_id": "TC_FAIL_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 38.85,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Repeated",
+      "test_case_id": "TC_REPEAT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 43.61,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Repeated",
+      "test_case_id": "TC_REPEAT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 43.99,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Repeated",
+      "test_case_id": "TC_REPEAT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 41.85,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Repeated",
+      "test_case_id": "TC_REPEAT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 41.75,
+      "efficiency": "3 iter | 3 tools"
+    },
+    {
+      "scenario": "Repeated",
+      "test_case_id": "TC_REPEAT_01",
+      "status": "completed",
+      "completion": 100.0,
+      "groundedness": 100.0,
+      "hallucination": 0.0,
+      "recovery": 100.0,
+      "latency": 41.06,
+      "efficiency": "3 iter | 3 tools"
+    }
+  ]
+}

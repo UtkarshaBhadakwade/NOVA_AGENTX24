@@ -1,5 +1,5 @@
 // ==========================================================================
-// NOVA Agent — Task 5 & Task 6 Frontend Application Script
+// NOVA Agent — Task 5 Frontend Application Script
 // ==========================================================================
 
 let activeInvestigationId = null;
@@ -439,97 +439,6 @@ function renderReport(report, meta) {
             sourcesContainer.appendChild(card);
         });
     }
-}
-
-// Task 6 Evaluation Modal Handlers
-async function openEvalModal() {
-    const modal = document.getElementById('evalModal');
-    const body = document.getElementById('evalModalBody');
-    modal.style.display = "flex";
-
-    try {
-        const res = await fetch('/evaluation/summary');
-        if (!res.ok) {
-            body.innerHTML = `<p style="color: var(--status-low);">Failed to load evaluation summary (Status: ${res.status}).</p>`;
-            return;
-        }
-
-        const data = await res.json();
-        const m = data.overall_metrics || {};
-        const b = data.baseline_comparison || {};
-        const sc = data.scenario_summaries || [];
-
-        body.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
-                <div style="background: var(--bg-main); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Task Completion</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-green);">${m.task_completion_rate || 100}%</div>
-                </div>
-                <div style="background: var(--bg-main); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Accuracy Score</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary);">${m.accuracy_score || 91.12}%</div>
-                </div>
-                <div style="background: var(--bg-main); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Groundedness Score</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-blue);">${m.groundedness_score || 100}%</div>
-                </div>
-                <div style="background: var(--bg-main); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Hallucination Rate</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--status-high);">${m.hallucination_rate || 0}%</div>
-                </div>
-            </div>
-
-            <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 10px;">Baseline Comparison (Single Gemini Call vs NOVA Agent)</h3>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.82rem;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border); text-align: left; color: var(--text-muted);">
-                        <th style="padding: 8px;">Metric</th>
-                        <th style="padding: 8px;">NOVA Agent</th>
-                        <th style="padding: 8px;">Single Gemini Baseline</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 8px; font-weight: 500;">Task Completion Rate</td>
-                        <td style="padding: 8px; color: var(--accent-green); font-weight: 600;">${b.nova_agent?.completion_rate || 100}%</td>
-                        <td style="padding: 8px;">${b.single_gemini_baseline?.completion_rate || 66.7}%</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 8px; font-weight: 500;">Groundedness Score</td>
-                        <td style="padding: 8px; color: var(--accent-blue); font-weight: 600;">${b.nova_agent?.groundedness || 100}%</td>
-                        <td style="padding: 8px;">${b.single_gemini_baseline?.groundedness || 20}%</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 8px; font-weight: 500;">Hallucination Rate</td>
-                        <td style="padding: 8px; color: var(--status-high); font-weight: 600;">${b.nova_agent?.hallucination_rate || 0}%</td>
-                        <td style="padding: 8px;">${b.single_gemini_baseline?.hallucination_rate || 65}%</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 8px; font-weight: 500;">Average Latency</td>
-                        <td style="padding: 8px;">${b.nova_agent?.avg_latency || 8.54}s</td>
-                        <td style="padding: 8px; color: var(--accent-green);">${b.single_gemini_baseline?.avg_latency || 0.52}s (Faster, but ungrounded)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-main); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
-                <div>
-                    <strong style="font-size: 0.85rem;">Human Evaluation Status:</strong>
-                    <span style="display: inline-block; padding: 2px 8px; background: rgba(234, 179, 8, 0.15); color: #eab308; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 6px;">
-                        ${data.human_evaluation_status || 'PENDING'}
-                    </span>
-                </div>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">Stored in backend/evaluation/reports/human_evaluation.json</span>
-            </div>
-        `;
-    } catch (err) {
-        console.error("Error opening evaluation modal:", err);
-        body.innerHTML = `<p style="color: var(--status-low);">Error loading evaluation metrics.</p>`;
-    }
-}
-
-function closeEvalModal() {
-    document.getElementById('evalModal').style.display = "none";
 }
 
 function escapeHtml(text) {
