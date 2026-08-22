@@ -8,6 +8,10 @@
   },
   "routes": [
     {
+      "src": "/evaluation.*",
+      "dest": "api/index.py"
+    },
+    {
       "src": "/investigations.*",
       "dest": "api/index.py"
     },

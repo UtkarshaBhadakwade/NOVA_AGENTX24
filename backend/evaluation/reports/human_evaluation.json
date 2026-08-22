@@ -1,0 +1,28 @@
+{
+  "status": "PENDING",
+  "rubric": {
+    "scale": "1-5 Likert Scale (1 = Poor, 2 = Weak, 3 = Acceptable, 4 = Good, 5 = Excellent)",
+    "dimensions": {
+      "accuracy": "Factual correctness and factual consistency of key intelligence claims.",
+      "evidence_grounding": "Direct linking of report statements to verifiable citations (arXiv, CrossRef, Web).",
+      "evidence_quality": "Source reliability, peer-reviewed journal quality, and recency.",
+      "strategic_usefulness": "Actionability, clear opportunity/threat decomposition, and practical recommendations.",
+      "uncertainty_handling": "Honest qualification of missing data, non-speculative tone, and appropriate confidence badges.",
+      "robustness": "System stability under ambiguous prompts, tool outages, and adversarial claims.",
+      "overall_quality": "Overall synthesis clarity, formatting, and report value."
+    }
+  },
+  "evaluator_name": null,
+  "last_updated": null,
+  "evaluations": [],
+  "aggregated_scores": {
+    "accuracy_avg": null,
+    "evidence_grounding_avg": null,
+    "evidence_quality_avg": null,
+    "strategic_usefulness_avg": null,
+    "uncertainty_handling_avg": null,
+    "robustness_avg": null,
+    "overall_quality_avg": null,
+    "total_evaluations_completed": 0
+  }
+}

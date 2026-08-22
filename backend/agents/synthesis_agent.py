@@ -108,7 +108,8 @@ You MUST return your response ONLY as a valid JSON object with the exact keys:
 """
 
             response = llm.invoke(prompt_content)
-            raw_text = response.content.strip()
+            raw_text = response.content if isinstance(response.content, str) else str(response.content)
+            raw_text = raw_text.strip()
             
             # Extract JSON block
             if "```json" in raw_text:
