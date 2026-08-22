@@ -1,11 +1,11 @@
 {
   "normal_trace_test": {
-    "trace_id": "trc_34855c8249f0",
+    "trace_id": "trc_31ded21a5c81",
     "investigation_id": "test_normal_01",
     "objective": "Find the latest developments in AI agents and determine opportunities or threats.",
-    "start_timestamp": "2026-08-22T23:53:51Z",
-    "end_timestamp": "2026-08-22T23:54:32Z",
-    "total_latency_seconds": 41.125,
+    "start_timestamp": "2026-08-22T23:48:24Z",
+    "end_timestamp": "2026-08-22T23:48:26Z",
+    "total_latency_seconds": 2.479,
     "iteration_count": 3,
     "tool_call_count": 6,
     "status": "completed",
@@ -14,121 +14,107 @@
       "output_tokens": "NOT_AVAILABLE",
       "total_tokens": "NOT_AVAILABLE"
     },
-    "agent_spans_count": 1,
+    "agent_spans_count": 0,
     "tool_spans": [],
     "decision_spans": [
       {
         "event": "[PLANNING]",
         "detail": "Analyzing objective: 'Find the latest developments in AI agents and determine opportunities or threats.'",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[PLAN_CREATED]",
         "detail": "Plan: Parallel Research & Market Gathering, Evaluate evidence & hypothesis, Synthesize report",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[RESOURCE_STATUS]",
         "detail": "Iteration 1/8 | Remaining budget: 7 steps",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[PARALLEL_EXECUTION]",
         "detail": "Dispatching Research Agent & Market Intelligence Agent concurrently.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[PARALLEL_EXECUTION]",
         "detail": "Concurrently executed Research Agent & Market Intelligence Agent.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[RESEARCH_AGENT]",
         "detail": "Searching scientific & technical papers on arXiv & CrossRef for: 'Find the latest developments in AI agents and determine opportunities or threats.'",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[AGENT_COMPLETE]",
         "detail": "Research Agent completed: 5 arXiv papers and 12 CrossRef publications collected.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[MARKET_INTELLIGENCE_AGENT]",
         "detail": "Searching competitor & market developments via Tavily for: 'Find the latest developments in AI agents and determine opportunities or threats.'",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[AGENT_COMPLETE]",
-        "detail": "Market Intelligence Agent completed: 5 live web results collected via Tavily.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "detail": "Market Intelligence Agent completed: 0 live web results collected via Tavily.",
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[RESOURCE_STATUS]",
         "detail": "Iteration 2/8 | Remaining budget: 6 steps",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[SELF_EVALUATION]",
         "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[HYPOTHESIS_VERIFICATION]",
         "detail": "Hypothesis: 'AI agents represent a significant strategic opportunity with managed operational risks.' | Status: SUPPORTED",
-        "timestamp": "2026-08-22T23:54:32Z"
-      },
-      {
-        "event": "[CONFLICT_DETECTED]",
-        "detail": "Reconciled market deployment growth claims with academic security research.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[SELF_EVALUATION]",
-        "detail": "Result: Passed. Evidence density sufficient (22 evidence items). Confidence: HIGH.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "detail": "Result: Passed. Evidence density sufficient (17 evidence items). Confidence: HIGH.",
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[RESOURCE_STATUS]",
         "detail": "Iteration 3/8 | Remaining budget: 5 steps",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[DECISION]",
         "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[STRATEGIC_SYNTHESIS_AGENT]",
         "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       },
       {
         "event": "[TASK_COMPLETE]",
         "detail": "Final evidence synthesis complete. Intelligence report generated.",
-        "timestamp": "2026-08-22T23:54:32Z"
+        "timestamp": "2026-08-22T23:48:26Z"
       }
     ],
-    "error_spans": [
-      {
-        "trace_id": "trc_34855c8249f0",
-        "component": "LLM",
-        "error_category": "API_ERROR",
-        "error_message": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 26.946125641s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '26s'}]}}",
-        "timestamp": "2026-08-22T23:54:32Z",
-        "recovery_attempted": true
-      }
-    ],
+    "error_spans": [],
     "failed_tools": [],
     "fallback_attempts": []
   },
   "controlled_failure_test": {
     "trace_summary": {
-      "trace_id": "trc_31f314254dba",
+      "trace_id": "trc_3c5cc664f7e5",
       "investigation_id": "exp_failure_01",
       "objective": "Analyze AI agent market news.",
-      "start_timestamp": "2026-08-22T23:54:32Z",
-      "end_timestamp": "2026-08-22T23:55:09Z",
-      "total_latency_seconds": 37.51,
+      "start_timestamp": "2026-08-22T23:48:26Z",
+      "end_timestamp": "2026-08-22T23:48:28Z",
+      "total_latency_seconds": 2.025,
       "iteration_count": 3,
       "tool_call_count": 6,
       "status": "completed",
@@ -137,16 +123,16 @@
         "output_tokens": "NOT_AVAILABLE",
         "total_tokens": "NOT_AVAILABLE"
       },
-      "agent_spans_count": 1,
+      "agent_spans_count": 0,
       "tool_spans": [
         {
           "tool_name": "Tavily Web Search",
-          "call_id": "Tavily Web Search_1787442872.405848",
-          "start_time": 1787442872.4058518,
+          "call_id": "Tavily Web Search_1787442506.7127438",
+          "start_time": 1787442506.7127502,
           "sanitized_query": "Analyze AI agent market news.",
           "status": "FAILED",
-          "end_time": 1787442872.5064225,
-          "latency": 0.101,
+          "end_time": 1787442506.813031,
+          "latency": 0.1,
           "error_type": "TOOL_FAILURE",
           "error_message": "Tavily Search API request timed out after 10.0s (Simulated Failure)"
         }
@@ -155,89 +141,81 @@
         {
           "event": "[PLANNING]",
           "detail": "Analyzing objective: 'Analyze AI agent market news.'",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[PLAN_CREATED]",
           "detail": "Plan: Gather market intelligence via Tavily, Evaluate evidence, Synthesize report",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESOURCE_STATUS]",
           "detail": "Iteration 1/8 | Remaining budget: 7 steps",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[TOOL_FAILURE]",
           "detail": "Tavily Web Search API unavailable.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[FALLBACK]",
           "detail": "Fallback: Redirecting to Research Agent for academic paper evidence.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESEARCH_AGENT]",
           "detail": "Searching scientific & technical papers on arXiv & CrossRef for: 'Analyze AI agent market news.'",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[AGENT_COMPLETE]",
           "detail": "Research Agent completed: 5 arXiv papers and 12 CrossRef publications collected.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESOURCE_STATUS]",
           "detail": "Iteration 2/8 | Remaining budget: 6 steps",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[SELF_EVALUATION]",
           "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[SELF_EVALUATION]",
           "detail": "Result: Passed. Evidence density sufficient (17 evidence items). Confidence: MEDIUM.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESOURCE_STATUS]",
           "detail": "Iteration 3/8 | Remaining budget: 5 steps",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[DECISION]",
           "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[STRATEGIC_SYNTHESIS_AGENT]",
           "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[TASK_COMPLETE]",
           "detail": "Final evidence synthesis complete. Intelligence report generated.",
-          "timestamp": "2026-08-22T23:55:09Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         }
       ],
       "error_spans": [
         {
-          "trace_id": "trc_31f314254dba",
+          "trace_id": "trc_3c5cc664f7e5",
           "component": "Tavily Web Search",
           "error_category": "TOOL_FAILURE",
           "error_message": "Tavily Search API request timed out after 10.0s (Simulated Failure)",
-          "timestamp": "2026-08-22T23:54:32Z",
-          "recovery_attempted": true
-        },
-        {
-          "trace_id": "trc_31f314254dba",
-          "component": "LLM",
-          "error_category": "API_ERROR",
-          "error_message": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 49.440965056s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}",
-          "timestamp": "2026-08-22T23:55:09Z",
+          "timestamp": "2026-08-22T23:48:26Z",
           "recovery_attempted": true
         }
       ],
@@ -250,7 +228,7 @@
       ]
     },
     "diagnosis": {
-      "trace_id": "trc_31f314254dba",
+      "trace_id": "trc_3c5cc664f7e5",
       "root_cause": "Tool 'Tavily' returned API failure or missing API key.",
       "affected_component": "Tavily",
       "evidence": [
@@ -263,12 +241,12 @@
   },
   "improved_trace_test": {
     "trace_summary": {
-      "trace_id": "trc_2d5ef9856162",
+      "trace_id": "trc_becb521c87e0",
       "investigation_id": "exp_improved_01",
       "objective": "Analyze AI agent market news.",
-      "start_timestamp": "2026-08-22T23:55:09Z",
-      "end_timestamp": "2026-08-22T23:55:46Z",
-      "total_latency_seconds": 36.337,
+      "start_timestamp": "2026-08-22T23:48:28Z",
+      "end_timestamp": "2026-08-22T23:48:28Z",
+      "total_latency_seconds": 0.024,
       "iteration_count": 2,
       "tool_call_count": 4,
       "status": "completed",
@@ -277,15 +255,15 @@
         "output_tokens": "NOT_AVAILABLE",
         "total_tokens": "NOT_AVAILABLE"
       },
-      "agent_spans_count": 1,
+      "agent_spans_count": 0,
       "tool_spans": [
         {
           "tool_name": "Tavily Web Search (Optimized Fallback)",
-          "call_id": "Tavily Web Search (Optimized Fallback)_1787442909.9161508",
-          "start_time": 1787442909.9161577,
+          "call_id": "Tavily Web Search (Optimized Fallback)_1787442508.7379658",
+          "start_time": 1787442508.737977,
           "sanitized_query": "Analyze AI agent market news.",
           "status": "FAILED",
-          "end_time": 1787442909.9264104,
+          "end_time": 1787442508.7482507,
           "latency": 0.01,
           "error_type": "TIMEOUT",
           "error_message": "Tavily API timeout threshold exceeded (2.0s Limit). Activating instant fallback."
@@ -295,64 +273,56 @@
         {
           "event": "[PLANNING]",
           "detail": "Analyzing objective: 'Analyze AI agent market news.'",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[PLAN_CREATED]",
           "detail": "Plan: Gather market intelligence via Tavily, Evaluate evidence, Synthesize report",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESOURCE_STATUS]",
           "detail": "Iteration 1/8 | Remaining budget: 7 steps",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[SELF_EVALUATION]",
           "detail": "Evaluating collected evidence completeness, hypothesis, and evidence conflicts.",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[SELF_EVALUATION]",
           "detail": "Result: Passed. Evidence density sufficient (0 evidence items). Confidence: LOW.",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[RESOURCE_STATUS]",
           "detail": "Iteration 2/8 | Remaining budget: 6 steps",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[DECISION]",
           "detail": "Evidence sufficient. Directing Strategic Synthesis Agent.",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[STRATEGIC_SYNTHESIS_AGENT]",
           "detail": "Synthesizing multi-source evidence, evidence conflicts, and hypothesis verification into structured intelligence report.",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         },
         {
           "event": "[TASK_COMPLETE]",
           "detail": "Final evidence synthesis complete. Intelligence report generated.",
-          "timestamp": "2026-08-22T23:55:46Z"
+          "timestamp": "2026-08-22T23:48:28Z"
         }
       ],
       "error_spans": [
         {
-          "trace_id": "trc_2d5ef9856162",
+          "trace_id": "trc_becb521c87e0",
           "component": "Tavily Web Search (Optimized Fallback)",
           "error_category": "TIMEOUT",
           "error_message": "Tavily API timeout threshold exceeded (2.0s Limit). Activating instant fallback.",
-          "timestamp": "2026-08-22T23:55:09Z",
-          "recovery_attempted": true
-        },
-        {
-          "trace_id": "trc_2d5ef9856162",
-          "component": "LLM",
-          "error_category": "API_ERROR",
-          "error_message": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 13.099820622s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}",
-          "timestamp": "2026-08-22T23:55:46Z",
+          "timestamp": "2026-08-22T23:48:28Z",
           "recovery_attempted": true
         }
       ],
@@ -366,9 +336,9 @@
     "before_vs_after_comparison": {
       "metric_comparison": {
         "Total Execution Time": {
-          "before": "37.51s",
-          "after": "36.337s",
-          "improvement": "Faster by 1.17s"
+          "before": "2.025s",
+          "after": "0.024s",
+          "improvement": "Faster by 2.0s"
         },
         "Tool Calls": {
           "before": 6,
@@ -376,8 +346,8 @@
           "improvement": "Optimized tool routing"
         },
         "Error Count": {
-          "before": 2,
-          "after": 2,
+          "before": 1,
+          "after": 1,
           "improvement": "Reduced by 0"
         },
         "Task Success Rate": {

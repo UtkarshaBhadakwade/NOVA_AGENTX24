@@ -4,9 +4,12 @@ import json
 import csv
 import time
 import logging
+from dotenv import load_dotenv
 
-# Ensure project root is in sys.path
+# Ensure project root is in sys.path and load environment variables
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env")))
 
 from backend.agent import agent_graph, MAX_ITERATIONS
 from backend.state import AgentState

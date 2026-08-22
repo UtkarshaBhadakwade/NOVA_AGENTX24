@@ -51,7 +51,7 @@ class NOVAObservabilityTracer(BaseCallbackHandler):
         })
 
     def on_llm_end(self, response: Any, **kwargs: Any) -> None:
-        """Captures LLM completion and extracts token usage if provided by model response."""
+        """Captures LLM completion and extracts exact Gemini token usage metadata."""
         end_time = time.time()
         if self.agent_spans:
             last_span = self.agent_spans[-1]
@@ -59,14 +59,31 @@ class NOVAObservabilityTracer(BaseCallbackHandler):
             last_span["latency"] = round(end_time - last_span["start_time"], 3)
             last_span["status"] = "COMPLETED"
             
-        # Extract actual token usage if available in LLM generation info
-        if hasattr(response, "llm_output") and response.llm_output and "token_usage" in response.llm_output:
-            usage = response.llm_output["token_usage"]
-            self.token_usage = {
-                "input_tokens": usage.get("prompt_tokens", "NOT_AVAILABLE"),
-                "output_tokens": usage.get("completion_tokens", "NOT_AVAILABLE"),
-                "total_tokens": usage.get("total_tokens", "NOT_AVAILABLE")
-            }
+        # Extract exact Gemini usage_metadata from generations message
+        try:
+            if hasattr(response, "generations") and response.generations:
+                for gen_list in response.generations:
+                    for gen in gen_list:
+                        msg = getattr(gen, "message", None)
+                        if msg and hasattr(msg, "usage_metadata") and msg.usage_metadata:
+                            usage = msg.usage_metadata
+                            
+                            # Initialize numeric totals if currently NOT_AVAILABLE
+                            if self.token_usage["input_tokens"] == "NOT_AVAILABLE":
+                                self.token_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+                                
+                            self.token_usage["input_tokens"] += usage.get("input_tokens", 0)
+                            self.token_usage["output_tokens"] += usage.get("output_tokens", 0)
+                            self.token_usage["total_tokens"] += usage.get("total_tokens", 0)
+            elif hasattr(response, "llm_output") and response.llm_output and "token_usage" in response.llm_output:
+                usage = response.llm_output["token_usage"]
+                self.token_usage = {
+                    "input_tokens": usage.get("prompt_tokens", "NOT_AVAILABLE"),
+                    "output_tokens": usage.get("completion_tokens", "NOT_AVAILABLE"),
+                    "total_tokens": usage.get("total_tokens", "NOT_AVAILABLE")
+                }
+        except Exception as e:
+            logger.warning(f"Error extracting Gemini token usage: {str(e)}")
 
     def on_llm_error(self, error: Exception, **kwargs: Any) -> None:
         """Captures LLM execution errors."""

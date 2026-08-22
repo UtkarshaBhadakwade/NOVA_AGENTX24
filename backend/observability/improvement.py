@@ -1,5 +1,12 @@
+import os
+import sys
 import time
 from typing import Dict, Any, Tuple
+from dotenv import load_dotenv
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env")))
 
 from backend.observability.tracer import NOVAObservabilityTracer
 from backend.agent import agent_graph, MAX_ITERATIONS
