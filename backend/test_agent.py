@@ -74,8 +74,8 @@ def run_verification_test():
     overall_status = "PASS" if graph_status == "WORKING" and final_report is not None else "FAIL"
 
     # Print Verification Summary Table
-    print("\n================================================")
-    print("NOVAagent BACKEND MVP VERIFICATION")
+    print("================================================")
+    print("NOVA Agent BACKEND MVP VERIFICATION")
     print("================================================")
     print(f"TEST STATUS:\n{overall_status}\n")
     print(f"OBJECTIVE:\n{objective}\n")

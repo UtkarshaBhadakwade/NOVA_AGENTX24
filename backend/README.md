@@ -1,4 +1,4 @@
-# NOVAagent — Autonomous Competitive Intelligence Agent
+# NOVA Agent - Autonomous Competitive Intelligence Agent
 
 ## Team Members
 - **Utkarsha Bhadakwade**
@@ -17,7 +17,7 @@ Organizations, startups, and research institutions operate in highly competitive
 
 ## Project Description
 
-**NOVAagent** is an Autonomous Competitive Intelligence Agent engineered to transform raw, fragmented market and academic data into structured, actionable strategic intelligence. Built on a genuine **ReAct (Reasoning + Action) state graph architecture using LangGraph**, NOVAagent continuously evaluates intelligence objectives, identifies missing information, dynamically selects specialized search and synthesis tools, and iteratively updates its internal state.
+**NOVA Agent** is an Autonomous Competitive Intelligence Agent engineered to transform raw, fragmented market and academic data into structured, actionable strategic intelligence. Built on a genuine **ReAct (Reasoning + Action) state graph architecture using LangGraph**, NOVA Agent continuously evaluates intelligence objectives, identifies missing information, dynamically selects specialized search and synthesis tools, and iteratively updates its internal state.
 
 ---
 

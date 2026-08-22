@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("agent_x.main")
 
 app = FastAPI(
-    title="NOVAagent - Autonomous Competitive Intelligence Agent",
+    title="NOVA Agent - Autonomous Competitive Intelligence Agent",
     description="Powered by LangGraph, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
     version="1.0.0"
 )
