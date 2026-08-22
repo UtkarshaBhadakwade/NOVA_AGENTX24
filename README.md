@@ -25,7 +25,7 @@ Organizations, startups, and research institutions operate in rapidly changing c
 
 ---
 
-## 🧠 Agentic Reasoning & ReAct Architecture
+## 🧠 Agentic Reasoning & Tool Calling Architecture
 
 ### Mandatory Capabilities
 
@@ -36,6 +36,14 @@ NOVA Agent implements a stateful **ReAct (Reasoning + Action)** loop in LangGrap
 - **Reason**: Inspects internal state and determines what information is required.
 - **Act**: Dynamically chooses tools (`web_search`, `research_search`, `crossref_search`, `analyze_information`).
 - **Observe**: Collects tool outputs, updates shared state via list reducers, and continues until evidence is sufficient or safety limits are reached.
+
+#### 2. Tool Calling
+> Integrate at least **2 external tools/APIs** relevant to the problem. The agent should dynamically determine when and which tool to use.
+
+NOVA Agent integrates 3 specialized external tools/APIs:
+- **Tavily Web Search API**: Live web market news, product launches, and competitor activities.
+- **arXiv REST XML API**: Scientific research papers, technical preprints, and open-access literature.
+- **CrossRef REST API**: Peer-reviewed journal publications, DOIs, and citation metadata.
 
 ---
 
@@ -151,10 +159,13 @@ Structured intelligence output containing:
 ### 2. ReAct Agent Execution & Completed Report
 ![Task 1 Completed Task Report](docs/screenshots/task1_execution_completed.png)
 
-### 3. Adaptive Multi-Agent Workspace
+### 3. Dynamic Tool Calling Execution & Grounded Sources
+![Dynamic Tool Calling Execution](docs/screenshots/tool_calling_execution.png)
+
+### 4. Adaptive Multi-Agent Workspace
 ![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
 
-### 4. Final Intelligence Dashboard & Grounded Sources
+### 5. Final Intelligence Dashboard & Grounded Sources
 ![Task 5 Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
 
 ---
