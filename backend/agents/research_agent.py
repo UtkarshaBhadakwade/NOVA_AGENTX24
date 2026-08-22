@@ -11,15 +11,16 @@ def research_agent_node(state: AgentState) -> Dict[str, Any]:
     Role: Scientific and Technical Intelligence Specialist.
     
     Responsibilities:
-    - Queries arXiv REST API for scientific papers matching objective & date filters.
-    - Queries CrossRef REST API for peer-reviewed journal publications and DOIs.
+    - Queries arXiv REST API for scientific papers matching objective, date, & quartile filters.
+    - Queries CrossRef REST API for peer-reviewed journal publications, DOIs, & quartile rankings.
     - Collects technical evidence and returns structured findings to shared state.
     """
     query = state.get("search_query", state["objective"])
     year = state.get("year", "Any Year")
     timeframe = state.get("timeframe", "Latest")
+    quartile = state.get("quartile", "All Quartiles")
 
-    filter_detail = f" | Year: {year} | Timeframe: {timeframe}" if year != "Any Year" or timeframe != "Latest" else ""
+    filter_detail = f" | Year: {year} | Quartile: {quartile}" if year != "Any Year" or quartile != "All Quartiles" else ""
     
     new_trace_events = [
         {
@@ -33,13 +34,13 @@ def research_agent_node(state: AgentState) -> Dict[str, Any]:
     errors = []
     
     try:
-        arxiv_results = research_search(query, year=year, timeframe=timeframe)
+        arxiv_results = research_search(query, year=year, timeframe=timeframe, quartile=quartile)
     except Exception as e:
         logger.error(f"ResearchAgent arXiv error: {str(e)}")
         errors.append(f"arXiv Search Warning: {str(e)}")
         
     try:
-        crossref_results = crossref_search(query, year=year, timeframe=timeframe)
+        crossref_results = crossref_search(query, year=year, timeframe=timeframe, quartile=quartile)
     except Exception as e:
         logger.error(f"ResearchAgent CrossRef error: {str(e)}")
         errors.append(f"CrossRef Search Warning: {str(e)}")
@@ -56,7 +57,7 @@ def research_agent_node(state: AgentState) -> Dict[str, Any]:
         "agent": "ResearchAgent",
         "query": query,
         "year": year,
-        "timeframe": timeframe,
+        "quartile": quartile,
         "arxiv_count": len(valid_arxiv),
         "crossref_count": len(valid_crossref),
         "top_titles": [r.get("title") for r in (valid_arxiv + valid_crossref)[:4]]

@@ -17,6 +17,7 @@ class AgentState(TypedDict):
     timeframe: Optional[str]
     year: Optional[str]
     source_filter: Optional[str]
+    quartile: Optional[str]
     current_task: Optional[str]
     delegated_agent: Optional[str]
     research_results: Annotated[List[Dict[str, Any]], merge_lists]

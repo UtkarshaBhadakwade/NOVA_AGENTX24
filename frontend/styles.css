@@ -483,12 +483,6 @@ body {
     border-color: var(--accent-primary);
 }
 
-.filter-group select:disabled {
-    background-color: #f0eee6;
-    color: var(--text-muted);
-    cursor: not-allowed;
-}
-
 /* --------------------------------------------------------------------------
    Workspace Grid Layout (Split Pane)
    -------------------------------------------------------------------------- */
@@ -939,6 +933,12 @@ body {
     text-decoration: underline;
 }
 
+.source-tags-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
 .source-tag {
     padding: 2px 6px;
     border-radius: var(--radius-sm);
@@ -951,6 +951,21 @@ body {
 .tag-web { background-color: var(--tag-web); }
 .tag-arxiv { background-color: var(--tag-arxiv); }
 .tag-crossref { background-color: var(--tag-crossref); }
+
+/* Quartile Badges */
+.quartile-tag {
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: 0.68rem;
+    font-weight: 700;
+    border: 1px solid var(--border-color);
+    text-transform: uppercase;
+}
+
+.tag-q1 { background-color: #e8f5e9; color: #1b5e20; border-color: #a5d6a7; }
+.tag-q2 { background-color: #e3f2fd; color: #0d47a1; border-color: #90caf9; }
+.tag-q3 { background-color: #fff8e1; color: #f57f17; border-color: #ffe082; }
+.tag-q4 { background-color: #f5f5f5; color: #616161; border-color: #e0e0e0; }
 
 /* 9. Coverage & Stats */
 .coverage-box {
@@ -993,6 +1008,6 @@ body {
 
 @media (max-width: 768px) {
     .sidebar {
-        display: none; /* Responsive drawer collapse */
+        display: none;
     }
 }

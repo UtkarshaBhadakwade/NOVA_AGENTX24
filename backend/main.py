@@ -49,9 +49,10 @@ class AnalyzeRequest(BaseModel):
         description="The intelligence objective to gather information and report on.",
         example="Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization."
     )
-    timeframe: Optional[str] = Field("Latest", description="Timeframe filter (e.g. Latest, Last 30 Days, Last 6 Months, Last 1 Year)")
-    year: Optional[str] = Field("Any Year", description="Publication year filter (e.g. Any Year, 2026, 2025, 2024, 2023)")
-    source_filter: Optional[str] = Field("All Sources", description="Source filter (e.g. All Sources, arXiv, CrossRef, Journal Articles)")
+    timeframe: Optional[str] = Field("Latest", description="Timeframe filter")
+    year: Optional[str] = Field("Any Year", description="Publication year filter")
+    source_filter: Optional[str] = Field("All Sources", description="Source filter")
+    quartile: Optional[str] = Field("All Quartiles", description="Journal Quartile filter (Q1, Q2, Q3, Q4)")
 
 class AnalyzeResponse(BaseModel):
     id: Optional[str]
@@ -59,6 +60,7 @@ class AnalyzeResponse(BaseModel):
     timeframe: str
     year: str
     source_filter: str
+    quartile: str
     status: str
     iterations: int
     tools_called: List[str]
@@ -107,6 +109,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "timeframe": request.timeframe or "Latest",
         "year": request.year or "Any Year",
         "source_filter": request.source_filter or "All Sources",
+        "quartile": request.quartile or "All Quartiles",
         "current_task": None,
         "delegated_agent": None,
         "research_results": [],
@@ -128,11 +131,10 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "search_query": request.objective
     }
 
-    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}' (Year: {request.year}, Timeframe: {request.timeframe})")
+    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}' (Year: {request.year}, Quartile: {request.quartile})")
     try:
         final_state = agent_graph.invoke(initial_state)
 
-        # Extract tools/agents called from actions_taken
         tools_called = [
             action for action in final_state.get("actions_taken", [])
             if not action.startswith("supervisor ->")
@@ -145,6 +147,7 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "timeframe": request.timeframe or "Latest",
             "year": request.year or "Any Year",
             "source_filter": request.source_filter or "All Sources",
+            "quartile": request.quartile or "All Quartiles",
             "status": "completed" if final_state.get("task_complete") else "incomplete",
             "iterations": final_state.get("iteration_count", 0),
             "tools_called": tools_called,
@@ -156,7 +159,6 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "errors": final_state.get("errors", [])
         }
 
-        # Save completed investigation to SQLite database
         saved = save_investigation(response_data)
         response_data["id"] = saved.get("id")
 

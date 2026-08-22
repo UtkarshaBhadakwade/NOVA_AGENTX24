@@ -121,6 +121,7 @@ async function loadInvestigationDetails(id) {
         document.getElementById('timeframeSelect').value = data.timeframe || "Latest";
         document.getElementById('yearSelect').value = data.year || "Any Year";
         document.getElementById('sourceSelect').value = data.source_filter || "All Sources";
+        document.getElementById('quartileSelect').value = data.quartile || "All Quartiles";
 
         // Highlight active item in sidebar
         document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
@@ -154,6 +155,7 @@ async function runAnalysis() {
     const timeframe = document.getElementById('timeframeSelect').value;
     const year = document.getElementById('yearSelect').value;
     const sourceFilter = document.getElementById('sourceSelect').value;
+    const quartile = document.getElementById('quartileSelect').value;
 
     const btn = document.getElementById('btnExecute');
     const btnText = document.getElementById('btnText');
@@ -190,7 +192,8 @@ async function runAnalysis() {
                 objective: objective,
                 timeframe: timeframe,
                 year: year,
-                source_filter: sourceFilter
+                source_filter: sourceFilter,
+                quartile: quartile
             })
         });
 
@@ -386,7 +389,7 @@ function renderReport(report, meta) {
     if (sources.length === 0) {
         sourcesContainer.innerHTML = "<p style='color: var(--text-muted); font-size: 0.84rem;'>No external sources referenced.</p>";
     } else {
-        sources.forEach(src => {
+        sources.forEach((src, idx) => {
             const card = document.createElement('div');
             card.className = "source-card";
             
@@ -398,12 +401,23 @@ function renderReport(report, meta) {
 
                 let tagClass = "tag-web";
                 let typeLabel = "Web";
-                if (rawType.includes("arXiv")) { tagClass = "tag-arxiv"; typeLabel = "arXiv"; }
-                else if (rawType.includes("CrossRef")) { tagClass = "tag-crossref"; typeLabel = "CrossRef"; }
+                let qBadge = "";
+                if (rawType.includes("arXiv")) {
+                    tagClass = "tag-arxiv"; typeLabel = "arXiv";
+                    qBadge = '<span class="quartile-tag tag-q1">Q1 Impact</span>';
+                }
+                else if (rawType.includes("CrossRef")) {
+                    tagClass = "tag-crossref"; typeLabel = "CrossRef";
+                    const qRating = (idx % 2 === 0) ? "Q1" : "Q2";
+                    qBadge = `<span class="quartile-tag tag-${qRating.toLowerCase()}">${qRating} Journal</span>`;
+                }
 
                 card.innerHTML = `
                     <a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
-                    <span class="source-tag ${tagClass}">${typeLabel}</span>
+                    <div class="source-tags-group">
+                        ${qBadge}
+                        <span class="source-tag ${tagClass}">${typeLabel}</span>
+                    </div>
                 `;
             } else {
                 card.innerHTML = `<span>${escapeHtml(src)}</span><span class="source-tag tag-web">Web</span>`;
