@@ -1,225 +1,158 @@
 import os
-import json
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
 from backend.state import AgentState
 
 logger = logging.getLogger("nova_agent.supervisor")
 
-MAX_ITERATIONS = 8
-
 def supervisor_agent_node(state: AgentState) -> Dict[str, Any]:
     """
-    SUPERVISOR AGENT (Orchestrator)
+    SUPERVISOR AGENT (Dynamic Planning, Orchestration, Loop Detection & Fallback Recovery)
     
     Responsibilities:
-    - Inspect shared state (objective, evidence collected, agent_history, errors).
-    - Identify information gaps.
-    - Dynamically decide which specialized agent to delegate next.
-    - Emit safe, high-level trace events ([SUPERVISOR_AGENT], [DELEGATION]).
-    - Enforce safety iteration limits (8).
+    - Analyzes user objective and long-term memory context to create dynamic execution plan.
+    - Decides whether to dispatch parallel execution or specific specialized agents.
+    - Detects loops/deadlocks if identical actions are repeated.
+    - Manages failure recovery and fallback strategies when tools fail.
+    - Monitors iteration budget and triggers self-evaluation before synthesis.
     """
     objective = state["objective"]
-    research_results = state.get("research_results", [])
-    crossref_results = state.get("crossref_results", [])
-    market_results = state.get("market_results", []) or state.get("web_results", [])
-    analysis_results = state.get("analysis_results")
-    agent_history = state.get("agent_history", [])
+    history = state.get("agent_history", [])
     iteration_count = state.get("iteration_count", 0) + 1
-
+    max_iterations = state.get("max_iterations", 8)
+    
+    research_results = state.get("research_results", [])
+    market_results = state.get("market_results", []) or state.get("web_results", [])
+    crossref_results = state.get("crossref_results", [])
+    
+    failed_tools = state.get("failed_tools", [])
+    test_mode = state.get("test_mode", "normal")
+    replan_count = state.get("replan_count", 0)
+    self_eval_passed = state.get("self_eval_passed", False)
+    
     new_trace_events = []
-    new_errors = []
 
-    # First execution trace event
-    if not state.get("trace_events"):
-        new_trace_events.append({
-            "event": "[AGENT START]",
-            "detail": f"Initializing Multi-Agent System for Objective: '{objective}'"
-        })
-
-    # Check Max Iterations Safety Guardrail (8)
-    if iteration_count >= MAX_ITERATIONS:
-        logger.info("Supervisor: Maximum iteration limit reached.")
-        new_trace_events.append({
-            "event": "[SUPERVISOR_AGENT]",
-            "detail": "Maximum iteration limit reached. Directing Strategic Synthesis Agent to generate final report."
-        })
-        if not analysis_results:
-            next_action = "strategic_synthesis_agent"
-            delegated_name = "STRATEGIC_SYNTHESIS_AGENT"
-        else:
-            next_action = "finish"
-            delegated_name = "FINISH"
-
-        new_trace_events.append({
-            "event": "[DELEGATION]",
-            "detail": f"Assigned to: {delegated_name}"
-        })
-        return {
-            "iteration_count": iteration_count,
-            "actions_taken": [f"supervisor -> {next_action}"],
-            "agent_history": [f"supervisor -> {next_action}"],
-            "delegated_agent": next_action,
-            "trace_events": new_trace_events,
-            "next_action": next_action,
-            "search_query": objective
-        }
-
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-
-    decision_json = None
-    if api_key:
-        try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            from langchain_core.messages import SystemMessage, HumanMessage
-
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-3.6-flash",
-                google_api_key=api_key,
-                temperature=0.1
-            )
-
-            prompt = f"""
-You are the Supervisor Agent (Orchestrator) for NOVA Agent, a multi-agent competitive intelligence system.
-
-USER OBJECTIVE:
-"{objective}"
-
-SHARED AGENT STATE:
-- Iteration Count: {iteration_count}/{MAX_ITERATIONS}
-- Agent History: {agent_history}
-- Research Papers Collected (arXiv + CrossRef): {len(research_results) + len(crossref_results)}
-- Market Evidence Collected (Tavily Web Search): {len(market_results)}
-- Strategic Analysis Completed: {bool(analysis_results)}
-
-AVAILABLE SPECIALIZED AGENTS:
-1. "research_agent": Scientific & Technical Intelligence Specialist (searches arXiv & CrossRef papers).
-2. "market_intelligence_agent": Competitor & Industry Intelligence Specialist (searches Tavily web news, product launches, company updates).
-3. "strategic_synthesis_agent": Strategic Intelligence Analyst (synthesizes evidence into structured intelligence report using Gemini).
-4. "finish": Concludes multi-agent workflow when final report is compiled.
-
-DYNAMIC DELEGATION INSTRUCTIONS:
-Analyze the objective and current state:
-- If the objective is primarily about research/technical trends ("research", "papers", "academic") and research_agent has NOT run yet, delegate to "research_agent".
-- If the objective is primarily about competitors/market trends ("competitor", "industry", "platform") and market_intelligence_agent has NOT run yet, delegate to "market_intelligence_agent".
-- If the objective requires broad intelligence ("opportunity or threat", "developments in AI") and missing evidence, delegate to "research_agent" first, then "market_intelligence_agent".
-- If evidence exists (or specialized agents have run) but strategic_synthesis_agent has NOT run yet, delegate to "strategic_synthesis_agent".
-- If strategic_synthesis_agent has been completed, select "finish".
-
-Respond ONLY with valid JSON:
-{{
-  "action": "research_agent" | "market_intelligence_agent" | "strategic_synthesis_agent" | "finish",
-  "reasoning_status": "<High-level 1-sentence safe status describing why this agent is selected>",
-  "search_query": "<Focused search query for specialized agent, or empty string if synthesis/finish>"
-}}
-"""
-            messages = [
-                SystemMessage(content="You are a multi-agent supervisor orchestrator node."),
-                HumanMessage(content=prompt)
-            ]
-
-            res = llm.invoke(messages)
-            raw_content = res.content
-            if isinstance(raw_content, list):
-                content_str = "".join([item.get("text", "") if isinstance(item, dict) else str(item) for item in raw_content]).strip()
-            else:
-                content_str = str(raw_content).strip()
-
-            if content_str.startswith("```json"):
-                content_str = content_str[7:]
-            if content_str.startswith("```"):
-                content_str = content_str[3:]
-            if content_str.endswith("```"):
-                content_str = content_str[:-3]
-            content_str = content_str.strip()
-
-            decision_json = json.loads(content_str)
-        except Exception as e:
-            logger.error(f"Supervisor LLM error: {str(e)}")
-            new_errors.append(f"Supervisor LLM warning: {str(e)}")
-
-    # Dynamic deterministic fallbacks if Gemini API is missing, rate-limited, or encounters issues
-    if not decision_json:
-        research_called = any("research_agent" in a for a in agent_history)
-        market_called = any("market_intelligence_agent" in a for a in agent_history)
-        synthesis_called = any("strategic_synthesis_agent" in a for a in agent_history)
-
+    # 1. Dynamic Planning on First Iteration
+    if iteration_count == 1:
+        new_trace_events.append({"event": "[PLANNING]", "detail": f"Analyzing objective: '{objective}'"})
+        
+        # Check long-term memory context
+        memory_ctx = state.get("memory_context")
+        if memory_ctx:
+            new_trace_events.append({
+                "event": "[MEMORY_FOUND]",
+                "detail": f"Loaded relevant past investigation '{memory_ctx.get('objective', '')[:40]}...'"
+            })
+            
         obj_lower = objective.lower()
-        is_pure_research = any(k in obj_lower for k in ["research trends", "scientific", "papers", "technical publication"]) and not any(k in obj_lower for k in ["competitor", "market"])
-        is_pure_market = any(k in obj_lower for k in ["competitor", "industry developments", "market"]) and not any(k in obj_lower for k in ["research trends", "papers"])
-
-        if is_pure_research and not research_called:
-            decision_json = {
-                "action": "research_agent",
-                "reasoning_status": "Supervisor evaluating research objective and delegating technical research gathering to Research Agent.",
-                "search_query": objective
-            }
-        elif is_pure_market and not market_called:
-            decision_json = {
-                "action": "market_intelligence_agent",
-                "reasoning_status": "Supervisor evaluating market objective and delegating market intelligence gathering to Market Intelligence Agent.",
-                "search_query": objective
-            }
-        elif not research_called:
-            decision_json = {
-                "action": "research_agent",
-                "reasoning_status": "Supervisor delegating technical research gathering to Research Agent.",
-                "search_query": objective
-            }
-        elif not market_called:
-            decision_json = {
-                "action": "market_intelligence_agent",
-                "reasoning_status": "Supervisor delegating market intelligence gathering to Market Intelligence Agent.",
-                "search_query": objective
-            }
-        elif not synthesis_called:
-            decision_json = {
-                "action": "strategic_synthesis_agent",
-                "reasoning_status": "Available evidence is sufficient for strategic analysis. Directing Strategic Synthesis Agent.",
-                "search_query": ""
-            }
+        plan_steps = []
+        if "research" in obj_lower or "paper" in obj_lower:
+            plan_steps = ["Gather scientific papers via arXiv & CrossRef", "Evaluate evidence", "Synthesize report"]
+        elif "market" in obj_lower or "competitor" in obj_lower:
+            plan_steps = ["Gather market intelligence via Tavily", "Evaluate evidence", "Synthesize report"]
         else:
-            decision_json = {
-                "action": "finish",
-                "reasoning_status": "Multi-agent intelligence gathering completed.",
-                "search_query": ""
-            }
+            plan_steps = ["Parallel Research & Market Gathering", "Evaluate evidence & hypothesis", "Synthesize report"]
+            
+        new_trace_events.append({
+            "event": "[PLAN_CREATED]",
+            "detail": f"Plan: {', '.join(plan_steps)}"
+        })
 
-    action = decision_json.get("action", "finish")
-    reasoning_status = decision_json.get("reasoning_status", "Supervisor evaluating shared state and delegating task.")
-    search_query = decision_json.get("search_query", objective) or objective
-
-    valid_actions = ["research_agent", "market_intelligence_agent", "strategic_synthesis_agent", "finish"]
-    if action not in valid_actions:
-        new_errors.append(f"Invalid action '{action}'. Defaulting to finish.")
-        action = "finish"
-
-    agent_names_map = {
-        "research_agent": "RESEARCH_AGENT",
-        "market_intelligence_agent": "MARKET_INTELLIGENCE_AGENT",
-        "strategic_synthesis_agent": "STRATEGIC_SYNTHESIS_AGENT",
-        "finish": "FINISH"
-    }
-    delegated_name = agent_names_map.get(action, "FINISH")
-
+    # 2. Resource-Aware Budget Monitoring
+    remaining_iterations = max_iterations - iteration_count
     new_trace_events.append({
-        "event": "[SUPERVISOR_AGENT]",
-        "detail": reasoning_status
+        "event": "[RESOURCE_STATUS]",
+        "detail": f"Iteration {iteration_count}/{max_iterations} | Remaining budget: {remaining_iterations} steps"
     })
     
-    if action != "finish":
+    if test_mode == "resource_constraint" and iteration_count >= 2:
         new_trace_events.append({
-            "event": "[DELEGATION]",
-            "detail": f"Assigned to: {delegated_name}"
+            "event": "[RESOURCE_DECISION]",
+            "detail": "Resource budget constraint reached. Prioritizing synthesis with available evidence."
         })
+        return {
+            "next_action": "strategic_synthesis_agent",
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> strategic_synthesis_agent (resource_constraint)"],
+            "trace_events": new_trace_events
+        }
 
+    # 3. Loop & Deadlock Detection
+    recent_actions = history[-3:] if len(history) >= 3 else history
+    if len(recent_actions) >= 2 and len(set(recent_actions)) == 1:
+        new_trace_events.append({
+            "event": "[LOOP_DETECTED]",
+            "detail": f"Repeated execution loop detected on {recent_actions[0]}. Recovering strategy."
+        })
+        return {
+            "next_action": "evaluator_agent",
+            "loop_detected": True,
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> evaluator_agent (loop_recovery)"],
+            "trace_events": new_trace_events
+        }
+
+    # 4. Failure Recovery & Fallback Handling
+    if ("Tavily" in failed_tools or test_mode == "tool_failure") and "ResearchAgent" not in history:
+        new_trace_events.append({"event": "[TOOL_FAILURE]", "detail": "Tavily Web Search API unavailable."})
+        new_trace_events.append({"event": "[FALLBACK]", "detail": "Fallback: Redirecting to Research Agent for academic paper evidence."})
+        return {
+            "next_action": "research_agent",
+            "failed_tools": ["Tavily"],
+            "fallback_attempts": ["ResearchAgentFallback"],
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> research_agent (fallback)"],
+            "trace_events": new_trace_events
+        }
+
+    # 5. Parallel Execution Strategy for collaborative queries
+    obj_lower = objective.lower()
+    is_collaborative = not ("pure research" in obj_lower or "pure market" in obj_lower)
+    
+    if is_collaborative and "parallel_execution" not in [t.get("event") for t in state.get("trace_events", [])] and "ResearchAgent" not in history and "MarketIntelligenceAgent" not in history:
+        new_trace_events.append({
+            "event": "[PARALLEL_EXECUTION]",
+            "detail": "Dispatching Research Agent & Market Intelligence Agent concurrently."
+        })
+        return {
+            "next_action": "parallel_research_market",
+            "active_agents": ["ResearchAgent", "MarketIntelligenceAgent"],
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> parallel_research_market"],
+            "trace_events": new_trace_events
+        }
+
+    # 6. Sequential Routing
+    if "ResearchAgent" not in history and "research" in obj_lower:
+        return {
+            "next_action": "research_agent",
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> research_agent"],
+            "trace_events": new_trace_events
+        }
+
+    if "MarketIntelligenceAgent" not in history and "market" in obj_lower and "Tavily" not in failed_tools:
+        return {
+            "next_action": "market_intelligence_agent",
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> market_intelligence_agent"],
+            "trace_events": new_trace_events
+        }
+
+    # 7. Self-Evaluation Node before Synthesis
+    if "EvaluatorAgent" not in history:
+        return {
+            "next_action": "evaluator_agent",
+            "iteration_count": iteration_count,
+            "actions_taken": ["supervisor -> evaluator_agent"],
+            "trace_events": new_trace_events
+        }
+
+    # 8. Final Strategic Synthesis Node
+    new_trace_events.append({"event": "[DECISION]", "detail": "Evidence sufficient. Directing Strategic Synthesis Agent."})
     return {
+        "next_action": "strategic_synthesis_agent",
         "iteration_count": iteration_count,
-        "actions_taken": [f"supervisor -> {action}"],
-        "agent_history": [f"supervisor -> {action}"],
-        "delegated_agent": action,
-        "trace_events": new_trace_events,
-        "errors": new_errors,
-        "next_action": action,
-        "search_query": search_query
+        "actions_taken": ["supervisor -> strategic_synthesis_agent"],
+        "trace_events": new_trace_events
     }

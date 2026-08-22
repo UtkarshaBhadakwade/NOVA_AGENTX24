@@ -9,23 +9,16 @@ def research_agent_node(state: AgentState) -> Dict[str, Any]:
     """
     RESEARCH AGENT
     Role: Scientific and Technical Intelligence Specialist.
-    
-    Responsibilities:
-    - Queries arXiv REST API for scientific papers matching objective, date, & quartile filters.
-    - Queries CrossRef REST API for peer-reviewed journal publications, DOIs, & quartile rankings.
-    - Collects technical evidence and returns structured findings to shared state.
     """
     query = state.get("search_query", state["objective"])
     year = state.get("year", "Any Year")
     timeframe = state.get("timeframe", "Latest")
     quartile = state.get("quartile", "All Quartiles")
 
-    filter_detail = f" | Year: {year} | Quartile: {quartile}" if year != "Any Year" or quartile != "All Quartiles" else ""
-    
     new_trace_events = [
         {
             "event": "[RESEARCH_AGENT]",
-            "detail": f"Searching scientific & technical papers on arXiv & CrossRef for: '{query}'{filter_detail}"
+            "detail": f"Searching scientific & technical papers on arXiv & CrossRef for: '{query}'"
         }
     ]
     
@@ -49,15 +42,13 @@ def research_agent_node(state: AgentState) -> Dict[str, Any]:
     valid_crossref = [r for r in crossref_results if "Failure" not in r.get("title", "") and "No " not in r.get("title", "")]
     
     new_trace_events.append({
-        "event": "[TOOL_RESULT]",
-        "detail": f"Research findings collected: {len(valid_arxiv)} arXiv papers and {len(valid_crossref)} CrossRef publications."
+        "event": "[AGENT_COMPLETE]",
+        "detail": f"Research Agent completed: {len(valid_arxiv)} arXiv papers and {len(valid_crossref)} CrossRef publications collected."
     })
 
     findings_summary = {
         "agent": "ResearchAgent",
         "query": query,
-        "year": year,
-        "quartile": quartile,
         "arxiv_count": len(valid_arxiv),
         "crossref_count": len(valid_crossref),
         "top_titles": [r.get("title") for r in (valid_arxiv + valid_crossref)[:4]]

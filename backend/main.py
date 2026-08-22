@@ -1,4 +1,5 @@
 import os
+import uuid
 import logging
 from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, HTTPException, Query
@@ -29,12 +30,12 @@ logger = logging.getLogger("nova_agent.main")
 try:
     init_db()
 except Exception as e:
-    logger.warning(f"[MEMORY_WARNING] Persistent memory storage unavailable. Continuing investigation without long-term memory. Details: {str(e)}")
+    logger.warning(f"[MEMORY_WARNING] Persistent memory storage unavailable. Details: {str(e)}")
 
 app = FastAPI(
-    title="NOVA Agent - Autonomous Competitive Intelligence Agent",
-    description="Powered by LangGraph Multi-Agent Architecture, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
-    version="1.0.0"
+    title="NOVA Agent - Autonomous Competitive Intelligence System",
+    description="Powered by LangGraph Adaptive Multi-Agent Architecture, Checkpointing, Gemini 3.6 Flash, Tavily, arXiv, and CrossRef.",
+    version="2.0.0"
 )
 
 # Enable CORS for frontend integration
@@ -52,18 +53,11 @@ class AnalyzeRequest(BaseModel):
         description="The intelligence objective to gather information and report on.",
         example="Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization."
     )
-    timeframe: Optional[str] = Field("Latest", description="Timeframe filter")
-    year: Optional[str] = Field("Any Year", description="Publication year filter")
-    source_filter: Optional[str] = Field("All Sources", description="Source filter")
-    quartile: Optional[str] = Field("All Quartiles", description="Journal Quartile filter (Q1, Q2, Q3, Q4)")
+    test_mode: Optional[str] = Field("normal", description="Adversarial test mode: normal, tool_failure, conflict, resource_constraint, self_eval_fail")
 
 class AnalyzeResponse(BaseModel):
     id: Optional[str] = None
     objective: str
-    timeframe: str = "Latest"
-    year: str = "Any Year"
-    source_filter: str = "All Sources"
-    quartile: str = "All Quartiles"
     status: str = "completed"
     iterations: int = 0
     tools_called: List[str] = []
@@ -72,13 +66,14 @@ class AnalyzeResponse(BaseModel):
     web_results_count: int = 0
     research_results_count: int = 0
     crossref_results_count: int = 0
+    memory_found: bool = False
     errors: List[str] = []
 
 @app.get("/health")
 def health_check():
     return {
         "status": "ok",
-        "service": "NOVA Agent Autonomous Multi-Agent System",
+        "service": "NOVA Agent Adaptive Multi-Agent Framework (Task 5)",
         "gemini_api_key_configured": bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")),
         "tavily_api_key_configured": bool(os.environ.get("TAVILY_API_KEY"))
     }
@@ -130,18 +125,60 @@ def run_intelligence_analysis(request: AnalyzeRequest):
     if not request.objective.strip():
         raise HTTPException(status_code=400, detail="Objective string cannot be empty.")
 
+    # Memory Retrieval: Search relevant past investigations
+    memory_context = None
+    memory_found = False
+    try:
+        past_invs = search_investigations(request.objective)
+        if past_invs:
+            memory_found = True
+            top_match = past_invs[0]
+            memory_context = {
+                "id": top_match.get("id"),
+                "objective": top_match.get("objective"),
+                "created_at": top_match.get("created_at")
+            }
+    except Exception as e:
+        logger.warning(f"[MEMORY_WARNING] Memory retrieval warning: {str(e)}")
+
+    initial_trace = []
+    if memory_found and memory_context:
+        initial_trace.append({"event": "[MEMORY_RETRIEVAL]", "detail": f"Searching past investigations for '{request.objective[:40]}...'"})
+        initial_trace.append({"event": "[MEMORY_FOUND]", "detail": f"Loaded past investigation context: '{memory_context['objective'][:40]}...'"})
+
+    thread_id = str(uuid.uuid4())[:8]
+
     initial_state: AgentState = {
         "objective": request.objective,
-        "timeframe": request.timeframe or "Latest",
-        "year": request.year or "Any Year",
-        "source_filter": request.source_filter or "All Sources",
-        "quartile": request.quartile or "All Quartiles",
+        "timeframe": "Latest",
+        "year": "Any Year",
+        "source_filter": "All Sources",
+        "quartile": "All Quartiles",
+        "plan": [],
+        "pending_tasks": [],
+        "completed_tasks": [],
+        "active_agents": [],
         "current_task": None,
         "delegated_agent": None,
         "research_results": [],
         "market_results": [],
         "web_results": [],
         "crossref_results": [],
+        "verification_results": [],
+        "evidence_conflicts": [],
+        "failed_tools": [],
+        "fallback_attempts": [],
+        "hypothesis": None,
+        "hypothesis_status": None,
+        "memory_context": memory_context,
+        "confidence": None,
+        "uncertainty": None,
+        "resource_budget": {"max_iterations": MAX_ITERATIONS},
+        "replan_count": 0,
+        "loop_detected": False,
+        "self_eval_passed": False,
+        "data_availability_note": None,
+        "test_mode": request.test_mode or "normal",
         "agent_findings": [],
         "agent_history": [],
         "actions_taken": [],
@@ -151,16 +188,20 @@ def run_intelligence_analysis(request: AnalyzeRequest):
         "task_complete": False,
         "final_report": None,
         "analysis_results": None,
-        "trace_events": [],
+        "trace_events": initial_trace,
         "errors": [],
         "next_action": "supervisor",
         "search_query": request.objective
     }
 
-    logger.info(f"Starting NOVA Agent Multi-Agent run for objective: '{request.objective}' (Year: {request.year}, Quartile: {request.quartile})")
+    logger.info(f"Starting Task 5 Adaptive Agent Graph for objective: '{request.objective}' (TestMode: {request.test_mode})")
     
     try:
-        final_state = agent_graph.invoke(initial_state)
+        # Invoke LangGraph state graph with thread checkpointing configuration
+        final_state = agent_graph.invoke(
+            initial_state,
+            config={"configurable": {"thread_id": thread_id}}
+        )
 
         tools_called = [
             action for action in final_state.get("actions_taken", [])
@@ -169,31 +210,35 @@ def run_intelligence_analysis(request: AnalyzeRequest):
 
         web_res = final_state.get("market_results", []) or final_state.get("web_results", [])
 
+        # Add Checkpoint Trace Event
+        final_trace = final_state.get("trace_events", [])
+        final_trace.append({
+            "event": "[CHECKPOINT]",
+            "detail": f"LangGraph state checkpointed under thread_id '{thread_id}'."
+        })
+
         response_data = {
             "id": None,
             "objective": final_state["objective"],
-            "timeframe": request.timeframe or "Latest",
-            "year": request.year or "Any Year",
-            "source_filter": request.source_filter or "All Sources",
-            "quartile": request.quartile or "All Quartiles",
             "status": "completed" if final_state.get("task_complete") else "incomplete",
             "iterations": final_state.get("iteration_count", 0),
             "tools_called": tools_called,
-            "trace_events": final_state.get("trace_events", []),
+            "trace_events": final_trace,
             "final_report": final_state.get("final_report"),
             "web_results_count": len(web_res),
             "research_results_count": len(final_state.get("research_results", [])),
             "crossref_results_count": len(final_state.get("crossref_results", [])),
+            "memory_found": memory_found,
             "errors": final_state.get("errors", [])
         }
 
-        # Save completed investigation to SQLite database with error isolation
+        # Save investigation to SQLite database
         try:
             saved = save_investigation(response_data)
             if saved and isinstance(saved, dict):
                 response_data["id"] = saved.get("id")
         except Exception as db_err:
-            logger.warning(f"[MEMORY_WARNING] Persistent memory save warning: {str(db_err)}")
+            logger.warning(f"[MEMORY_WARNING] Memory save warning: {str(db_err)}")
 
         return AnalyzeResponse(**response_data)
 

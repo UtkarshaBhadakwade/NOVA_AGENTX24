@@ -9,24 +9,35 @@ def market_agent_node(state: AgentState) -> Dict[str, Any]:
     """
     MARKET INTELLIGENCE AGENT
     Role: Competitor and Industry Intelligence Specialist.
-    
-    Responsibilities:
-    - Queries Tavily Web Search API for live competitor activities, product launches, and market developments.
-    - Collects industry news and returns structured findings to shared state.
     """
     query = state.get("search_query", state["objective"])
     year = state.get("year", "Any Year")
     timeframe = state.get("timeframe", "Latest")
+    test_mode = state.get("test_mode", "normal")
 
-    filter_detail = f" | Year: {year} | Timeframe: {timeframe}" if year != "Any Year" or timeframe != "Latest" else ""
-    
     new_trace_events = [
         {
             "event": "[MARKET_INTELLIGENCE_AGENT]",
-            "detail": f"Searching competitor & market developments via Tavily for: '{query}'{filter_detail}"
+            "detail": f"Searching competitor & market developments via Tavily for: '{query}'"
         }
     ]
     
+    # Adversarial Test Mode: Tool Failure Simulation
+    if test_mode == "tool_failure":
+        new_trace_events.append({
+            "event": "[TOOL_FAILURE]",
+            "detail": "Simulated Tavily Web Search API Failure (Adversarial Test)."
+        })
+        return {
+            "market_results": [],
+            "web_results": [],
+            "failed_tools": ["Tavily"],
+            "actions_taken": ["MarketIntelligenceAgent (Failed: Tavily)"],
+            "agent_history": ["MarketIntelligenceAgent"],
+            "trace_events": new_trace_events,
+            "errors": ["Tavily API Simulated Failure"]
+        }
+
     web_results = []
     errors = []
     
@@ -39,15 +50,13 @@ def market_agent_node(state: AgentState) -> Dict[str, Any]:
     valid_web = [r for r in web_results if "Failure" not in r.get("title", "") and "Missing" not in r.get("title", "")]
 
     new_trace_events.append({
-        "event": "[TOOL_RESULT]",
-        "detail": f"Market findings collected: {len(valid_web)} live web results via Tavily."
+        "event": "[AGENT_COMPLETE]",
+        "detail": f"Market Intelligence Agent completed: {len(valid_web)} live web results collected via Tavily."
     })
 
     findings_summary = {
         "agent": "MarketIntelligenceAgent",
         "query": query,
-        "year": year,
-        "timeframe": timeframe,
         "web_count": len(valid_web),
         "top_titles": [r.get("title") for r in valid_web[:4]]
     }

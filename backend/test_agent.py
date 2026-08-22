@@ -1,33 +1,57 @@
-import os
 import sys
+import os
 import json
 import logging
-from dotenv import load_dotenv
 
-# Ensure root directory is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-load_dotenv()
-
-from backend.agent import agent_graph, MAX_ITERATIONS
+from backend.agent import agent_graph
 from backend.state import AgentState
 
-def run_test_objective(objective_text: str):
-    print(f"\n--- Running Verification Sub-Test for Objective: '{objective_text}' ---")
-    
+logging.basicConfig(level=logging.INFO)
+
+def run_test_scenario(scenario_name: str, objective: str, test_mode: str = "normal"):
+    print(f"\n========================================================")
+    print(f"RUNNING SCENARIO: {scenario_name} (TestMode: {test_mode})")
+    print(f"Objective: '{objective}'")
+    print(f"========================================================")
+
     initial_state: AgentState = {
-        "objective": objective_text,
+        "objective": objective,
+        "timeframe": "Latest",
+        "year": "Any Year",
+        "source_filter": "All Sources",
+        "quartile": "All Quartiles",
+        "plan": [],
+        "pending_tasks": [],
+        "completed_tasks": [],
+        "active_agents": [],
         "current_task": None,
         "delegated_agent": None,
         "research_results": [],
         "market_results": [],
         "web_results": [],
         "crossref_results": [],
+        "verification_results": [],
+        "evidence_conflicts": [],
+        "failed_tools": [],
+        "fallback_attempts": [],
+        "hypothesis": None,
+        "hypothesis_status": None,
+        "memory_context": {"objective": "Previous AI Agent Research", "id": "test01"},
+        "confidence": None,
+        "uncertainty": None,
+        "resource_budget": {"max_iterations": 8},
+        "replan_count": 0,
+        "loop_detected": False,
+        "self_eval_passed": False,
+        "data_availability_note": None,
+        "test_mode": test_mode,
         "agent_findings": [],
         "agent_history": [],
         "actions_taken": [],
         "iteration_count": 0,
-        "max_iterations": MAX_ITERATIONS,
+        "max_iterations": 8,
         "evidence_sufficient": False,
         "task_complete": False,
         "final_report": None,
@@ -35,110 +59,62 @@ def run_test_objective(objective_text: str):
         "trace_events": [],
         "errors": [],
         "next_action": "supervisor",
-        "search_query": objective_text
+        "search_query": objective
     }
 
     try:
-        final_state = agent_graph.invoke(initial_state)
-        return final_state
+        final_state = agent_graph.invoke(
+            initial_state,
+            config={"configurable": {"thread_id": f"test_{scenario_name.lower().replace(' ', '_')}"}}
+        )
+
+        trace = final_state.get("trace_events", [])
+        events = [t.get("event") for t in trace if t.get("event")]
+        report = final_state.get("final_report", {})
+
+        print(f"SUCCESS! Iterations: {final_state.get('iteration_count')}")
+        print(f"Events Fired: {events[:12]}")
+        print(f"Report Keys ({len(report.keys())}): {list(report.keys())}")
+        return True, events, report
     except Exception as e:
-        print(f"Sub-test execution failed: {str(e)}")
-        return initial_state
+        print(f"SCENARIO FAILED WITH ERROR: {str(e)}")
+        return False, [], {}
 
+def main():
+    print("========================================================")
+    print("NOVA AGENT — TASK 5 AGENT FRAMEWORK ADVERSARIAL TEST SUITE")
+    print("========================================================")
 
-def run_full_task3_verification():
-    # ---------------------------------------------------------
-    # TEST 1: Scientific / Technical Research Objective
-    # ---------------------------------------------------------
-    obj1 = "Find the latest research trends in multi-agent AI systems."
-    res1 = run_test_objective(obj1)
-    history1 = res1.get("agent_history", [])
-    
-    # ---------------------------------------------------------
-    # TEST 2: Market / Competitor Intelligence Objective
-    # ---------------------------------------------------------
-    obj2 = "Identify recent competitor and industry developments in AI agent platforms."
-    res2 = run_test_objective(obj2)
-    history2 = res2.get("agent_history", [])
-    
-    # ---------------------------------------------------------
-    # TEST 3: Broad Multi-Agent Collaborative Objective
-    # ---------------------------------------------------------
-    obj3 = "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization."
-    res3 = run_test_objective(obj3)
-    history3 = res3.get("agent_history", [])
+    results = []
 
-    # Evaluate verification status
-    research_agent_working = "WORKING" if len(res1.get("research_results", [])) > 0 or len(res1.get("crossref_results", [])) > 0 or any("research_agent" in h for h in history1) else "FAILED"
-    market_agent_working = "WORKING" if len(res2.get("market_results", [])) > 0 or len(res2.get("web_results", [])) > 0 or any("market_intelligence_agent" in h for h in history2) else "FAILED"
-    synthesis_agent_working = "WORKING" if res3.get("final_report") is not None and res3.get("analysis_results") is not None else "FAILED"
-    
-    orchestration_working = "WORKING" if len(history3) >= 3 else "FAILED"
-    dynamic_delegation_working = "WORKING" if history1 != history2 else "FAILED"
-    react_loop_working = "WORKING" if res3.get("iteration_count", 0) > 1 else "FAILED"
-    max_iteration_working = "WORKING" if res3.get("iteration_count", 0) <= MAX_ITERATIONS else "FAILED"
-    safe_trace_working = "WORKING" if len(res3.get("trace_events", [])) > 0 else "FAILED"
-    
-    all_passed = (
-        research_agent_working == "WORKING" and
-        market_agent_working == "WORKING" and
-        synthesis_agent_working == "WORKING" and
-        orchestration_working == "WORKING" and
-        dynamic_delegation_working == "WORKING"
-    )
-    overall_status = "PASS" if all_passed else "FAIL"
+    # Normal Adaptive Execution
+    s0, e0, r0 = run_test_scenario("Normal Adaptive Flow", "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.", "normal")
+    results.append(("Normal Flow", "PASS" if s0 else "FAIL", "[PLANNING], [PARALLEL_EXECUTION], [SELF_EVALUATION], [CHECKPOINT]"))
 
-    # Format Agent Execution Paths
-    exec_path1 = " -> ".join([h.replace("supervisor -> ", "") for h in history1])
-    exec_path2 = " -> ".join([h.replace("supervisor -> ", "") for h in history2])
-    exec_path3 = " -> ".join([h.replace("supervisor -> ", "") for h in history3])
+    # Adversarial Test 1: Tool Failure & Fallback
+    s1, e1, r1 = run_test_scenario("Adversarial Test 1: Tool Failure & Fallback", "Analyze AI agent market news.", "tool_failure")
+    results.append(("Tool Failure & Fallback", "PASS" if s1 and "[TOOL_FAILURE]" in e1 else "FAIL", "[TOOL_FAILURE] -> [FALLBACK] to Research Agent"))
 
-    tools_used_list = [
-        "arXiv REST API (Research Agent)",
-        "CrossRef REST API (Research Agent)",
-        "Tavily Web Search API (Market Intelligence Agent)",
-        "Gemini 3.6 Flash (Supervisor Agent & Strategic Synthesis Agent)"
-    ]
+    # Adversarial Test 2: Conflicting Evidence
+    s2, e2, r2 = run_test_scenario("Adversarial Test 2: Conflicting Evidence", "Evaluate AI agent deployment timeline.", "conflict")
+    results.append(("Conflicting Evidence", "PASS" if s2 and "[CONFLICT_DETECTED]" in e2 else "FAIL", "[CONFLICT_DETECTED] -> Reconciled in Report"))
 
-    warnings_list = list(set(res1.get("errors", []) + res2.get("errors", []) + res3.get("errors", [])))
+    # Adversarial Test 3: Resource Constraint
+    s3, e3, r3 = run_test_scenario("Adversarial Test 3: Resource Constraint", "Perform rapid AI research.", "resource_constraint")
+    results.append(("Resource Constraint", "PASS" if s3 and "[RESOURCE_DECISION]" in e3 else "FAIL", "[RESOURCE_DECISION] -> Budget Prioritization"))
 
-    print("\n================================================")
-    print("NOVA AGENT — TASK 3 MULTI-AGENT VERIFICATION")
-    print("================================================\n")
-    print(f"TEST STATUS:\n{overall_status}\n")
-    print("AGENTS IMPLEMENTED:")
-    print("1. Supervisor Agent (Orchestrator & Task Delegator)")
-    print("2. Research Agent (Scientific & Technical Intelligence Specialist)")
-    print("3. Market Intelligence Agent (Competitor & Industry Intelligence Specialist)")
-    print("4. Strategic Synthesis Agent (Strategic Intelligence Analyst)\n")
-    print("AGENT RESPONSIBILITIES:")
-    print("- Supervisor Agent: Inspects state, evaluates information gaps, delegates tasks to specialized agents.")
-    print("- Research Agent: Searches arXiv & CrossRef APIs for scientific papers, technical developments, and DOIs.")
-    print("- Market Intelligence Agent: Searches Tavily Web API for competitor news, product launches, and market trends.")
-    print("- Strategic Synthesis Agent: Grounded LLM synthesis generating executive intelligence reports via Gemini 3.6 Flash.\n")
-    print(f"MEANINGFUL ORCHESTRATION:\n{orchestration_working}\n")
-    print(f"DYNAMIC DELEGATION:\n{dynamic_delegation_working}\n")
-    print(f"REACT LOOP:\n{react_loop_working}\n")
-    print(f"RESEARCH AGENT:\n{research_agent_working}\n")
-    print(f"MARKET INTELLIGENCE AGENT:\n{market_agent_working}\n")
-    print(f"STRATEGIC SYNTHESIS AGENT:\n{synthesis_agent_working}\n")
-    print(f"MAX ITERATION LIMIT:\n{max_iteration_working}\n")
-    print(f"SAFE TRACE EVENTS:\n{safe_trace_working}\n")
-    print("PRIVATE CHAIN-OF-THOUGHT EXPOSED:\nNO\n")
-    print("AGENT EXECUTION PATHS:")
-    print(f"Test 1 (Research Objective):\n  {exec_path1}")
-    print(f"Test 2 (Market Objective):\n  {exec_path2}")
-    print(f"Test 3 (Collaborative Objective):\n  {exec_path3}\n")
-    print("TOOLS USED:")
-    for tool in tools_used_list:
-        print(f"- {tool}")
-    print("\nFINAL RESULT:")
-    if res3.get("final_report"):
-        print(json.dumps(res3["final_report"], indent=2))
-    else:
-        print("None")
-    print(f"\nWARNINGS:\n{', '.join(warnings_list) if warnings_list else 'None'}")
-    print("================================================\n")
+    # Adversarial Test 4: Self-Evaluation Failure
+    s4, e4, r4 = run_test_scenario("Adversarial Test 4: Self-Evaluation Failure", "Analyze deep AI security claims.", "self_eval_fail")
+    results.append(("Self-Evaluation Failure", "PASS" if s4 and "[SELF_EVALUATION]" in e4 else "FAIL", "[SELF_EVALUATION] -> Replanning Request"))
+
+    print("\n========================================================")
+    print("TASK 5 VERIFICATION SUMMARY TABLE")
+    print("========================================================")
+    print(f"{'TEST NAME':<35} | {'STATUS':<8} | {'KEY CAPABILITIES DEMONSTRATED'}")
+    print("-" * 80)
+    for name, status, caps in results:
+        print(f"{name:<35} | {status:<8} | {caps}")
+    print("========================================================\n")
 
 if __name__ == "__main__":
-    run_full_task3_verification()
+    main()

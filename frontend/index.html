@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVA Agent — Autonomous Competitive Intelligence</title>
+    <title>NOVA Agent — Autonomous Competitive Intelligence System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <!-- Main Container with Persistent Left Sidebar -->
     <div class="app-layout">
         
-        <!-- Left Investigation History Sidebar -->
+        <!-- Left Investigation History & Search Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <div class="brand-logo">N</div>
@@ -30,13 +30,16 @@
                 <span>New Investigation</span>
             </button>
 
-            <!-- Search History Input -->
+            <!-- Search Investigations Input -->
             <div class="sidebar-search">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="historySearchInput" placeholder="Search history..." onkeyup="filterHistory()">
+                <label for="historySearchInput" class="search-label">Search Investigations</label>
+                <div class="search-input-wrapper">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="historySearchInput" placeholder="Type to search past reports..." onkeyup="filterHistory()">
+                </div>
             </div>
 
-            <!-- History List Sections -->
+            <!-- History Scroll List -->
             <div class="history-scroll-container">
                 
                 <!-- PINNED -->
@@ -47,7 +50,7 @@
                     </div>
                 </div>
 
-                <!-- RECENT -->
+                <!-- RECENT INVESTIGATIONS -->
                 <div class="history-section">
                     <div class="history-section-title">RECENT INVESTIGATIONS</div>
                     <div class="history-list" id="recentHistoryList">
@@ -59,7 +62,7 @@
 
             <div class="sidebar-footer">
                 <span class="status-indicator"></span>
-                <span>System Live</span>
+                <span>LangGraph Framework Live</span>
             </div>
         </aside>
 
@@ -70,96 +73,50 @@
             <header class="top-bar">
                 <div class="top-bar-title">
                     <h1>Intelligence Workspace</h1>
-                    <p>Multi-agent research, market analysis, and evidence synthesis</p>
+                    <p>Adaptive multi-agent research, market analysis, and evidence synthesis</p>
                 </div>
-                <div class="top-bar-stats" id="activeMetaBadge">
-                    <span class="meta-pill">Multi-Agent State</span>
-                    <span class="meta-pill">LangGraph ReAct</span>
+                
+                <!-- Memory Visualization Indicator -->
+                <div class="memory-indicator" id="memoryIndicator">
+                    <div class="mem-pill short-term">
+                        <span class="mem-dot green"></span>
+                        <span>Short-Term Memory: Active LangGraph State</span>
+                    </div>
+                    <div class="mem-pill long-term" id="longTermMemBadge" style="display: none;">
+                        <span class="mem-dot blue"></span>
+                        <span id="longTermMemText">Long-Term Memory: 1 Past Investigation Loaded</span>
+                    </div>
                 </div>
             </header>
 
-            <!-- Objective Input & Filter Bar Section -->
+            <!-- Objective Input & Preset Section -->
             <section class="input-section">
                 <div class="objective-input-container">
-                    <input type="text" id="objectiveInput" placeholder="Enter an intelligence objective (e.g. Find the latest developments in AI agents and evaluate opportunities/threats)..." autocomplete="off">
+                    <input type="text" id="objectiveInput" placeholder="Enter an intelligence objective (e.g. Find the latest developments in AI agents and determine opportunities/threats)..." autocomplete="off">
                     <button class="btn-execute" id="btnExecute" onclick="runAnalysis()">
                         <span id="btnText">Execute Agent</span>
                         <div class="spinner" id="btnSpinner" style="display: none;"></div>
                     </button>
                 </div>
 
-                <!-- Preset Quick Filters -->
+                <!-- Preset Quick Prompts -->
                 <div class="presets-row">
-                    <span class="preset-label">Quick Prompts:</span>
+                    <span class="preset-label">Quick Objectives:</span>
                     <button class="preset-chip" onclick="setPrompt(this)">Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.</button>
-                    <button class="preset-chip" onclick="setPrompt(this)">Find the latest research trends in multi-agent AI systems.</button>
+                    <button class="preset-chip" onclick="setPrompt(this)">Find recent research papers about multi-agent AI systems.</button>
                     <button class="preset-chip" onclick="setPrompt(this)">Identify recent competitor and industry developments in AI agent platforms.</button>
-                </div>
-
-                <!-- Filter Controls Bar -->
-                <div class="filters-bar">
-                    
-                    <!-- Timeline Filter -->
-                    <div class="filter-group">
-                        <label for="timeframeSelect">Timeline</label>
-                        <select id="timeframeSelect">
-                            <option value="Latest">Latest</option>
-                            <option value="Last 30 Days">Last 30 Days</option>
-                            <option value="Last 3 Months">Last 3 Months</option>
-                            <option value="Last 6 Months">Last 6 Months</option>
-                            <option value="Last 1 Year">Last 1 Year</option>
-                        </select>
-                    </div>
-
-                    <!-- Year Filter -->
-                    <div class="filter-group">
-                        <label for="yearSelect">Publication Year</label>
-                        <select id="yearSelect">
-                            <option value="Any Year">Any Year</option>
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="Earlier">Earlier</option>
-                        </select>
-                    </div>
-
-                    <!-- Source Filter -->
-                    <div class="filter-group">
-                        <label for="sourceSelect">Research Source</label>
-                        <select id="sourceSelect">
-                            <option value="All Sources">All Sources</option>
-                            <option value="arXiv">arXiv Papers</option>
-                            <option value="CrossRef">CrossRef Publications</option>
-                            <option value="Journal Articles">Journal Articles</option>
-                            <option value="Conference Papers">Conference Papers</option>
-                        </select>
-                    </div>
-
-                    <!-- Quartile Filter -->
-                    <div class="filter-group">
-                        <label for="quartileSelect">Journal Quartile</label>
-                        <select id="quartileSelect">
-                            <option value="All Quartiles">All Quartiles (Default)</option>
-                            <option value="Q1">Q1 (High Impact)</option>
-                            <option value="Q2">Q2 (Mid-High Impact)</option>
-                            <option value="Q3">Q3 (Standard Impact)</option>
-                            <option value="Q4">Q4 (General Academic)</option>
-                        </select>
-                    </div>
-
                 </div>
             </section>
 
             <!-- Workspace Grid (Split Pane) -->
             <div class="workspace-grid">
                 
-                <!-- Left Execution Stream Pane (Process Only - No Duplicated Full Results) -->
+                <!-- Left Execution Stream Pane (Process & Adaptive Orchestration Only) -->
                 <section class="pane execution-pane">
                     <div class="pane-header">
                         <div class="pane-title">
                             <h2>Agent Execution</h2>
-                            <span class="pane-subtitle">Process and Orchestration</span>
+                            <span class="pane-subtitle">Adaptive Task Orchestration</span>
                         </div>
                         <span class="badge-step" id="iterationBadge">Ready</span>
                     </div>
@@ -167,13 +124,13 @@
                     <div class="execution-scroll-container">
                         <div class="timeline" id="timeline">
                             <div class="timeline-empty">
-                                <p>Submit an objective to view real-time agent process logs.</p>
+                                <p>Submit an objective to view adaptive agent planning and orchestration trace logs.</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Right Main Intelligence Report Pane (Prominent Detailed Output) -->
+                <!-- Right Main Intelligence Report Pane (11-Part Intelligence Dashboard) -->
                 <section class="pane report-pane">
                     <div class="pane-header">
                         <div class="pane-title">
@@ -189,97 +146,91 @@
                         <div class="report-welcome" id="reportWelcome">
                             <div class="welcome-card">
                                 <h3>NOVA Agent Intelligence Platform</h3>
-                                <p>Select a past investigation from the sidebar or enter a new objective to generate a structured report.</p>
+                                <p>Select a past investigation from the sidebar or enter a new objective to generate an adaptive intelligence report.</p>
                                 <div class="features-list">
                                     <div class="feat-item">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                        <span>Orchestrated by 4 Specialized Agents (Supervisor, Research, Market, Synthesis)</span>
+                                        <span>Dynamic Planning & Adaptive Task Decomposition</span>
                                     </div>
                                     <div class="feat-item">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                        <span>Grounded in Tavily Web Search, arXiv papers, and CrossRef DOIs</span>
+                                        <span>Parallel Execution, Checkpointing & Autonomous Replanning</span>
                                     </div>
                                     <div class="feat-item">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                        <span>Persistent SQLite Investigation History & Date Filtering</span>
+                                        <span>Self-Evaluation, Hypothesis Verification & Conflict Resolution</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 9-Part Structured Intelligence Report -->
+                        <!-- 11-Part Structured Intelligence Report -->
                         <div class="report-content" id="reportContent" style="display: none;">
                             
                             <!-- 1. Executive Summary -->
                             <div class="report-block">
                                 <h3 class="block-title">1. Executive Summary</h3>
-                                <div class="summary-box" id="execSummary">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <div class="summary-box" id="execSummary"></div>
                             </div>
 
                             <!-- 2. Key Developments -->
                             <div class="report-block">
                                 <h3 class="block-title">2. Key Developments</h3>
-                                <div class="developments-grid" id="keyDevelopments">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <div class="developments-grid" id="keyDevelopments"></div>
                             </div>
 
                             <!-- 3. Emerging Trends -->
                             <div class="report-block">
                                 <h3 class="block-title">3. Emerging Trends</h3>
-                                <ul class="trends-list" id="emergingTrends">
-                                    <!-- Populated dynamically -->
-                                </ul>
+                                <ul class="trends-list" id="emergingTrends"></ul>
                             </div>
 
                             <!-- 4. Strategic Opportunities -->
                             <div class="report-block">
                                 <h3 class="block-title">4. Strategic Opportunities</h3>
-                                <div class="opportunities-grid" id="opportunities">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <div class="opportunities-grid" id="opportunities"></div>
                             </div>
 
                             <!-- 5. Threats and Risks -->
                             <div class="report-block">
                                 <h3 class="block-title">5. Threats and Risks</h3>
-                                <div class="risks-list" id="threats">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <div class="risks-list" id="threats"></div>
                             </div>
 
-                            <!-- 6. Strategic Implications -->
+                            <!-- 6. Evidence Conflicts -->
                             <div class="report-block">
-                                <h3 class="block-title">6. Strategic Implications</h3>
-                                <div class="implications-box" id="strategicImplications">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <h3 class="block-title">6. Evidence Conflicts</h3>
+                                <div class="conflicts-box" id="evidenceConflicts"></div>
                             </div>
 
-                            <!-- 7. Recommended Actions -->
+                            <!-- 7. Hypothesis Verification -->
                             <div class="report-block">
-                                <h3 class="block-title">7. Recommended Actions</h3>
-                                <div class="actions-priority-list" id="recommendedActions">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <h3 class="block-title">7. Hypothesis Verification</h3>
+                                <div class="hypothesis-box" id="hypothesisVerification"></div>
                             </div>
 
-                            <!-- 8. Dedicated Evidence & Sources -->
+                            <!-- 8. Strategic Implications -->
                             <div class="report-block">
-                                <h3 class="block-title">8. Dedicated Evidence & Sources</h3>
-                                <div class="sources-grid" id="sourcesContainer">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <h3 class="block-title">8. Strategic Implications</h3>
+                                <div class="implications-box" id="strategicImplications"></div>
                             </div>
 
-                            <!-- 9. Confidence & Coverage -->
+                            <!-- 9. Recommended Actions -->
                             <div class="report-block">
-                                <h3 class="block-title">9. Confidence & Coverage Summary</h3>
-                                <div class="coverage-box" id="coverageBox">
-                                    <!-- Populated dynamically -->
-                                </div>
+                                <h3 class="block-title">9. Recommended Actions</h3>
+                                <div class="actions-priority-list" id="recommendedActions"></div>
+                            </div>
+
+                            <!-- 10. Confidence and Uncertainty -->
+                            <div class="report-block">
+                                <h3 class="block-title">10. Confidence and Uncertainty Assessment</h3>
+                                <div class="confidence-box" id="confidenceUncertainty"></div>
+                            </div>
+
+                            <!-- 11. Dedicated Evidence and Sources -->
+                            <div class="report-block">
+                                <h3 class="block-title">11. Dedicated Evidence & Sources</h3>
+                                <div class="sources-grid" id="sourcesContainer"></div>
                             </div>
 
                         </div>
