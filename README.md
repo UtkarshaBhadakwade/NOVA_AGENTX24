@@ -4,6 +4,8 @@
 - **Utkarsha Bhadakwade**
 - **Pranav Gaikwad**
 - **Vedika Pangavhane**
+- **Shriraj Kamble**
+- **Prathamesh Kolhe**
 
 ---
 
