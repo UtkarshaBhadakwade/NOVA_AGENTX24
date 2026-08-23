@@ -82,7 +82,9 @@ NOVA Agent integrates 3 specialized external tools/APIs:
 NOVA Agent includes an isolated evaluation framework (`backend/evaluation/`) testing 8 benchmark scenarios (`NORMAL`, `AMBIGUOUS`, `ADVERSARIAL`, `CONTRADICTORY`, `INCOMPLETE_EVIDENCE`, `TOOL_FAILURE`, `REPEATED_RUNS`, `BASELINE_COMPARISON`). It measures task completion, latency, iterations, tool calls, groundedness ratios, failure recovery, uncertainty qualifications, statistical consistency across 5 repeated runs, and comparative performance against a single-call LLM baseline.
 
 #### 4. Advanced Tracing & Observability
-> Implement an additive, isolated tracing and observability layer capturing end-to-end investigation lifecycles, decision traces, tool latencies, structured error categorizations, controlled failure experiments, automatic root cause diagnosis, and before-vs-after optimization measurements.
+> Implement end-to-end tracing of agents, prompts, decisions, tool calls, latency, token usage, and errors. Introduce a controlled failure and use the trace to *identify the root cause, automatically diagnose it, and improve the system*. Demonstrate measurable before-vs-after improvements in execution time, tool calls, errors, or task success rate.
+> 
+> *LangSmith, Langfuse, OpenTelemetry, or equivalent may be used.*
 
 NOVA Agent incorporates a dedicated observability layer (`backend/observability/`) featuring a LangChain/LangGraph `CallbackHandler` that records trace IDs, execution spans, decision logs, tool latencies, structured error classifications (`API_ERROR`, `TIMEOUT`, `TOOL_FAILURE`), token usage, rule-based root cause diagnosis, and before-vs-after improvement comparisons.
 
@@ -212,6 +214,9 @@ Structured intelligence output containing:
 ### 6. System Evaluation & Live Intelligence Execution
 ![System Evaluation & Live Intelligence Execution](docs/screenshots/task6_evaluation_execution.png)
 
+### 7. Advanced Tracing & Observability
+![7. Advanced Tracing & Observability](docs/screenshots/task7_tracing_observability.png)
+
 ---
 
 ## 🛠️ Technology Stack
@@ -268,7 +273,11 @@ TAVILY_API_KEY=your_tavily_api_key_here
   ```powershell
   .\venv\Scripts\python -m backend.evaluation.run_evaluation
   ```
-- **Option B: FastAPI Web Server**
+- **Option B: Run Isolated Tracing & Observability Suite**
+  ```powershell
+  .\venv\Scripts\python -m backend.observability.run_observability_test
+  ```
+- **Option C: FastAPI Web Server**
   ```powershell
   .\venv\Scripts\uvicorn backend.main:app --reload --port 8000
   ```
