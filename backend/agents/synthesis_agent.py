@@ -65,6 +65,11 @@ def synthesis_agent_node(state: AgentState) -> Dict[str, Any]:
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 
     final_report = None
+    token_usage = {
+        "input_tokens": "NOT_AVAILABLE",
+        "output_tokens": "NOT_AVAILABLE",
+        "total_tokens": "NOT_AVAILABLE"
+    }
 
     if api_key:
         try:
@@ -109,6 +114,14 @@ You MUST return your response ONLY as a valid JSON object with the exact keys:
 
             response = llm.invoke(prompt_content)
             raw_text = response.content.strip()
+            
+            usage_meta = getattr(response, "usage_metadata", None)
+            if usage_meta and isinstance(usage_meta, dict):
+                token_usage = {
+                    "input_tokens": usage_meta.get("input_tokens", "NOT_AVAILABLE"),
+                    "output_tokens": usage_meta.get("output_tokens", "NOT_AVAILABLE"),
+                    "total_tokens": usage_meta.get("total_tokens", "NOT_AVAILABLE")
+                }
             
             # Extract JSON block
             if "```json" in raw_text:
@@ -184,5 +197,6 @@ You MUST return your response ONLY as a valid JSON object with the exact keys:
         "task_complete": True,
         "actions_taken": ["StrategicSynthesisAgent:analyze_information"],
         "agent_history": ["StrategicSynthesisAgent"],
-        "trace_events": new_trace_events
+        "trace_events": new_trace_events,
+        "token_usage": token_usage
     }

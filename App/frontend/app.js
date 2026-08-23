@@ -458,9 +458,10 @@ function escapeHtml(text) {
 }
 
 function updateGeminiQuotaPanel(tokenUsage) {
-    const inputEl = document.getElementById('inputTokensVal');
-    const outputEl = document.getElementById('outputTokensVal');
-    const totalEl = document.getElementById('totalTokensVal');
+    const inputEl = document.getElementById('sidebarInputTokens');
+    const outputEl = document.getElementById('sidebarOutputTokens');
+    const totalEl = document.getElementById('sidebarTotalTokens');
+    const statusBadge = document.getElementById('geminiStatusBadge');
     
     if (!inputEl || !outputEl || !totalEl) return;
 
@@ -472,9 +473,12 @@ function updateGeminiQuotaPanel(tokenUsage) {
         inputEl.innerText = (typeof inp === 'number') ? inp.toLocaleString() : (inp || 'NOT_AVAILABLE');
         outputEl.innerText = (typeof out === 'number') ? out.toLocaleString() : (out || 'NOT_AVAILABLE');
         totalEl.innerText = (typeof tot === 'number') ? tot.toLocaleString() : (tot || 'NOT_AVAILABLE');
+        
+        if (statusBadge) statusBadge.innerText = "ACTIVE";
     } else {
-        inputEl.innerText = 'NOT_AVAILABLE';
-        outputEl.innerText = 'NOT_AVAILABLE';
-        totalEl.innerText = 'NOT_AVAILABLE';
+        inputEl.innerText = '--';
+        outputEl.innerText = '--';
+        totalEl.innerText = '--';
+        if (statusBadge) statusBadge.innerText = "READY";
     }
 }

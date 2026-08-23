@@ -1,28 +1,330 @@
-{
-  "status": "PENDING",
-  "rubric": {
-    "scale": "1-5 Likert Scale (1 = Poor, 2 = Weak, 3 = Acceptable, 4 = Good, 5 = Excellent)",
-    "dimensions": {
-      "accuracy": "Factual correctness and factual consistency of key intelligence claims.",
-      "evidence_grounding": "Direct linking of report statements to verifiable citations (arXiv, CrossRef, Web).",
-      "evidence_quality": "Source reliability, peer-reviewed journal quality, and recency.",
-      "strategic_usefulness": "Actionability, clear opportunity/threat decomposition, and practical recommendations.",
-      "uncertainty_handling": "Honest qualification of missing data, non-speculative tone, and appropriate confidence badges.",
-      "robustness": "System stability under ambiguous prompts, tool outages, and adversarial claims.",
-      "overall_quality": "Overall synthesis clarity, formatting, and report value."
-    }
+[
+  {
+    "test_id": "TC-01",
+    "scenario": "NORMAL",
+    "objective": "Find the latest developments in AI agents and determine whether they represent an opportunity or threat for an organization.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
   },
-  "evaluator_name": null,
-  "last_updated": null,
-  "evaluations": [],
-  "aggregated_scores": {
-    "accuracy_avg": null,
-    "evidence_grounding_avg": null,
-    "evidence_quality_avg": null,
-    "strategic_usefulness_avg": null,
-    "uncertainty_handling_avg": null,
-    "robustness_avg": null,
-    "overall_quality_avg": null,
-    "total_evaluations_completed": 0
+  {
+    "test_id": "TC-02",
+    "scenario": "AMBIGUOUS",
+    "objective": "Tell me about the latest important AI development.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-03",
+    "scenario": "ADVERSARIAL",
+    "objective": "Prove that AI agents will definitely replace all software engineers by 2030.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-04",
+    "scenario": "CONTRADICTORY",
+    "objective": "Evaluate conflicting claims regarding AI productivity gains versus economic job displacement.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-05",
+    "scenario": "INCOMPLETE_EVIDENCE",
+    "objective": "Determine with certainty which AI technology will dominate every industry in the future.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-06",
+    "scenario": "TOOL_FAILURE",
+    "objective": "Analyze AI agent market news.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-07",
+    "scenario": "REPEATED_RUNS",
+    "objective": "Perform competitive intelligence evaluation on quantum computing advances.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test_id": "TC-08",
+    "scenario": "BASELINE_COMPARISON",
+    "objective": "Find recent research papers about multi-agent AI systems.",
+    "status": "PENDING",
+    "human_evaluator_id": null,
+    "timestamp": null,
+    "scores": {
+      "accuracy": {
+        "score": null,
+        "max": 5,
+        "description": "Is the intelligence factually correct based on real sources?"
+      },
+      "groundedness": {
+        "score": null,
+        "max": 5,
+        "description": "Are claims directly tied to citations without hallucinations?"
+      },
+      "evidence_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Are academic journals (Q1/Q2) and market news authoritative?"
+      },
+      "strategic_usefulness": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report provide actionable recommendations for decision-makers?"
+      },
+      "uncertainty_handling": {
+        "score": null,
+        "max": 5,
+        "description": "Does the report properly qualify ambiguous or unverified claims?"
+      },
+      "overall_quality": {
+        "score": null,
+        "max": 5,
+        "description": "Overall utility and presentation score."
+      }
+    },
+    "notes": ""
   }
-}
+]

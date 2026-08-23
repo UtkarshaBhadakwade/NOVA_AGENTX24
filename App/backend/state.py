@@ -68,3 +68,4 @@ class AgentState(TypedDict):
     errors: Annotated[List[str], merge_lists]
     next_action: str
     search_query: str
+    token_usage: Optional[Dict[str, Any]]
