@@ -1,479 +1,40 @@
-# NOVA Agent
+# NOVA Agent — Autonomous Competitive Intelligence System
 
-## Autonomous Competitive Intelligence Platform
-
-**NOVA Agent** is an enterprise-grade autonomous AI-powered Competitive Intelligence platform engineered to autonomously monitor, verify, and analyze:
-
-- **Research Developments & Scientific Breakthroughs**
-- **Peer-Reviewed Publications & Technical Preprints**
-- **Industry News & Market Dynamics**
-- **Competitor Announcements & Product Launches**
-- **Emerging Technologies & Disruptive Innovations**
-- **Market Trends & Industry Dynamics**
-- **Strategic Growth Opportunities**
-- **Threats, Risks, & Evidence Conflicts**
+[![Vercel Live Deployment](https://img.shields.io/badge/Vercel-Live_Deployment-success?style=flat-square&logo=vercel)](https://nova-agentx-24.vercel.app)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg?style=flat-square&logo=python)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-orange.svg?style=flat-square)](https://github.com/langchain-ai/langgraph)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 
 ---
 
-### 🎯 Problem Statement
+## 📁 Repository Folder Structure
 
-Organizations, startups, and research institutions operate in rapidly changing competitive markets where keeping track of scientific publications, patent filings, competitor product announcements, and market developments is critical. However, manually gathering, verifying, and synthesizing data across fragmented web search engines, academic journals, and news portals is time-consuming, inefficient, and prone to missing crucial intelligence.
-
-**NOVA Agent** solves this by orchestrating an **Autonomous Multi-Agent System** using **LangGraph** and **LangChain Core**. It continuously monitors research and market activities, reconciles conflicting claims, verifies analytical hypotheses, and delivers structured, evidence-grounded competitive intelligence reports in real time.
-
----
-
-## 1. PROJECT OVERVIEW
-
-### What is NOVA Agent?
-NOVA Agent is a stateful multi-agent system designed for automated market intelligence gathering, literature synthesis, and strategic evidence verification. It combines dynamic planning, parallel multi-agent research dispatches, self-evaluation loops, persistent memory, end-to-end observability, and automated system diagnostics into a single unified platform.
-
-### Why is it needed?
-Standard web search engines and single-prompt LLM chatbots suffer from significant drawbacks:
-1. **Lack of Evidence Grounding**: Generic chatbots often hallucinate facts, invent citations, or draw conclusions from incomplete data.
-2. **Manual Fragmentation**: Analysts must manually search web news, arXiv preprints, and CrossRef DOIs separately.
-3. **No Conflict Resolution**: Traditional search engines do not reconcile contradictory market claims against academic research.
-4. **No Autonomous Recovery**: When an API fails or returns empty data, simple scripts crash instead of routing to alternative tools.
-
-### What Makes NOVA Agent Different From a Normal Chatbot?
-Unlike linear conversational chatbots, NOVA Agent operates an autonomous, stateful **ReAct (Reasoning + Action)** control loop. The system dynamically decomposes complex user objectives into adaptive execution plans, dispatches specialized agents concurrently, verifies evidence sufficiency, autonomously replans upon missing data, and compiles 11-part structured intelligence reports grounded exclusively in verified sources.
-
-```
-USER OBJECTIVE
-      │
-      ▼
-PLAN GENERATION (Supervisor Agent)
-      │
-      ▼
-TASK DECOMPOSITION & DELEGATION
-      │
-      ▼
-PARALLEL AGENT DISPATCH (Research + Market Agents)
-      │
-      ▼
-DYNAMIC TOOL EXECUTION (Tavily + arXiv + CrossRef)
-      │
-      ▼
-OBSERVATION & SHARED STATE UPDATE
-      │
-      ▼
-SELF-EVALUATION & CONFLICT RESOLUTION (Evaluator Agent)
-      │
-      ├───────────────────────┐
-      │ (Evidence Insufficient)│ (Evidence Sufficient)
-      ▼                       ▼
-AUTONOMOUS REPLANNING    STRATEGIC SYNTHESIS (11-Part Intelligence Report)
-```
-
----
-
-## 2. REPOSITORY STRUCTURE
-
-Below is the directory structure mapping the project repository:
-
-```
-NOVA_AGENTX24/
-│
-├── App/                             # Complete Application Bundle
-│   ├── app.py                       # Standalone Python application launcher
-│   ├── backend/                     # Backend Python package mirror
-│   ├── frontend/                    # Web interface static files mirror
-│   ├── api/                         # Vercel serverless entry point
-│   └── vercel.json                  # Serverless function configuration
-│
-├── Dataset/                         # Benchmark & Validation Datasets
-│   ├── sample_investigations.json   # Sample investigation benchmark dataset
-│   └── README.md                    # Dataset documentation
-│
-├── Model/                           # Multi-Agent Architectural Models
-│   ├── Model_1_Supervisor/          # Supervisor agent planning model specifications
-│   ├── Model_2_Evaluator/           # Evaluator & hypothesis verification model specifications
-│   ├── Model_3_Synthesis/           # Strategic synthesis model specifications
-│   └── README.md                    # Multi-agent model documentation
-│
-├── Documents/                       # Documentation & Project Presentations
-│   ├── Document_Generated_Report.md # Generated system documentation report
-│   ├── TASK7_OBSERVABILITY.md       # Task 7 Tracing & Observability architecture guide
-│   ├── PPT/                         # Presentation slide outlines and overviews
-│   └── screenshots/                 # High-resolution system screenshots
-│
-├── backend/                         # Core Production Backend Architecture
-│   ├── agent.py                     # Compiled LangGraph orchestration graph & checkpointer
-│   ├── main.py                      # FastAPI REST API endpoints & server setup
-│   ├── state.py                     # Shared AgentState schema & list reducers
-│   ├── db.py                        # SQLite persistent long-term memory engine
-│   ├── agents/                      # Specialized Agent Implementations
-│   │   ├── research_agent.py        # Academic literature research agent
-│   │   ├── market_agent.py          # Market intelligence web search agent
-│   │   ├── evaluator_agent.py       # Self-evaluation & conflict resolution agent
-│   │   └── synthesis_agent.py       # 11-Part strategic synthesis report agent
-│   ├── tools/                       # External Tool & API Integrations
-│   │   ├── web_search.py            # Tavily Web Search API client
-│   │   ├── research_search.py       # arXiv REST XML API client
-│   │   ├── crossref_search.py       # CrossRef REST API client
-│   │   └── analyze.py               # Text processing & chunking utilities
-│   ├── evaluation/                  # Task 6 Isolated Evaluation Framework
-│   │   ├── evaluator.py             # Evaluation orchestrator
-│   │   ├── test_cases.py            # 8 Benchmark test scenarios
-│   │   ├── metrics.py               # Automated evaluation metrics engine
-│   │   ├── baseline.py              # Single LLM baseline comparator
-│   │   ├── human_evaluation.py      # Human evaluation rubric template
-│   │   ├── run_evaluation.py        # CLI evaluation test runner
-│   │   └── reports/                 # Saved evaluation JSON/CSV reports
-│   └── observability/               # Task 7 Isolated Observability Framework
-│       ├── tracer.py                # LangChain CallbackHandler & trace collector
-│       ├── metrics.py               # Observability metrics calculator
-│       ├── diagnostics.py           # Rule-based automatic root cause diagnostic engine
-│       ├── failure_tests.py         # Controlled failure experiment runner
-│       ├── improvement.py           # Automatic runtime strategy optimizer
-│       ├── run_observability_test.py# CLI observability test runner
-│       └── reports/                 # Saved observability JSON/CSV reports
-│
-├── frontend/                        # Web Frontend User Interface
-│   ├── index.html                   # Single-page intelligence workspace HTML
-│   ├── styles.css                   # Glassmorphic dark design system CSS
-│   └── app.js                       # Asynchronous frontend state manager JS
-│
-├── api/                             # Serverless Entry Points
-│   └── index.py                     # Vercel serverless function entry handler
-│
-├── docs/                            # Documentation Assets & Screenshots
-│   └── screenshots/                 # Task 1-7 embedded interface screenshots
-│
-├── .gitignore                       # Git ignore configuration
-├── LICENSE                          # MIT Open Source License
-├── TASK7_OBSERVABILITY.md           # Task 7 Observability specification document
-├── requirements.txt                 # Python dependencies manifest
-├── vercel.json                      # Vercel serverless deployment routing config
-└── README.md                        # Master Project Documentation
-```
-
-### Folder Purpose Descriptions:
-
-- **`Dataset/`**: Contains reference investigation benchmark datasets used for offline evaluation and testing.
-- **`Model/`**: Contains architectural specifications and prompt model configurations for the Supervisor, Evaluator, and Synthesis agents.
-- **`Documents/`**: Contains project documentation, Task 7 observability documentation, presentation slide outlines, and exported architectural reports.
-- **`App/`**: Contains the complete mirror bundle of backend modules, frontend assets, and standalone launcher script (`app.py`).
-- **`backend/`**: Contains the production Python application, including FastAPI routes, LangGraph graph definitions, agents, tool clients, SQLite memory, evaluation suite, and observability module.
-- **`frontend/`**: Contains the web interface (HTML, CSS, JavaScript) featuring the live execution stream, memory indicator, Gemini usage panel, and execution metrics panel.
-
----
-
-## 3. SYSTEM ARCHITECTURE
-
-NOVA Agent is built on **LangGraph**, providing a stateful, cyclic, multi-agent orchestration graph equipped with shared state reducers, thread checkpointing (`MemorySaver`), parallel execution nodes, and autonomous replanning logic.
-
-### 📐 End-to-End System Architecture Diagram
-
-```mermaid
-flowchart TD
-    User([User Objective]) --> Frontend[NOVA Frontend Workspace]
-    Frontend --> FastAPI[FastAPI REST API /analyze]
-    FastAPI --> DB[(SQLite Long-Term Memory)]
-    DB --> Checkpoint[LangGraph Thread Checkpoint]
-    Checkpoint --> Supervisor[Supervisor Agent - Dynamic Planner]
-    
-    Supervisor -->|Parallel Dispatch| ResearchAgent[Research Agent - Academic Literature]
-    Supervisor -->|Parallel Dispatch| MarketAgent[Market Intelligence Agent - Web News]
-    
-    ResearchAgent --> ArXivAPI[arXiv REST API]
-    ResearchAgent --> CrossRefAPI[CrossRef REST API]
-    MarketAgent --> TavilyAPI[Tavily Search API]
-    
-    ArXivAPI --> SharedState[Shared AgentState Reducer]
-    CrossRefAPI --> SharedState
-    TavilyAPI --> SharedState
-    
-    SharedState --> Evaluator[Evaluator Agent - Self-Evaluation]
-    
-    Evaluator -->|Evidence Insufficient| Supervisor
-    Evaluator -->|Evidence Sufficient| Synthesis[Strategic Synthesis Agent]
-    
-    Synthesis --> GeminiLLM[Google Gemini 3.6 Flash]
-    GeminiLLM --> Report[11-Part Intelligence Report]
-    
-    Report --> Frontend
-    Report --> DB
-```
-
----
-
-## 4. MULTI-AGENT ARCHITECTURE
-
-NOVA Agent divides complex competitive intelligence gathering across 5 specialized collaborative agents:
-
-### 1. Supervisor Agent (`backend/agent.py`)
-- **Responsibility**: Serves as the central orchestrator and dynamic planner. It analyzes the user objective, checks SQLite long-term memory for prior investigations, generates an adaptive execution plan, dispatches research tasks, monitors resource limits (max iterations = 8), and triggers replanning if data gaps are detected.
-
-### 2. Research Agent (`backend/agents/research_agent.py`)
-- **Responsibility**: Focuses on scientific and technical literature search. It translates objectives into academic queries, queries the arXiv REST XML API and CrossRef REST API, parses paper abstracts, DOIs, authors, and publication dates, and formats findings into structured research evidence.
-
-### 3. Market Intelligence Agent (`backend/agents/market_agent.py`)
-- **Responsibility**: Focuses on live web news and commercial market developments. It queries the Tavily Web Search API, extracts news articles, competitor product announcements, and press releases, and feeds real-time market data into the shared state.
-
-### 4. Evaluator Agent (`backend/agents/evaluator_agent.py`)
-- **Responsibility**: Conducts hypothesis testing, conflict resolution, and self-evaluation. It checks whether web claims conflict with academic literature, evaluates whether collected evidence is sufficient to satisfy the objective, and assigns hypothesis verification status (`SUPPORTED`, `PARTIALLY_SUPPORTED`, `NOT_SUPPORTED`, `INSUFFICIENT_EVIDENCE`).
-
-### 5. Strategic Synthesis Agent (`backend/agents/synthesis_agent.py`)
-- **Responsibility**: Compiles all verified findings, market trends, academic citations, and uncertainty assessments into a clean, 11-part structured competitive intelligence report using Google Gemini 3.6 Flash. If API quotas are exceeded, it executes a grounded non-LLM fallback synthesis engine.
-
----
-
-## 5. AGENTIC REASONING AND LANGGRAPH
-
-### ReAct Control Loop in LangGraph
-
-NOVA Agent implements a stateful **ReAct (Reasoning + Action)** pattern:
-
-```
-USER OBJECTIVE ──► SUPERVISOR ──► TASK DECOMPOSITION ──► AGENT DELEGATION
-                                                               │
-┌──────────────────────────────────────────────────────────────┘
-▼
-TOOL EXECUTION ──► OBSERVATION ──► SHARED STATE UPDATE ──► EVALUATION
-                                                               │
-         ┌─────────────────────────────────────────────────────┤
-         ▼                                                     ▼
-(Evidence Insufficient)                                (Evidence Sufficient)
-AUTONOMOUS REPLANNING                                  SYNTHESIS & REPORT
-```
-
-### Key Architectural Capabilities:
-
-1. **Dynamic Planning**: The Supervisor breaks objectives into step-by-step plans stored in `state["plan"]`.
-2. **Conditional Routing**: LangGraph conditional edges (`route_supervisor`) dynamically select whether to execute parallel research nodes, evaluate evidence, or trigger replanning.
-3. **Shared State & Reducers**: The `AgentState` schema in `backend/state.py` uses `Annotated[List[Any], merge_lists]` reducers to combine findings from parallel worker agents without race conditions.
-4. **Autonomous Replanning**: If the Evaluator Agent marks `evidence_sufficient = False`, the Supervisor increments `replan_count` and generates additional search queries.
-5. **Loop Protection & Resource Budgets**: Limits execution to a maximum of 8 iterations (`max_iterations = 8`). If the loop limit is reached, it automatically forces strategic report synthesis with available data.
-6. **Failure Recovery & Tool Fallback**: If Tavily fails or times out, the system logs the tool failure (`state["failed_tools"]`), activates fallback routing (`state["fallback_attempts"]`), and relies on arXiv and CrossRef academic search.
-
-### Safe Trace Event Protocol:
-Instead of exposing private LLM chain-of-thought or internal reasoning prompts, NOVA Agent records sanitized high-level trace tags:
-- `[PLANNING]`: Supervisor creating execution plan.
-- `[PLAN_CREATED]`: Generated plan steps.
-- `[RESOURCE_STATUS]`: Iteration budget tracking.
-- `[PARALLEL_EXECUTION]`: Concurrent Research & Market agent dispatch.
-- `[SELF_EVALUATION]`: Evaluator hypothesis and evidence check.
-- `[CHECKPOINT]`: State checkpointed under thread ID.
-- `[TASK_COMPLETE]`: Final report generated successfully.
-
----
-
-## 6. TOOLS AND APIs
-
-| Tool / API | Category | Purpose & Usage in NOVA Agent |
-| :--- | :--- | :--- |
-| **Google Gemini 3.6 Flash** | LLM Reasoning & Synthesis | Synthesizes complex evidence into 11-part structured intelligence reports via `langchain_google_genai`. |
-| **Tavily Web Search API** | Market Intelligence Tool | Searches live web news, competitor announcements, product releases, and market developments. |
-| **arXiv REST XML API** | Academic Literature Tool | Queries open-access scientific preprints, computer science papers, and technical literature. |
-| **CrossRef REST API** | Scholarly Metadata Tool | Searches peer-reviewed journal articles, DOIs, publication years, and academic citations. |
-| **FastAPI** | Web Application Framework | Exposes high-performance async REST endpoints (`/analyze`, `/investigations`, `/health`). |
-| **LangGraph** | Multi-Agent Orchestration | Manages stateful cyclic execution graphs, parallel dispatches, conditional routing, and checkpointing. |
-| **LangChain Core** | Agent Framework | Provides unified abstractions for callback handlers, tools, messages, and model integrations. |
-| **SQLite3** | Persistent Storage | Stores long-term investigation history, search indexes, report snapshots, and pinned items. |
-
----
-
-## 7. MEMORY AND CONTEXT MANAGEMENT
-
-NOVA Agent features a dual-layer memory system combining short-term state management with long-term persistent storage:
-
-```
-                      USER OBJECTIVE
-                            │
-            ┌───────────────┴───────────────┐
-            ▼                               ▼
-  SHORT-TERM MEMORY                 LONG-TERM MEMORY
-(LangGraph Thread State)        (SQLite Persistent Database)
-  - Active plan                    - Past investigation history
-  - Parallel agent findings        - Full report JSON snapshots
-  - Verification state             - Keyword search index
-  - Thread Checkpointer            - Pinned investigations
-```
-
-### Short-Term Memory
-- Managed natively by LangGraph's `MemorySaver` checkpointer and `AgentState`.
-- Maintains active plan steps, pending tasks, findings from parallel agent dispatches, evidence conflict lists, and thread IDs across cyclic steps within an investigation.
-
-### Long-Term Memory
-- Powered by an embedded **SQLite3** database engine ([`backend/db.py`](file:///c:/Users/VEDIKA/Downloads/New%20folder/backend/db.py)).
-- Automatically saves completed investigation reports, objective titles, step counts, tool call lists, and timestamps.
-- **Search & Retrieval**: When a user enters a new objective, NOVA Agent performs a keyword search across past investigations. If a match is found, it automatically loads prior investigation context into `state["memory_context"]`, providing historical continuity.
-
----
-
-## 8. INVESTIGATION HISTORY
-
-The left sidebar of the NOVA Agent workspace provides full access to past investigation records:
-
-- **Pinned Investigations**: Pin important investigations to keep them permanently at the top of the sidebar.
-- **Recent Investigations**: View chronological list of recent intelligence lookups with timestamps and step counts.
-- **Real-Time History Search**: Filter past reports dynamically using the search bar (`GET /investigations/search?q=...`).
-- **One-Click Memory Reload**: Click any saved item to instantly reload its 11-part intelligence report and execution timeline.
-
-![Investigation History](docs/screenshots/task5_adaptive_workspace.png)
-
----
-
-## 9. INTELLIGENCE REPORT
-
-When an investigation completes, NOVA Agent generates a comprehensive **11-Part Structured Competitive Intelligence Report**:
-
-1. **EXECUTIVE SUMMARY**: High-level synthesis of key findings and strategic positioning.
-2. **KEY DEVELOPMENTS**: Grid of verified news, research discoveries, and market events.
-3. **EMERGING TRENDS**: Identified technology trajectories and market patterns.
-4. **OPPORTUNITIES**: Strategic growth areas and market gaps.
-5. **THREATS AND RISKS**: Competitive threats, market risks, and technology challenges.
-6. **EVIDENCE CONFLICTS**: Reconciled discrepancies between web market claims and academic papers.
-7. **HYPOTHESIS VERIFICATION**: Structured verification status (`SUPPORTED`, `PARTIALLY_SUPPORTED`, `NOT_SUPPORTED`, `INSUFFICIENT_EVIDENCE`).
-8. **STRATEGIC IMPLICATIONS**: Business and operational impact analysis.
-9. **RECOMMENDED ACTIONS**: Actionable steps for leadership and product teams.
-10. **CONFIDENCE AND UNCERTAINTY ASSESSMENT**: Rated confidence level (`HIGH`, `MEDIUM`, `LOW`) and uncertainty qualifications.
-11. **SOURCES USED**: Clickable grounded source citations linking to web news, arXiv preprints, and CrossRef DOIs.
-
-![Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
-
----
-
-## 10. OBSERVABILITY
-
-NOVA Agent incorporates a dedicated, isolated observability layer ([`backend/observability/`](file:///c:/Users/VEDIKA/Downloads/New%20folder/backend/observability)) to track execution telemetry:
-
-- **End-to-End Tracing (`NOVAObservabilityTracer`)**: Inherits from `BaseCallbackHandler` to record unique `Trace ID` (`trc_...`), component start/end times, tool latencies, sanitized decision logs, and error spans.
-- **Gemini Token Usage Metadata**: Safely extracts exact `input_tokens`, `output_tokens`, and `total_tokens` from `AIMessage.usage_metadata` returned by Gemini. If unavailable (e.g. non-LLM fallback run), it records `"NOT_AVAILABLE"`.
-- **Rule-Based Automatic Root Cause Diagnosis**: Evaluates trace events to automatically diagnose tool timeouts or API failures and output structured JSON recommendations (`root_cause`, `affected_component`, `evidence`, `severity`, `recommended_improvement`).
-- **Controlled Failure Experiments**: Simulates tool timeouts in explicit test modes to test recovery without disrupting user workflows.
-- **Before vs After Performance Measurement**: Compares execution time, tool call counts, error counts, and task success rates before and after runtime optimizations.
-
-### Compact Sidebar Observability Cards:
-The web interface features two compact sidebar panels matching the NOVA off-white/warm-beige theme:
-- **GEMINI USAGE**: Displays Input Tokens, Output Tokens, Total Tokens, and Status (`ACTIVE` / `READY`).
-- **EXECUTION METRICS**: Displays Latency (seconds), Iterations, Tool Calls, Error Count, and Status (`SUCCESS` / `RECOVERED` / `READY`).
-
-![Advanced Tracing & Observability](docs/screenshots/task7_tracing_observability.png)
-
----
-
-## 11. EVALUATION
-
-NOVA Agent includes an isolated system evaluation framework ([`backend/evaluation/`](file:///c:/Users/VEDIKA/Downloads/New%20folder/backend/evaluation)):
-
-- **8 Benchmark Test Scenarios**: Evaluates system behavior across `NORMAL`, `AMBIGUOUS`, `ADVERSARIAL`, `CONTRADICTORY`, `INCOMPLETE_EVIDENCE`, `TOOL_FAILURE`, `REPEATED_RUNS`, and `BASELINE_COMPARISON`.
-- **Automated Performance Metrics**: Measures task completion rate, groundedness ratio, failure recovery success rate, total latency, iteration counts, and tool calls.
-- **Statistical Consistency (5 Repeated Runs)**: Evaluates latency variance and metric stability across repeated trials.
-- **Baseline Comparison**: Compares NOVA Agent's multi-agent graph against a single-call LLM baseline to quantify performance gains from agentic reasoning and tool calling.
-- **Human Evaluation Rubric**: Includes structured 1–5 scoring templates for human reviewer validation (`Accuracy`, `Groundedness`, `Evidence Quality`, `Strategic Usefulness`, `Uncertainty Handling`, `Overall Quality`).
-
-![System Evaluation Execution](docs/screenshots/task6_evaluation_execution.png)
-
----
-
-## 12. FAILURE RECOVERY
-
-NOVA Agent is designed for high resilience against real-world API and network failures:
-
-1. **API Timeout Handling**: If Tavily or an academic API times out, the tool error is caught, categorized (`TIMEOUT`), and logged to the trace.
-2. **Autonomous Tool Fallback**: Upon web search failure, the Supervisor Agent automatically falls back to arXiv and CrossRef academic search.
-3. **Structured Non-LLM Fallback Synthesis**: If Gemini API quotas are exhausted (HTTP 429), `synthesis_agent.py` executes a deterministic, grounded fallback synthesis engine using collected evidence.
-4. **Iteration Budget Caps**: Protects against infinite loops by capping execution at 8 iterations (`max_iterations = 8`).
-5. **Data Availability Notes**: Reports transparently to the user when data sources are unavailable due to tool failures.
-
----
-
-## 13. TECHNOLOGY STACK
-
-| Technology | Purpose in NOVA Agent |
-| :--- | :--- |
-| **Python 3.11+** | Primary backend language |
-| **FastAPI** | Async REST API server |
-| **LangGraph** | Multi-agent cyclic graph orchestration & state management |
-| **LangChain Core** | Callbacks, tools, messages, and model abstractions |
-| **Google Gemini 3.6 Flash** | AI reasoning, hypothesis evaluation, and report synthesis |
-| **Tavily Web Search API** | Live market news and web intelligence gathering |
-| **arXiv REST XML API** | Open-access scientific research paper search |
-| **CrossRef REST API** | Peer-reviewed journal metadata and DOI search |
-| **HTML5 / Vanilla CSS3 / JavaScript** | Single-page intelligence workspace frontend |
-| **SQLite3** | Persistent long-term memory & investigation database |
-| **Vercel Serverless** | Cloud deployment platform (`api/index.py`) |
-
----
-
-## 14. INSTALLATION
-
-Follow these steps to set up and run NOVA Agent locally:
-
-### Step 1: Clone Repository
-```powershell
-git clone https://github.com/UtkarshaBhadakwade/NOVA_AGENTX24.git
-cd NOVA_AGENTX24
-```
-
-### Step 2: Create & Activate Virtual Environment
-```powershell
-python -m venv venv
-.\venv\Scripts\activate
-```
-
-### Step 3: Install Dependencies
-```powershell
-pip install -r requirements.txt
-```
-
-### Step 4: Configure Environment Variables
-Create a `.env` file in the root directory (or in `backend/.env`):
-```env
-GEMINI_API_KEY=your_google_gemini_api_key_here
-TAVILY_API_KEY=your_tavily_search_api_key_here
-```
-
-### Step 5: Start FastAPI Server
-```powershell
-python -m uvicorn backend.main:app --reload --port 8000
-```
-
-### Step 6: Access Web Interface
-Open your browser and navigate to:
 ```text
-http://localhost:8000
+NOVA_AGENTX24/
+├── Dataset/                     # Datasets & Benchmarks (1, 2, 3)
+│   ├── sample_investigations.json
+│   └── README.md
+├── Model/                       # Multi-Agent Models
+│   ├── Model_1_Supervisor/      # Supervisor Dynamic Planning Model (supervisor.py)
+│   ├── Model_2_Evaluator/       # Evaluator Hypothesis & Conflict Model (evaluator.py)
+│   ├── Model_3_Synthesis/       # Strategic Synthesis Model (synthesis_agent.py)
+│   └── README.md
+├── Documents/                   # Presentation & Generated Reports
+│   ├── PPT/                     # Presentation Slide Outlines
+│   ├── screenshots/             # System UI Screenshots
+│   └── Document_Generated_Report.md
+├── App/                         # Main Application Directory (.py, backend, frontend, api)
+│   ├── backend/                 # FastAPI, LangGraph agents, main.py, agent.py
+│   ├── frontend/                # Single-Page Web Dashboard (index.html, styles.css, app.js)
+│   ├── api/                     # Vercel Serverless Function entry point (index.py)
+│   └── app.py                   # Standalone Python Application Launcher
+├── backend/
+│   └── evaluation/              # Isolated System Evaluation Module & Reports
+├── vercel.json                  # Vercel deployment configuration
+├── requirements.txt             # Project dependencies
+├── LICENSE                      # License
+└── README.md                    # Master Documentation File
 ```
-
----
-
-## 15. ENVIRONMENT VARIABLES
-
-| Variable | Required | Description |
-| :--- | :--- | :--- |
-| **`GEMINI_API_KEY`** | Yes | Google Gemini API key for LLM reasoning and synthesis. |
-| **`TAVILY_API_KEY`** | Yes | Tavily Web Search API key for market news search. |
-| **`GOOGLE_API_KEY`** | Optional | Alternate environment key for Google Gemini API. |
-| **`LANGCHAIN_TRACING_V2`** | Optional | Set to `true` to enable external LangSmith tracing. |
-| **`LANGCHAIN_API_KEY`** | Optional | API key for external LangSmith observability platform. |
-
----
-
-## 16. HOW TO RUN
-
-### 1. Web Application (FastAPI Server)
-```powershell
-python -m uvicorn backend.main:app --reload --port 8000
-```
-
-### 2. Standalone Application Launcher
-```powershell
-python App/app.py
-```
-
-### 3. Run Isolated Task 6 System Evaluation Suite
-```powershell
-python -m backend.evaluation.run_evaluation
-```
-*Generates evaluation reports in `backend/evaluation/reports/`.*
-
-### 4. Run Isolated Task 7 Tracing & Observability Suite
-```powershell
-python -m backend.observability.run_observability_test
-```
-*Generates observability reports in `backend/observability/reports/`.*
 
 ---
 
@@ -487,6 +48,237 @@ python -m backend.observability.run_observability_test
 
 ---
 
-## 📄 License
+## 🎯 Problem Statement
 
-This project is licensed under the **MIT License** - see the [`LICENSE`](file:///c:/Users/VEDIKA/Downloads/New%20folder/LICENSE) file for details.
+Organizations, startups, and research institutions operate in rapidly changing competitive markets where keeping track of scientific publications, patent filings, competitor product announcements, and market developments is critical. However, manually gathering, verifying, and synthesizing data across fragmented web search engines, academic journals, and news portals is time-consuming, inefficient, and prone to missing crucial intelligence.
+
+**NOVA Agent** solves this by orchestrating an **Autonomous Multi-Agent System** that continuously monitors research and market activities, reconciles conflicting claims, verifies analytical hypotheses, and delivers structured, evidence-grounded competitive intelligence reports in real time.
+
+---
+
+## 🧠 Agentic Reasoning, Tool Calling & Evaluation Architecture
+
+### Mandatory Capabilities
+
+#### 1. Agentic Reasoning
+> Implement a reasoning pattern such as **ReAct** or an equivalent approach. The agent should reason, decide the next action, use tools, observe results, and continue until the task is completed.
+
+NOVA Agent implements a stateful **ReAct (Reasoning + Action)** loop in LangGraph:
+- **Reason**: Inspects internal state and determines what information is required.
+- **Act**: Dynamically chooses tools (`web_search`, `research_search`, `crossref_search`, `analyze_information`).
+- **Observe**: Collects tool outputs, updates shared state via list reducers, and continues until evidence is sufficient or safety limits are reached.
+
+#### 2. Tool Calling
+> Integrate at least **2 external tools/APIs** relevant to the problem. The agent should dynamically determine when and which tool to use.
+
+NOVA Agent integrates 3 specialized external tools/APIs:
+- **Tavily Web Search API**: Live web market news, product launches, and competitor activities.
+- **arXiv REST XML API**: Scientific research papers, technical preprints, and open-access literature.
+- **CrossRef REST API**: Peer-reviewed journal publications, DOIs, and citation metadata.
+
+#### 3. Evaluation
+> Define measurable criteria for accuracy, task completion, reliability, robustness, evidence quality, and efficiency using automated and human evaluation. Test the agent across normal, ambiguous, adversarial, contradictory, incomplete, and tool-failure scenarios, including repeated runs and baseline comparison. Measure accuracy, groundedness, hallucination, recovery, consistency, latency, and resource efficiency, while evaluating whether the agent can identify uncertainty, refuse unsupported conclusions, and recover from failures.
+
+NOVA Agent includes an isolated evaluation framework (`backend/evaluation/`) testing 8 benchmark scenarios (`NORMAL`, `AMBIGUOUS`, `ADVERSARIAL`, `CONTRADICTORY`, `INCOMPLETE_EVIDENCE`, `TOOL_FAILURE`, `REPEATED_RUNS`, `BASELINE_COMPARISON`). It measures task completion, latency, iterations, tool calls, groundedness ratios, failure recovery, uncertainty qualifications, statistical consistency across 5 repeated runs, and comparative performance against a single-call LLM baseline.
+
+#### 4. Advanced Tracing & Observability
+> Implement end-to-end tracing of agents, prompts, decisions, tool calls, latency, token usage, and errors. Introduce a controlled failure and use the trace to *identify the root cause, automatically diagnose it, and improve the system*. Demonstrate measurable before-vs-after improvements in execution time, tool calls, errors, or task success rate.
+> 
+> *LangSmith, Langfuse, OpenTelemetry, or equivalent may be used.*
+
+NOVA Agent incorporates a dedicated observability layer (`backend/observability/`) featuring a LangChain/LangGraph `CallbackHandler` that records trace IDs, execution spans, decision logs, tool latencies, structured error classifications (`API_ERROR`, `TIMEOUT`, `TOOL_FAILURE`), token usage, rule-based root cause diagnosis, and before-vs-after improvement comparisons.
+
+---
+
+## 🏗️ Workflow & System Architecture
+
+NOVA Agent is built on **LangGraph**, providing a stateful, cyclic, multi-agent orchestration graph equipped with shared state reducers, thread checkpointing (`MemorySaver`), parallel execution nodes, and autonomous replanning logic.
+
+### 📐 End-to-End System Architecture Diagram
+
+```
+                              USER OBJECTIVE
+                                    │
+                                    ▼
+                     ┌─────────────────────────────┐
+                     │    LONG-TERM MEMORY SEARCH  │
+                     │  (SQLite Past Investigations)│
+                     └──────────────┬──────────────┘
+                                    │
+                                    ▼
+                     ┌─────────────────────────────┐
+                     │       SUPERVISOR AGENT      │◄─────────────────────────────┐
+                     │ (Dynamic Planning Node)     │                              │
+                     └──────────────┬──────────────┘                              │
+                                    │                                             │
+             ┌──────────────────────┼──────────────────────┐                      │
+             │ Parallel Execution   │ Sequential           │ Fallback             │
+             ▼                      ▼                      ▼                      │
+  ┌────────────────────┐   ┌─────────────────┐   ┌────────────────────┐           │
+  │ RESEARCH & MARKET  │   │ RESEARCH AGENT  │   │ MARKET INTEL AGENT │           │
+  │ PARALLEL NODE      │   │ (arXiv/CrossRef)│   │ (Tavily Web Search)│           │
+  └──────────┬─────────┘   └────────┬────────┘   └─────────┬──────────┘           │
+             │                      │                      │                      │
+             └──────────────────────┴──────────┬───────────┘                      │
+                                               │                                  │
+                                               ▼                                  │
+                                   ┌──────────────────────┐                       │
+                                   │   EVALUATOR AGENT    │                       │
+                                   │ (Self-Eval, Conflict │                       │
+                                   │  & Hypothesis Check) │                       │
+                                   └───────────┬──────────┘                       │
+                                               │                                  │
+                                               ├──────────────────────────────────┘
+                                               │ Self-Evaluation Passed
+                                               ▼
+                                   ┌──────────────────────┐
+                                   │ STRATEGIC SYNTHESIS  │
+                                   │ (Gemini 3.6 Flash)   │
+                                   └───────────┬──────────┘
+                                               │
+                                               ▼
+                                   ┌──────────────────────┐
+                                   │ 11-PART INTELLIGENCE │
+                                   │   DASHBOARD REPORT   │
+                                   └──────────────────────┘
+```
+
+---
+
+## 🤖 Specialized Multi-Agent Network
+
+| Agent Name | Role | Core Responsibilities & Integrated Tools |
+| :--- | :--- | :--- |
+| **Supervisor Agent** | Dynamic Task Orchestrator | Analyzes objectives, retrieves long-term memory context, creates execution plans (`[PLANNING]`), dispatches parallel tasks, monitors resource budgets, and handles tool fallbacks. |
+| **Research Agent** | Scientific & Technical Specialist | Queries **arXiv REST API** and **CrossRef REST API** for scientific papers, DOIs, technical developments, and publication year metadata. |
+| **Market Intelligence Agent** | Competitor & Industry Specialist | Queries **Tavily Web Search API** for live web news, competitor product launches, company activities, and market developments. |
+| **Evaluator Agent** | Self-Evaluation & Hypothesis Specialist | Performs self-evaluation (`[SELF_EVALUATION]`), verifies hypotheses (`[HYPOTHESIS_VERIFICATION]`), detects conflicting evidence (`[CONFLICT_DETECTED]`), and assesses operational confidence (`HIGH` / `MEDIUM` / `LOW`). |
+| **Strategic Synthesis Agent** | Strategic Intelligence Analyst | Synthesizes multi-source evidence using **Google Gemini 3.6 Flash** into structured 11-part grounded intelligence reports. |
+
+---
+
+## ✨ Key Features
+
+### 1. 🗂️ Persistent Investigation History & Visible Search
+- **Persistent Left Sidebar**: Displays `+ New Investigation`, visible `Search Investigations` input, and `PINNED` & `RECENT INVESTIGATIONS` lists.
+- **SQLite Storage**: Automatically saves completed investigations to `investigations.db` (with `/tmp/investigations.db` fallback on Vercel).
+- **One-Click Recall**: Clicking past investigations reloads full reports and trace logs instantly.
+
+### 2. 🧠 Short-Term & Long-Term Memory Visualization
+- **Short-Term Memory**: LangGraph shared state (`AgentState`) maintained across active agent nodes.
+- **Long-Term Memory**: SQLite database. Automatically retrieves relevant past investigation findings before execution and displays the **Long-Term Memory Indicator** in the workspace.
+
+### 3. ⚡ Adaptive Task Decomposition & Parallel Execution
+- **Dynamic Planning**: Supervisor generates adaptive plans (`[PLANNING]`, `[PLAN_CREATED]`) tailored to user objectives.
+- **Parallel Dispatch**: Concurrently executes `ResearchAgent` and `MarketIntelligenceAgent` (`[PARALLEL_EXECUTION]`).
+- **LangGraph Checkpointing**: Checkpoints workflow state under `thread_id` using `MemorySaver`.
+
+### 4. 🛡️ Failure Recovery, Fallbacks & Deadlock Prevention
+- **Tool Fallbacks**: If Tavily web search fails (`[TOOL_FAILURE]`), Supervisor automatically redirects (`[FALLBACK]`) to research paper tools.
+- **Loop Detection**: Identifies repeated execution cycles (`[LOOP_DETECTED]`) and forces strategy recovery.
+- **Resource-Aware Budgeting**: Tracks iteration limits (`[RESOURCE_STATUS]`) and prioritizes synthesis under tight constraints.
+
+### 5. 📊 11-Part Final Intelligence Report Dashboard
+Structured intelligence output containing:
+1. **Executive Summary**
+2. **Key Developments** (with category badges)
+3. **Emerging Trends**
+4. **Strategic Opportunities**
+5. **Threats and Risks** (with `High Risk`, `Medium Risk`, `Low Risk` badges)
+6. **Evidence Conflicts** (Reconciled market deployment claims vs academic risk research)
+7. **Hypothesis Verification** (`SUPPORTED`, `PARTIALLY_SUPPORTED`, `INSUFFICIENT_EVIDENCE`)
+8. **Strategic Implications**
+9. **Recommended Actions** (`Priority 1: Immediate`, `Priority 2: Short-Term`, `Priority 3: Long-Term`)
+10. **Confidence & Uncertainty Assessment** (`HIGH`, `MEDIUM`, `LOW`)
+11. **Dedicated Evidence & Sources** (Clickable cards with `Q1 Journal`, `Q2 Journal`, `arXiv`, `CrossRef`, `Web` badges)
+
+---
+
+## 🖼️ Application Screenshots
+
+### 1. ReAct Agent Workspace (Initial View)
+![Task 1 Initial Workspace View](docs/screenshots/task1_workspace_initial.png)
+
+### 2. ReAct Agent Execution & Completed Report
+![Task 1 Completed Task Report](docs/screenshots/task1_execution_completed.png)
+
+### 3. Dynamic Tool Calling Execution & Grounded Sources
+![Dynamic Tool Calling Execution](docs/screenshots/tool_calling_execution.png)
+
+### 4. Final Intelligence Dashboard & Grounded Sources
+![Task 5 Final Intelligence Dashboard](docs/screenshots/task5_intelligence_dashboard.png)
+
+### 5. Adaptive Multi-Agent Workspace
+![Task 5 Adaptive Multi-Agent Workspace](docs/screenshots/task5_adaptive_workspace.png)
+
+### 6. System Evaluation & Live Intelligence Execution
+![System Evaluation & Live Intelligence Execution](docs/screenshots/task6_evaluation_execution.png)
+
+### 7. Advanced Tracing & Observability
+![7. Advanced Tracing & Observability](docs/screenshots/task7_tracing_observability.png)
+
+---
+
+## 🛠️ Technology Stack
+
+- **Agent Framework**: Python 3.11+, LangGraph, LangChain Core
+- **LLM Reasoning & Synthesis**: Google Gemini 3.6 Flash (`langchain-google-genai`)
+- **Search & Tool APIs**:
+  - **Tavily Web Search API**: Live web market news and competitor developments
+  - **arXiv REST XML API**: Scientific publications and technical preprints
+  - **CrossRef REST API**: Peer-reviewed journals, DOIs, and conference proceedings
+- **Backend & Persistence**: FastAPI, Uvicorn, SQLite3, Pydantic v2, Python-Dotenv
+- **Web Frontend**: HTML5, Vanilla CSS3, Vanilla JavaScript (Single-Page Workspace)
+- **Deployment**: Vercel Serverless (`api/index.py` with 60s `maxDuration`)
+
+---
+
+## 🚀 Live Demo & Deployment Guide
+
+### Live Application URL:
+👉 **[https://nova-agentx-24.vercel.app](https://nova-agentx-24.vercel.app)**
+
+### Vercel Deployment Instructions:
+1. Import repository `https://github.com/UtkarshaBhadakwade/NOVA_AGENTX24` on [Vercel](https://vercel.com/new).
+2. Configure Environment Variables under **Project Settings ➔ Environment Variables**:
+   - `GEMINI_API_KEY` = your Google Gemini API key
+   - `TAVILY_API_KEY` = your Tavily Search API key
+3. Click **Deploy**!
+
+---
+
+## 💻 Local Setup & Execution
+
+### 1. Clone & Navigate
+```powershell
+cd "c:\Users\VEDIKA\Downloads\New folder"
+```
+
+### 2. Environment Setup
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r backend/requirements.txt
+```
+
+### 3. Configure `.env` File
+Create `backend/.env`:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+TAVILY_API_KEY=your_tavily_api_key_here
+```
+
+### 4. Run Locally
+- **Option A: Run Isolated Evaluation Suite**
+  ```powershell
+  .\venv\Scripts\python -m backend.evaluation.run_evaluation
+  ```
+- **Option B: Run Isolated Tracing & Observability Suite**
+  ```powershell
+  .\venv\Scripts\python -m backend.observability.run_observability_test
+  ```
+- **Option C: FastAPI Web Server**
+  ```powershell
+  .\venv\Scripts\uvicorn backend.main:app --reload --port 8000
+  ```
+  Visit **`http://localhost:8000`** in your web browser.
