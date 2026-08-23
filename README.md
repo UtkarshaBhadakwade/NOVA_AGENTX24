@@ -88,6 +88,9 @@ NOVA Agent includes an isolated evaluation framework (`backend/evaluation/`) tes
 
 NOVA Agent incorporates a dedicated observability layer (`backend/observability/`) featuring a LangChain/LangGraph `CallbackHandler` that records trace IDs, execution spans, decision logs, tool latencies, structured error classifications (`API_ERROR`, `TIMEOUT`, `TOOL_FAILURE`), token usage, rule-based root cause diagnosis, and before-vs-after improvement comparisons.
 
+#### 5. Deployment Done Successfully (Task 8)
+> Production cloud deployment on Vercel Serverless Platform (`api/index.py`). Successfully deployed live at `https://nova-agentx-24.vercel.app` with environment variables (`GEMINI_API_KEY`, `TAVILY_API_KEY`), automatic route mapping, SQLite `/tmp` memory fallback, 60s serverless timeout threshold, and real-time live intelligence execution.
+
 ---
 
 ## 🏗️ Workflow & System Architecture
@@ -216,6 +219,9 @@ Structured intelligence output containing:
 
 ### 7. Advanced Tracing & Observability
 ![7. Advanced Tracing & Observability](docs/screenshots/task7_tracing_observability.png)
+
+### 8. Live Vercel Production Deployment & Execution
+![8. Live Vercel Production Deployment](docs/screenshots/task8_vercel_deployment.png)
 
 ---
 
