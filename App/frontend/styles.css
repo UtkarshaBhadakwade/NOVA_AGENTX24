@@ -632,3 +632,61 @@ body {
     color: var(--text-primary);
     font-weight: 600;
 }
+
+/* Compact Sidebar Execution Metrics Component (NOVA Design System) */
+.sidebar-metrics-card {
+    margin: 6px 14px 4px 14px;
+    padding: 10px 12px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md, 6px);
+    font-size: 0.75rem;
+}
+
+.sidebar-metrics-card .metrics-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-metrics-card .metrics-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sidebar-metrics-card .metrics-status-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--accent-color, #a855f7);
+    letter-spacing: 0.3px;
+}
+
+.sidebar-metrics-card .metrics-stats-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sidebar-metrics-card .metrics-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.73rem;
+    color: var(--text-secondary);
+}
+
+.sidebar-metrics-card .metrics-val {
+    font-family: var(--font-mono, monospace);
+    color: var(--text-primary);
+    font-weight: 600;
+}

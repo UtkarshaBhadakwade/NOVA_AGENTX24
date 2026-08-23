@@ -1,4 +1,5 @@
 import os
+import time
 import uuid
 import logging
 from typing import List, Dict, Any, Optional
@@ -71,6 +72,7 @@ class AnalyzeResponse(BaseModel):
     memory_found: bool = False
     errors: List[str] = []
     token_usage: Optional[Dict[str, Any]] = None
+    execution_metrics: Optional[Dict[str, Any]] = None
 
 @app.get("/health")
 def health_check():
@@ -125,6 +127,7 @@ def pin_investigation(investigation_id: str):
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def run_intelligence_analysis(request: AnalyzeRequest):
+    start_time = time.time()
     if not request.objective.strip():
         raise HTTPException(status_code=400, detail="Objective string cannot be empty.")
 
@@ -219,6 +222,22 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "detail": f"LangGraph state checkpointed under thread_id '{thread_id}'."
         })
 
+        latency_sec = round(time.time() - start_time, 2)
+        err_count = len(final_state.get("errors", [])) + len(tracer.error_spans)
+        exec_status = "SUCCESS"
+        if err_count > 0 and final_state.get("task_complete"):
+            exec_status = "RECOVERED"
+        elif not final_state.get("task_complete"):
+            exec_status = "FAILED"
+
+        execution_metrics = {
+            "latency_seconds": latency_sec,
+            "iterations": final_state.get("iteration_count", 0),
+            "tool_calls": len(tools_called),
+            "error_count": err_count,
+            "status": exec_status
+        }
+
         response_data = {
             "id": None,
             "objective": final_state["objective"],
@@ -232,7 +251,8 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "crossref_results_count": len(final_state.get("crossref_results", [])),
             "memory_found": memory_found,
             "errors": final_state.get("errors", []),
-            "token_usage": tracer.token_usage
+            "token_usage": tracer.token_usage,
+            "execution_metrics": execution_metrics
         }
 
         try:
