@@ -121,10 +121,49 @@
                         <span class="badge-step" id="iterationBadge">Ready</span>
                     </div>
 
-                    <div class="execution-scroll-container">
-                        <div class="timeline" id="timeline">
-                            <div class="timeline-empty">
-                                <p>Submit an objective to view adaptive agent planning and orchestration trace logs.</p>
+                    <!-- Compact Gemini Usage & Quota Panel -->
+                    <div class="gemini-quota-card" id="geminiQuotaCard">
+                        <div class="quota-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <span>GEMINI USAGE & QUOTA</span>
+                        </div>
+                        <div class="quota-body">
+                            <div class="quota-section-title">THIS INVESTIGATION</div>
+                            <div class="quota-row">
+                                <span class="quota-label">Input Tokens</span>
+                                <strong id="inputTokensVal" class="quota-val">NOT_AVAILABLE</strong>
+                            </div>
+                            <div class="quota-row">
+                                <span class="quota-label">Output Tokens</span>
+                                <strong id="outputTokensVal" class="quota-val">NOT_AVAILABLE</strong>
+                            </div>
+                            <div class="quota-row">
+                                <span class="quota-label">Total Tokens</span>
+                                <strong id="totalTokensVal" class="quota-val">NOT_AVAILABLE</strong>
+                            </div>
+
+                            <div class="quota-divider"></div>
+
+                            <div class="quota-section-title">CONFIGURED API QUOTA LIMITS</div>
+                            <div class="quota-row">
+                                <span class="quota-label">RPM (Req / Min)</span>
+                                <span class="quota-val">20 Req / Min</span>
+                            </div>
+                            <div class="quota-row">
+                                <span class="quota-label">TPM (Tokens / Min)</span>
+                                <span class="quota-val">1,000,000</span>
+                            </div>
+                            <div class="quota-row">
+                                <span class="quota-label">RPD (Req / Day)</span>
+                                <span class="quota-val">1,500 Req / Day</span>
+                            </div>
+
+                            <div class="quota-footer">
+                                <div class="quota-status-pill">
+                                    <span class="status-dot-active"></span>
+                                    <span>Status: <strong>ACTIVE</strong></span>
+                                </div>
+                                <div class="quota-note">Exact remaining quota available in Google AI Studio.</div>
                             </div>
                         </div>
                     </div>

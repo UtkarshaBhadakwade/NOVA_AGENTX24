@@ -119,6 +119,9 @@ async function loadInvestigationDetails(id) {
 
         document.getElementById('iterationBadge').innerText = `${data.iterations || 1} Steps | ${(data.tools_called || []).length} Tools`;
 
+        // Update Gemini Usage & Quota Panel
+        updateGeminiQuotaPanel(data.token_usage);
+
         // Render Compact Process Timeline
         renderCompactTimeline(data.trace_events || []);
 
@@ -217,6 +220,9 @@ async function runAnalysis(testMode = "normal") {
         }
 
         document.getElementById('iterationBadge').innerText = `${data.iterations} Steps | ${data.tools_called.length} Tools`;
+
+        // Update Gemini Usage & Quota Panel
+        updateGeminiQuotaPanel(data.token_usage);
 
         // Render Compact Process Timeline
         renderCompactTimeline(data.trace_events || []);
@@ -449,4 +455,26 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+function updateGeminiQuotaPanel(tokenUsage) {
+    const inputEl = document.getElementById('inputTokensVal');
+    const outputEl = document.getElementById('outputTokensVal');
+    const totalEl = document.getElementById('totalTokensVal');
+    
+    if (!inputEl || !outputEl || !totalEl) return;
+
+    if (tokenUsage && typeof tokenUsage === 'object') {
+        const inp = tokenUsage.input_tokens;
+        const out = tokenUsage.output_tokens;
+        const tot = tokenUsage.total_tokens;
+
+        inputEl.innerText = (typeof inp === 'number') ? inp.toLocaleString() : (inp || 'NOT_AVAILABLE');
+        outputEl.innerText = (typeof out === 'number') ? out.toLocaleString() : (out || 'NOT_AVAILABLE');
+        totalEl.innerText = (typeof tot === 'number') ? tot.toLocaleString() : (tot || 'NOT_AVAILABLE');
+    } else {
+        inputEl.innerText = 'NOT_AVAILABLE';
+        outputEl.innerText = 'NOT_AVAILABLE';
+        totalEl.innerText = 'NOT_AVAILABLE';
+    }
 }

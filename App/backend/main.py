@@ -20,6 +20,8 @@ from backend.db import (
     toggle_pinned
 )
 
+from backend.observability.tracer import NOVAObservabilityTracer
+
 # Load environment variables
 load_dotenv()
 
@@ -68,6 +70,7 @@ class AnalyzeResponse(BaseModel):
     crossref_results_count: int = 0
     memory_found: bool = False
     errors: List[str] = []
+    token_usage: Optional[Dict[str, Any]] = None
 
 @app.get("/health")
 def health_check():
@@ -197,9 +200,10 @@ def run_intelligence_analysis(request: AnalyzeRequest):
     logger.info(f"Starting Task 5 Adaptive Agent Graph for objective: '{request.objective}' (TestMode: {request.test_mode})")
     
     try:
+        tracer = NOVAObservabilityTracer(investigation_id=thread_id)
         final_state = agent_graph.invoke(
             initial_state,
-            config={"configurable": {"thread_id": thread_id}}
+            config={"configurable": {"thread_id": thread_id}, "callbacks": [tracer]}
         )
 
         tools_called = [
@@ -227,7 +231,8 @@ def run_intelligence_analysis(request: AnalyzeRequest):
             "research_results_count": len(final_state.get("research_results", [])),
             "crossref_results_count": len(final_state.get("crossref_results", [])),
             "memory_found": memory_found,
-            "errors": final_state.get("errors", [])
+            "errors": final_state.get("errors", []),
+            "token_usage": tracer.token_usage
         }
 
         try:

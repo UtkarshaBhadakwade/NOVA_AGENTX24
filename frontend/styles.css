@@ -567,3 +567,88 @@ body {
 @media (max-width: 768px) {
     .sidebar { display: none; }
 }
+
+/* Compact Gemini Usage & Quota Panel */
+.gemini-quota-card {
+    margin: 12px;
+    padding: 12px;
+    background: rgba(16, 24, 38, 0.85);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.gemini-quota-card .quota-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #60a5fa;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.gemini-quota-card .quota-section-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    margin: 6px 0 4px 0;
+    text-transform: uppercase;
+}
+
+.gemini-quota-card .quota-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.gemini-quota-card .quota-label {
+    color: var(--text-secondary);
+}
+
+.gemini-quota-card .quota-val {
+    font-family: var(--font-mono, monospace);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.gemini-quota-card .quota-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 8px 0;
+}
+
+.gemini-quota-card .quota-footer {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.gemini-quota-card .quota-status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.gemini-quota-card .status-dot-active {
+    width: 6px;
+    height: 6px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #10b981;
+}
+
+.gemini-quota-card .quota-note {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-style: italic;
+}
